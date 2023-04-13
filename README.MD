@@ -72,8 +72,10 @@ Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
 
 ## Inspiration
 <img src="https://camo.githubusercontent.com/c7b6e0b937295c4d2c852130814050eb0caffac5b700ead6de21df6dbf83aa82/687474703a2f2f6e6f64657265642e6f72672f696d616765732f6e6f64652d7265642d73637265656e73686f742e706e67" alt="Node-RED: Low-code programming for event-driven applications" data-canonical-src="http://nodered.org/images/node-red-screenshot.png" style="max-width: 100%;">
-* [Node-RED](https://github.com/node-red/node-red)
+ 
+[GitHub NodeRED](https://github.com/node-red/node-red)
 
 ### Orange
   <img src="https://raw.githubusercontent.com/irgolic/orange3/README-shields/distribute/orange-example-tall.png" alt="https://raw.githubusercontent.com/irgolic/orange3/README-shields/distribute/orange-example-tall.png" class="transparent shrinkToFit" width="668" height="425">
-[Orange3 GitHub](https://github.com/biolab/orange3)
+
+[GitHub Orange3](https://github.com/biolab/orange3)
