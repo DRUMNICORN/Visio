@@ -54,17 +54,40 @@ Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
 
 * **Cherob** - *Initial work* - [Cherob](https://github.com/cherob)  
 
-## Dependencies
-
-* [egui](https://github.com/emilk/egui)
-* [egui-node-graph](https://github.com/setzer22/egui_node_graph)
-
 ## Inspiration
-<img src="https://camo.githubusercontent.com/c7b6e0b937295c4d2c852130814050eb0caffac5b700ead6de21df6dbf83aa82/687474703a2f2f6e6f64657265642e6f72672f696d616765732f6e6f64652d7265642d73637265656e73686f742e706e67" alt="Node-RED: Low-code programming for event-driven applications" data-canonical-src="http://nodered.org/images/node-red-screenshot.png" style="max-width: 100%;">
+
+### NodeRED
+
+![nodeRED](https://user-images.githubusercontent.com/15168847/232058437-213eb8a7-4eeb-4a6d-9752-60e12abf9bb7.png)
  
 [GitHub NodeRED](https://github.com/node-red/node-red)
 
 ### Orange
-  <img src="https://raw.githubusercontent.com/irgolic/orange3/README-shields/distribute/orange-example-tall.png" alt="https://raw.githubusercontent.com/irgolic/orange3/README-shields/distribute/orange-example-tall.png" class="transparent shrinkToFit" width="668" height="425">
+
+![orange3](https://user-images.githubusercontent.com/15168847/232058386-aee44090-4057-4427-841b-f3846b5d70a9.png)
 
 [GitHub Orange3](https://github.com/biolab/orange3)
+
+### Blender: Geometry Nodes
+
+![image](https://user-images.githubusercontent.com/15168847/232055166-b1cabd5e-a89b-4139-9a18-ae96e809d7e6.png)
+
+[Doc Geometry Nodes](https://docs.blender.org/manual/en/latest/modeling/geometry_nodes/index.html#index-0)
+
+### Unity: Shader Graph
+
+![shader_graph](https://user-images.githubusercontent.com/15168847/232055957-5c5d64e4-9a72-45be-8505-2872876e4e55.png)
+
+[Doc Shader Graph](https://docs.unity3d.com/Packages/com.unity.shadergraph@14.0/manual/First-Shader-Graph.html)
+
+### Drawflow
+
+![drawflow](https://user-images.githubusercontent.com/15168847/232057526-63018038-440b-4a0b-baac-d366e9cba313.gif)
+
+[GitHub Drawflow](https://github.com/jerosoler/Drawflow)
+
+### Unreal Engine 5: Blueprints
+
+![blueprints](https://user-images.githubusercontent.com/15168847/232058249-2f7ccaa3-887b-4248-8d1d-e354a52ad33a.png)
+
+[Doc Blueprints](https://docs.unrealengine.com/5.0/en-US/blueprint-tutorials-in-unreal-engine/)
