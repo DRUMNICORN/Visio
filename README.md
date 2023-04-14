@@ -4,6 +4,8 @@ Use Rust to create data workflows with no coding experience required.
 
 [Github](https://github.com/cherob/nodium) | [Discord](https://discord.gg/ZTVfME7RyN)
 
+![Latest version](https://img.shields.io/endpoint?label=crates.io&url=https%3A%2F%2Fcrates.io%2Fcrates%2Fnodium)
+
 ## Getting Started
 
 Nodium is an easy-to-use platform designed for data analysis and automation using Rust with no coding experience required. It provides a visual node-based interface where users can create data manipulation tasks by connecting nodes in a graph. Nodium includes a plugin browser for downloading extensions that provide additional functionality, such as mathematical nodes, network nodes, language model nodes, and image model nodes. Users can create custom data workflows by connecting nodes together, making it a versatile tool for a wide range of data analysis and automation tasks.
