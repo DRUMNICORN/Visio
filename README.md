@@ -30,7 +30,7 @@ cargo run
 ## Milestones
 
 ### Milestone 1: Implement the core module
-- [ ] Define the `Graph`, `Node`, and `NodeType` (input, process, debug, output) types in `src/core/graph.rs` and `src/core/node.rs`.
+- [x] Define the `Graph`, `Node`, and `NodeType` (input, process, debug, output) types in `src/core/graph.rs` and `src/core/node.rs`.
 - [ ] Implement the methods to create, add, and manipulate nodes in the graph.
 - [ ] Implement the `run` method to process the graph asynchronously.
 
