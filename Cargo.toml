@@ -2,6 +2,7 @@
 name = "nodium"
 version = "0.1.0"
 authors = ["cherob"]
+description = "Nodium is an easy-to-use data analysis and automation platform using Rust with a visual node-based interface. It includes a plugin browser for downloading extensions, making it versatile for a wide range of data manipulation tasks. No coding experience required."
 edition = "2021"
 
 [dependencies]
