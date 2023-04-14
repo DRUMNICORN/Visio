@@ -27,36 +27,23 @@ cd nodium
 cargo run
 ```
 
-## Roadmap
+## Milestones
 
-Here's a list of planned features for Nodium:
+### Milestone 1: Implement the core module
+- [ ] Define the `Graph`, `Node`, and `NodeType` (input, process, debug, output) types in `src/core/graph.rs` and `src/core/node.rs`.
+- [ ] Implement the methods to create, add, and manipulate nodes in the graph.
+- [ ] Implement the `run` method to process the graph asynchronously.
 
-### Milestone 1: Extension Browser
+### Milestone 2: Implement the UI module
+- [ ] Define the `AppController`, `PluginManager`, and `PluginBrowser` types in `src/ui/app_controller.rs`, `src/ui/plugin_manager.rs`, and `src/ui/plugin_browser.rs`.
+- [ ] Implement the methods to handle user interactions and manage the application state.
 
-- [ ] Create a basic extension system
-- [ ] Create a basic extension
-- [ ] Create a basic extension browser
-- [ ] Add the ability to download extensions
-- [ ] Add the ability to install extensions
-- [ ] Add the ability to uninstall extensions
-- [ ] Add the ability to update extensions
+### Milestone 3: Automatic extension handling
+- [ ] Create a system to discover and include Nodium extensions from external Rust crates published with the `nodium-<extension-name>` pattern.
+- [ ] Implement a method to rebuild the project with the included extensions.
 
-### Milestone 2: Node Editor
-
-- [ ] Create a basic node editor
-- [ ] Create a basic node
-- [ ] Add a context menu for adding nodes
-- [ ] Create a basic pipe, and add the ability to connect nodes with pipes
-- [ ] Add the ability to delete nodes and pipes
-- [ ] Add the ability to move nodes
-
-### Milestone 3: Runtime
-
-- [ ] Create a basic runtime
-- [ ] Add Input and Output nodes
-- [ ] Add the ability to run a workflow
-- [ ] Add the ability to stop a workflow
-
+### Milestone 4: Implement an extension browser
+- [ ] Add functionality to search for and include extensions from crates.io.
 
 ## Contributing
 
