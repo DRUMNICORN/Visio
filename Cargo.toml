@@ -4,11 +4,21 @@ version = "0.1.0"
 authors = ["cherob"]
 description = "Nodium is an easy-to-use data analysis and automation platform using Rust with a visual node-based interface. It includes a plugin browser for downloading extensions, making it versatile for a wide range of data manipulation tasks. No coding experience required."
 edition = "2021"
+license = "AGPL-3.0"
 
 [dependencies]
+egui = "0.19.0"
+egui_node_graph = "0.4.0"
+eframe = "0.19.0"
+anyhow = "1.0"
+serde = { version = "1.0", optional = true }
+
+[features]
+default = []
+persistence = ["serde", "egui_node_graph/persistence", "eframe/persistence"]
 
 [profile.dev]
-opt-level = 1
+opt-level = 0
 
 [profile.release]
-opt-level = 3
+opt-level = 2 
