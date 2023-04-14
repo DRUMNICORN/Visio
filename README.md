@@ -29,21 +29,8 @@ cargo run
 
 ## Milestones
 
-### Milestone 1: Implement the core module
-- [x] Define the `Graph`, `Node`, and `NodeType` (input, process, debug, output) types in `src/core/graph.rs` and `src/core/node.rs`.
-- [ ] Implement the methods to create, add, and manipulate nodes in the graph.
-- [ ] Implement the `run` method to process the graph asynchronously.
-
-### Milestone 2: Implement the UI module
-- [ ] Define the `AppController`, `PluginManager`, and `PluginBrowser` types in `src/ui/app_controller.rs`, `src/ui/plugin_manager.rs`, and `src/ui/plugin_browser.rs`.
-- [ ] Implement the methods to handle user interactions and manage the application state.
-
-### Milestone 3: Automatic extension handling
-- [ ] Create a system to discover and include Nodium extensions from external Rust crates published with the `nodium-<extension-name>` pattern.
-- [ ] Implement a method to rebuild the project with the included extensions.
-
-### Milestone 4: Implement an extension browser
-- [ ] Add functionality to search for and include extensions from crates.io.
+ 🏗️🏗️🏗️🏗️
+  🚧🚧🚧
 
 ## Contributing
 
