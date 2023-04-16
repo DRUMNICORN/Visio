@@ -1,4 +1,4 @@
-// nodium_egui/src/style_registry.rs
+// nodium_ui/src/style_registry.rs
 
 use crate::node_style::NodeStyle;
 use std::collections::HashMap;

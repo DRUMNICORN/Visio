@@ -1,4 +1,4 @@
-// nodium_egui/src/node_style.rs
+// nodium_ui/src/node_style.rs
 
 pub struct NodeStyle {
   pub category: String,

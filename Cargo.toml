@@ -7,9 +7,14 @@ edition = "2021"
 license = "AGPL-3.0"
 
 [dependencies]
-notime = { path = "libs/notime" }
-nodium_egui = { path = "libs/nodium_egui" }
-
+shaku = "0.5"
 tokio = { version = "1.0", features = ["full"] }
-
 eframe = "0.15.0"
+
+log = "0.4"
+env_logger = "0.9"
+
+
+nodium-core = { path = "libs/core" }
+nodium-app = { path = "libs/app" }
+nodium-events = { path = "libs/events" }

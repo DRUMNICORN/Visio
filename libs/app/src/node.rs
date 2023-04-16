@@ -1,4 +1,4 @@
-// nodium_egui/src/node.rs
+// nodium_ui/src/node.rs
 
 use crate::style_registry::StyleRegistry;
 
