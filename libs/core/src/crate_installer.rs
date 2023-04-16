@@ -5,17 +5,33 @@ use serde_json::Value;
 use std::process::Command;
 use std::sync::{Arc, Mutex, Weak};
 
-#[derive(Clone)]
-pub struct CrateInstaller {
+use dirs_next::document_dir;
+use std::fs;
+
+use libloading::{Library, Symbol};
+use std::collections::HashMap;
+use std::path::Path;
+
+pub struct PluginManager {
+    install_location: String,
     event_bus: Arc<EventBus>,
     shared_self: Weak<Mutex<Self>>,
+    libraries: HashMap<String, Library>,
 }
 
-impl CrateInstaller {
+impl PluginManager {
     pub fn new(event_bus: Arc<EventBus>) -> Arc<Mutex<Self>> {
-        let installer = Arc::new(Mutex::new(CrateInstaller {
+        let doc_dir = document_dir().expect("Unable to get user's document directory");
+        let install_location = doc_dir.join("nodium").join("plugins");
+        if !install_location.exists() {
+            fs::create_dir_all(&install_location).expect("Unable to create plugin directory");
+        }
+
+        let installer = Arc::new(Mutex::new(PluginManager {
+            install_location: String::from(install_location.to_str().unwrap()),
             event_bus: event_bus.clone(),
             shared_self: Weak::new(),
+            libraries: HashMap::new(),
         }));
         let weak_installer = Arc::downgrade(&installer);
         installer.lock().unwrap().shared_self = weak_installer;
@@ -47,18 +63,40 @@ impl CrateInstaller {
         // Handle other event types as needed
     }
 
-    fn install_crate(&self, crate_name: &str) {
-        debug!("Installing crate {}", crate_name);
-        let status = Command::new("cargo")
-            .arg("install")
-            .arg(crate_name)
-            .status()
-            .expect("Failed to execute cargo install command");
+    fn install_crate(&mut self, crate_name: &str) {
+        debug!("Installing crate {} to {}", crate_name, self.install_location);
+        
+        let mut cmd = Command::new("cargo");
 
-        if status.success() {
-            debug!("Crate {} installed successfully", crate_name);
-        } else {
-            debug!("Failed to install crate {}", crate_name);
-        }
+        cmd.arg("install")
+            .arg("--root")
+            .arg(&self.install_location)
+            .arg(crate_name);
+
+        let output = cmd.output().expect("Failed to execute cargo install command");
+
+        if output.status.success() {
+          debug!("Crate {} installed successfully", crate_name);
+          self.load_library(crate_name);
+      } else {
+          debug!("Crate {} failed to install", crate_name);
+      }
+
+        debug!("Cargo install output: {}", String::from_utf8_lossy(&output.stdout));
     }
+
+    fn load_library(&mut self, crate_name: &str) {
+      let lib_path = Path::new(&self.install_location).join("bin").join(crate_name);
+      debug!("Loading library from {}", lib_path.to_str().unwrap());
+      //  let ext = if cfg!(windows) { "dll" } else if cfg!(unix) { "so" } else { panic!("Unsupported platform"); };
+
+
+      let lib = unsafe { Library::new(&lib_path) }.expect("Unable to load library");
+      debug!("Library loaded successfully");
+
+      // let func: Symbol<unsafe extern "C" fn()> = lib.get(b"function_name").unwrap();
+
+      self.libraries.insert(String::from(crate_name), lib);
+      debug!("Library added to libraries map");
+  }
 }

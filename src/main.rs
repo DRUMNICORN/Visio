@@ -3,7 +3,7 @@ use nodium_app::NodiumApp;
 use nodium_events::EventBus;
 use tokio::runtime::Runtime;
 
-use nodium_core::crate_installer::CrateInstaller;
+use nodium_core::crate_installer::PluginManager;
 
 use env_logger::Builder;
 use log::{debug, LevelFilter};
@@ -19,13 +19,9 @@ fn main() {
 
   rt.block_on(async {
       let event_bus = EventBus::new();
-      let installer = CrateInstaller::new(event_bus.clone());
+      let installer = PluginManager::new(event_bus.clone());
       installer.lock().unwrap().register_event_handlers().await;
 
-      // Emit the "CrateInstall" event with a payload
-      // event_bus.emit("CrateInstall", String::from("Payload for CrateInstall")).await;
-
-      // Main application logic
       let app = NodiumApp::new(event_bus);
       debug!("NodiumApp created");
 

@@ -1,14 +1,14 @@
 # Nodium
 
-Use Rust to create data workflows with no coding experience required.
+>Nodium is currently in development and is not yet ready for production use.
 
-[Github](https://github.com/cherob/nodium) | [Discord](https://discord.gg/ZTVfME7RyN)
+Nodium is an easy-to-use data analysis and automation platform built using Rust, designed to be versatile and modular. Nodium aims to provide a user-friendly visual node-based interface for various tasks.
 
-![Latest version](https://img.shields.io/endpoint?label=crates.io&url=https%3A%2F%2Fcrates.io%2Fcrates%2Fnodium)
+![GitHub all releases](https://img.shields.io/github/downloads/cherob/nodium/total?label=GitHub%20downloads&style=for-the-badge&logo=github)![Crates.io](https://img.shields.io/crates/v/nodium?label=Crates.io&style=for-the-badge&logo=crates.io)![Crates.io](https://img.shields.io/crates/d/nodium?label=Crates.io%20downloads&style=for-the-badge&logo=crates.io)![Discord](https://img.shields.io/discord/1096210659588452422?label=Discord&style=for-the-badge&logo=discord)
 
 ## Getting Started
 
-Nodium is an easy-to-use platform designed for data analysis and automation using Rust with no coding experience required. It provides a visual node-based interface where users can create data manipulation tasks by connecting nodes in a graph. Nodium includes a plugin browser for downloading extensions that provide additional functionality, such as mathematical nodes, network nodes, language model nodes, and image model nodes. Users can create custom data workflows by connecting nodes together, making it a versatile tool for a wide range of data analysis and automation tasks.
+If you want to contribute to the project, you can clone the repository and run the project locally. Think about solving an issue or adding a feature.
 
 ### Prerequisites
 
@@ -27,10 +27,37 @@ cd nodium
 cargo run
 ```
 
+## Features
+
+* Visual node-based interface with input and output pins.
+* Dynamic loading of crates and runtime imports using libloading for plugin support
+* Task-based recursive computation of nodes to execute user-created graphs
+* Support for sub-flows as nodes, increasing modularity
+* Save and reuse flows across multiple locations
+* Async programming and a robust tasking system for performance and usability
+
 ## Milestones
 
- 🏗️🏗️🏗️🏗️
-  🚧🚧🚧
+### Milestone 1: Basic Nodes
+
+* [ ] Basic Input Node (Text, Number, etc.)
+* [ ] Debbugging Node (Print, Log, etc.)
+* [ ] Node Connection
+
+### Milestone 2: Basic Data Manipulation
+
+* [ ] File Node (Read, Write, etc.)
+* [ ] Basic data manipulation (filter, sort, etc.)
+* [ ] APIs (REST, GraphQL, etc.)
+* [ ] Databases (SQL, NoSQL, etc.)
+* [ ] Basic math operations (add, subtract, etc.)
+
+### Milestone 3: Basic Data Analysis
+
+* [ ] Machine learning processes (text, image, audio, etc.)
+* [ ] Web Dashboard creation (HTML, CSS, JS, etc.)
+* [ ] Machine learning training
+* [ ] IoT (MQTT, UDP, TCP, etc.)
 
 ## Contributing
 
