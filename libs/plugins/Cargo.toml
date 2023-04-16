@@ -4,3 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+libloading = "0.7"
+serde_json = "1.0"
+dirs-next = "2.0"
+
+nodium-events = { path = "../events" }
+
+log = "0.4"
+env_logger = "0.9"

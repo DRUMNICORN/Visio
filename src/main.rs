@@ -1,9 +1,8 @@
 use eframe::run_native;
 use nodium_app::NodiumApp;
 use nodium_events::EventBus;
+use nodium_plugins::PluginManager;
 use tokio::runtime::Runtime;
-
-use nodium_core::crate_installer::PluginManager;
 
 use env_logger::Builder;
 use log::{debug, LevelFilter};

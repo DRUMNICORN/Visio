@@ -14,6 +14,6 @@ eframe = "0.15.0"
 log = "0.4"
 env_logger = "0.9"
 
-nodium-core = { path = "libs/core" }
+nodium-plugins = { path = "libs/plugins" }
 nodium-app = { path = "libs/app" }
 nodium-events = { path = "libs/events" }
