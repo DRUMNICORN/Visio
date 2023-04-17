@@ -1,5 +1,7 @@
 [package]
 name = "nodium-plugins"
+description = "Nodium plugin system"
+authors = ["cherob"]
 version = "0.1.0"
 edition = "2021"
 license = "AGPL-3.0"
