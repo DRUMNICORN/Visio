@@ -5,7 +5,7 @@ authors = ["cherob"]
 edition = "2021"
 
 [dependencies]
-nodium_pdk = { path = "../nodium-pdk", version = "0.1.0" }
+nodium_pdk = { path = "../lib/pdk", version = "0.1.0" }
 
 [lib]
 name = "nodium_input"
