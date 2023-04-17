@@ -7,7 +7,7 @@ edition = "2021"
 license-file = "LICENSE"
 
 [dependencies]
-tokio = { version = "1.27.0", features = ["macros", "rt"] }
+tokio = { version = "1.27.0", features = ["full"] }
 eframe = "0.15.0"
 
 log = "0.4"
