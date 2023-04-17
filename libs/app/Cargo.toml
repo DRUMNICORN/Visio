@@ -4,6 +4,7 @@ authors = ["cherob"]
 description = "Nodium App, a GUI for Nodium"
 version = "0.1.0"
 edition = "2021"
+license = "AGPL-3.0"
 
 [dependencies]
 toml = "0.5"
