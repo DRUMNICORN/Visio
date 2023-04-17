@@ -3,6 +3,7 @@ name = "nodium_input"
 version = "0.1.0"
 authors = ["cherob"]
 edition = "2021"
+license = "AGPL-3.0"
 
 [dependencies]
 nodium-pdk = { path = "../lib/pdk", version = "0.1.0" }
