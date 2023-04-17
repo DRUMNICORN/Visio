@@ -114,7 +114,7 @@ impl NodiumApp {
                 debug!("Installing crate: {}", payload);
                 // warp in tokio task
                 tokio::spawn(async move {
-                  event_bus.emit("CrateInstall", payload).await;
+                    event_bus.emit("CrateInstall", payload).await;
                 });
             }
         }

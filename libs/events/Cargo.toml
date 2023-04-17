@@ -1,5 +1,7 @@
 [package]
 name = "nodium-events"
+authors = ["cherob"]
+description = "A simple event system for Rust"
 version = "0.1.0"
 edition = "2021"
 
