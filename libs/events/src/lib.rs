@@ -28,7 +28,6 @@ impl EventBus {
         if let Some(handler_list) = event_handlers.get(event_name) {
             for handler in handler_list {
                 handler(payload.clone());
-                debug!("Event handler for {} called", event_name);
             }
         }
     }

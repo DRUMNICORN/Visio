@@ -5,25 +5,37 @@ use nodium_plugins::Plugins;
 use tokio::runtime::Runtime;
 
 use env_logger::Builder;
-use log::{debug, LevelFilter};
+use log::{debug, info, LevelFilter};
 
 fn main() {
-  Builder::new()
-  .filter(None, LevelFilter::Debug) // Change this to the desired log level
-  .init();
+    Builder::new()
+        .filter(None, LevelFilter::Debug) // Change this to the desired log level
+        .init();
+    debug!("Logger initialized");
+    // welcome
+    println!("Welcome to Nodium!\n");
 
-  let rt = Runtime::new().unwrap();
-  debug!("Runtime created");
-  rt.block_on(async {
-    let event_bus = EventBus::new();
-    let installer = Plugins::new(event_bus.clone());
-      installer.lock().unwrap().register_event_handlers().await;
+    info!("Creating runtime");
+    let rt = Runtime::new().unwrap();
+    debug!("Runtime created");
+    rt.block_on(async {
+        info!("Creating event bus");
+        let event_bus = EventBus::new();
+        debug!("Event bus created");
 
-      let app = NodiumApp::new(event_bus);
-      debug!("NodiumApp created");
+        info!("Creating plugins");
+        let plugins = Plugins::new(event_bus.clone());
+        debug!("Plugins created");
 
-      let options = eframe::NativeOptions::default();
-      run_native(Box::new(app), options);
+        info!("Registering event handlers");
+        plugins.lock().unwrap().register_event_handlers().await;
+        debug!("Event handlers registered");
+
+        info!("NodiumApp starting");
+        let app = NodiumApp::new(event_bus);
+        debug!("NodiumApp created");
+
+        let options = eframe::NativeOptions::default();
+        run_native(Box::new(app), options);
     });
-  }
-
+}

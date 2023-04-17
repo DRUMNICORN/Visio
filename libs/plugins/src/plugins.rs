@@ -1,4 +1,4 @@
-use log::debug;
+use log::{debug, info, error};
 use nodium_events::EventBus;
 use serde_json::Value;
 use std::process::Command;
@@ -49,8 +49,8 @@ impl Plugins {
                 Box::new(move |payload| {
                     if let Some(installer) = weak_installer.upgrade() {
                         let mut installer = installer.lock().unwrap();
+                        info!("Installing crate");
                         installer.handle_event(payload);
-                        debug!("CrateInstall event handler called");
                     }
                 }) as Box<dyn Fn(String) + Send + Sync>,
             )
@@ -59,9 +59,13 @@ impl Plugins {
 
     fn handle_event(&mut self, payload: String) {
         let data: Value = serde_json::from_str(&payload).unwrap();
+        debug!("Handling event: {}", payload);
+        debug!("Event data: {:?}", data);
         if let Some(crate_name) = data.get("crate_name").and_then(Value::as_str) {
             debug!("Handling CrateInstall event for {}", crate_name);
             self.install_crate(crate_name);
+        }else{
+            debug!("No crate_name found in event payload");
         }
         // Handle other event types as needed
     }
@@ -87,7 +91,11 @@ impl Plugins {
             debug!("Crate {} installed successfully", crate_name);
             self.load_library(crate_name);
         } else {
-            debug!("Crate {} failed to install", crate_name);
+            error!(
+                "Crate {} failed to install: {}",
+                crate_name,
+                String::from_utf8_lossy(&output.stderr)
+            );
         }
 
         debug!(

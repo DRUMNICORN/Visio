@@ -14,7 +14,7 @@ use std::{
 };
 
 // constants for extension crates
-const EXTENSION_CRATE_PREFIX: &str = "nodium"; // prefix for extension crates on crates.io are "nodium_"
+const EXTENSION_CRATE_PREFIX: &str = "nodium_"; // prefix for extension crates on crates.io are "nodium_"
 
 pub struct WrappedCrate(pub Crate);
 
@@ -108,7 +108,7 @@ impl NodiumApp {
     fn install_button(&self, krate: Crate) -> impl FnOnce(&mut Ui) {
         let event_bus = self.event_bus.clone();
         move |ui: &mut Ui| {
-            ui.label(&krate.name);
+            ui.label(krate.name.replace(EXTENSION_CRATE_PREFIX, ""));
             if ui.button("Install").clicked() {
                 let payload = json!({ "crate_name": krate.clone().name }).to_string();
                 debug!("Installing crate: {}", payload);
