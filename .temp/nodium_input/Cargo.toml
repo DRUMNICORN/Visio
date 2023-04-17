@@ -1,0 +1,12 @@
+[package]
+name = "nodium_input"
+version = "0.1.0"
+authors = ["cherob"]
+edition = "2021"
+
+[dependencies]
+nodium_pdk = { path = "../nodium-pdk" }
+
+[lib]
+name = "nodium_input"
+crate-type = ["cdylib"]

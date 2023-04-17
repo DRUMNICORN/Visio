@@ -1,4 +1,4 @@
-// libs/nodium_ui/src/lib.rs
+// libs/nodium_ui/src/lib.rs TODO: https://docs.github.com/en/get-started/using-git/splitting-a-subfolder-out-into-a-new-repository
 use crates_io_api::{Crate, SyncClient};
 use egui::Ui;
 use log::debug;

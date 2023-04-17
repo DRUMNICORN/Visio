@@ -1,7 +1,7 @@
 use eframe::run_native;
 use nodium_app::NodiumApp;
 use nodium_events::EventBus;
-use nodium_plugins::PluginManager;
+use nodium_plugins::Plugins;
 use tokio::runtime::Runtime;
 
 use env_logger::Builder;
@@ -14,11 +14,9 @@ fn main() {
 
   let rt = Runtime::new().unwrap();
   debug!("Runtime created");
-
-
   rt.block_on(async {
-      let event_bus = EventBus::new();
-      let installer = PluginManager::new(event_bus.clone());
+    let event_bus = EventBus::new();
+    let installer = Plugins::new(event_bus.clone());
       installer.lock().unwrap().register_event_handlers().await;
 
       let app = NodiumApp::new(event_bus);
@@ -26,6 +24,6 @@ fn main() {
 
       let options = eframe::NativeOptions::default();
       run_native(Box::new(app), options);
-  });
-}
+    });
+  }
 

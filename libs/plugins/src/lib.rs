@@ -1,12 +1,7 @@
 // libs/plugins/src/plugins.rs
+mod plugins;
+mod registry;
 
-mod plugin_manager;
-
-pub use plugin_manager::PluginManager;
-
-pub trait Plugin {
-  fn name(&self) -> &'static str;
-  fn description(&self) -> &'static str;
-  fn version(&self) -> &'static str;
-  fn author(&self) -> &'static str;
-}
+// export Plugins and Registry
+pub use plugins::Plugins;
+pub use registry::Registry;

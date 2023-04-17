@@ -1,4 +1,3 @@
-// libs/core/src/crate_installer.rs
 use log::debug;
 use nodium_events::EventBus;
 use serde_json::Value;
@@ -12,14 +11,17 @@ use libloading::{Library, Symbol};
 use std::collections::HashMap;
 use std::path::Path;
 
-pub struct PluginManager {
+use crate::Registry;
+
+pub struct Plugins {
     install_location: String,
     event_bus: Arc<EventBus>,
     shared_self: Weak<Mutex<Self>>,
     libraries: HashMap<String, Library>,
+    registry: Registry,
 }
 
-impl PluginManager {
+impl Plugins {
     pub fn new(event_bus: Arc<EventBus>) -> Arc<Mutex<Self>> {
         let doc_dir = document_dir().expect("Unable to get user's document directory");
         let install_location = doc_dir.join("nodium").join("plugins");
@@ -27,11 +29,12 @@ impl PluginManager {
             fs::create_dir_all(&install_location).expect("Unable to create plugin directory");
         }
 
-        let installer = Arc::new(Mutex::new(PluginManager {
+        let installer = Arc::new(Mutex::new(Plugins {
             install_location: String::from(install_location.to_str().unwrap()),
             event_bus: event_bus.clone(),
             shared_self: Weak::new(),
             libraries: HashMap::new(),
+            registry: Registry::new(),
         }));
         let weak_installer = Arc::downgrade(&installer);
         installer.lock().unwrap().shared_self = weak_installer;
@@ -49,7 +52,7 @@ impl PluginManager {
                         installer.handle_event(payload);
                         debug!("CrateInstall event handler called");
                     }
-                }),
+                }) as Box<dyn Fn(String) + Send + Sync>,
             )
             .await;
     }
@@ -64,8 +67,11 @@ impl PluginManager {
     }
 
     fn install_crate(&mut self, crate_name: &str) {
-        debug!("Installing crate {} to {}", crate_name, self.install_location);
-        
+        debug!(
+            "Installing crate {} to {}",
+            crate_name, self.install_location
+        );
+
         let mut cmd = Command::new("cargo");
 
         cmd.arg("install")
@@ -73,30 +79,53 @@ impl PluginManager {
             .arg(&self.install_location)
             .arg(crate_name);
 
-        let output = cmd.output().expect("Failed to execute cargo install command");
+        let output = cmd
+            .output()
+            .expect("Failed to execute cargo install command");
 
         if output.status.success() {
-          debug!("Crate {} installed successfully", crate_name);
-          self.load_library(crate_name);
-      } else {
-          debug!("Crate {} failed to install", crate_name);
-      }
+            debug!("Crate {} installed successfully", crate_name);
+            self.load_library(crate_name);
+        } else {
+            debug!("Crate {} failed to install", crate_name);
+        }
 
-        debug!("Cargo install output: {}", String::from_utf8_lossy(&output.stdout));
+        debug!(
+            "Cargo install output: {}",
+            String::from_utf8_lossy(&output.stdout)
+        );
     }
 
     fn load_library(&mut self, crate_name: &str) {
-      let lib_path = Path::new(&self.install_location).join("bin").join(crate_name);
-      debug!("Loading library from {}", lib_path.to_str().unwrap());
-      //  let ext = if cfg!(windows) { "dll" } else if cfg!(unix) { "so" } else { panic!("Unsupported platform"); };
+        let lib_path = Path::new(&self.install_location)
+            .join("bin")
+            .join(crate_name);
+        debug!("Loading library from {}", lib_path.to_str().unwrap());
+        //  let ext = if cfg!(windows) { "dll" } else if cfg!(unix) { "so" } else { panic!("Unsupported platform"); };
 
+        let lib = unsafe { Library::new(&lib_path) }.expect("Unable to load library");
+        debug!("Library loaded successfully");
 
-      let lib = unsafe { Library::new(&lib_path) }.expect("Unable to load library");
-      debug!("Library loaded successfully");
+        // let func: Symbol<unsafe extern "C" fn()> = lib.get(b"function_name").unwrap();
 
-      // let func: Symbol<unsafe extern "C" fn()> = lib.get(b"function_name").unwrap();
+        self.libraries.insert(String::from(crate_name), lib);
+        debug!("Library added to libraries map");
 
-      self.libraries.insert(String::from(crate_name), lib);
-      debug!("Library added to libraries map");
-  }
+        // update registry
+        // let plugin: Symbol<unsafe extern "C" fn() -> Box<dyn nodium_pdk::Plugin>> = unsafe { self.libraries.get(crate_name).unwrap().get(b"plugin").unwrap() };
+        // let plugin = unsafe { plugin() };
+        // self.registry.register_plugin(plugin);
+        // debug!("Plugin registered");
+
+        let plugin: Symbol<unsafe extern "C" fn() -> Box<dyn nodium_pdk::Plugin>> = unsafe {
+            self.libraries
+                .get(crate_name)
+                .unwrap()
+                .get(b"plugin")
+                .unwrap()
+        };
+        let plugin = unsafe { plugin() };
+        self.registry.register_plugin(plugin);
+        debug!("Plugin registered");
+    }
 }
