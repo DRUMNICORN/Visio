@@ -8,7 +8,7 @@ license-file = "LICENSE"
 
 [dependencies]
 shaku = "0.5"
-tokio = { version = "1.0", features = ["full"] }
+tokio = { version = "1.0", features = ["macros", "rt"] }
 eframe = "0.15.0"
 
 log = "0.4"
