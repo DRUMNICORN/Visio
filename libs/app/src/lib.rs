@@ -1,17 +1,57 @@
 // libs/nodium_ui/src/lib.rs TODO: https://docs.github.com/en/get-started/using-git/splitting-a-subfolder-out-into-a-new-repository
+// path: libs/app/src/renderer.rs
+
+// pub trait Renderer {
+//   fn run(&self, app: crate::NodiumApp);
+//   fn clone_box(&self) -> Box<dyn Renderer>;
+// }
+
+mod iced_renderer;
+pub use iced_renderer::IcedRenderer;
+
+
+pub trait Renderer: RendererClone {
+  fn run(&self, app: NodiumApp) -> iced::Result;
+}
+
+pub trait RendererClone {
+  fn clone_box(&self) -> Box<dyn Renderer>;
+}
+
+impl<T> RendererClone for T
+where
+  T: 'static + Renderer + Clone,
+{
+  fn clone_box(&self) -> Box<dyn Renderer> {
+    Box::new(self.clone())
+  }
+}
+
+impl Clone for Box<dyn Renderer> {
+  fn clone(&self) -> Box<dyn Renderer> {
+    self.clone_box()
+  }
+}
+
 use crates_io_api::{Crate, SyncClient};
-use egui::{Context, Ui};
+
 use log::debug;
 use regex::Regex;
 
 use nodium_events::EventBus;
-use serde_json::json;
+// use serde_json::json;
 
 use std::hash::{Hash, Hasher};
 use std::{
     collections::HashSet,
     sync::{Arc, Mutex},
 };
+
+#[cfg(feature = "egui-renderer")]
+use eframe::{self, epi};
+
+#[cfg(feature = "tauri-renderer")]
+use tauri::{self, Builder};
 
 // constants for extension crates
 const EXTENSION_CRATE_PREFIX: &str = "nodium_"; // prefix for extension crates on crates.io are "nodium_"
@@ -38,16 +78,36 @@ impl Clone for WrappedCrate {
     }
 }
 
-#[derive(Clone)]
+#[cfg(feature = "egui-renderer")]
+use nodium_app_egui::EguiRenderer;
+
+#[cfg(feature = "tauri-renderer")]
+use nodium_app_tauri::TauriRenderer;
+
+
 pub struct NodiumApp {
     search_query: String,
     crates: Arc<Mutex<HashSet<WrappedCrate>>>,
     event_bus: Arc<EventBus>,
+    renderer: Box<dyn Renderer>,
     fetching: Arc<Mutex<bool>>,
 }
 
+impl Clone for NodiumApp {
+  fn clone(&self) -> Self {
+      NodiumApp {
+          event_bus: self.event_bus.clone(),
+          renderer: self.renderer.clone_box(),
+          crates: self.crates.clone(),
+          search_query: self.search_query.clone(),
+          fetching: self.fetching.clone(),
+      }
+  }
+}
+
+
 impl NodiumApp {
-    pub fn new(event_bus: Arc<EventBus>) -> Self {
+    pub fn new(event_bus: Arc<EventBus>, renderer: Box<dyn Renderer>) -> Self {
         let crates = Arc::new(Mutex::new(HashSet::new()));
         let fetching = Arc::new(Mutex::new(true));
         let event_bus = event_bus.clone();
@@ -60,14 +120,14 @@ impl NodiumApp {
             search_query: String::new(),
             crates,
             event_bus,
+            renderer: renderer,
             fetching,
         }
     }
 
-    // Inside NodiumApp implementation
     pub fn run(&self) {
-        let _app = eframe::run_native(Box::new(self.clone()), eframe::NativeOptions::default());
-    }
+      self.renderer.run(self.clone());
+  }
 
     async fn fetch_nodium_extension_crates(
         crates: Arc<Mutex<HashSet<WrappedCrate>>>,
@@ -105,71 +165,102 @@ impl NodiumApp {
         *fetching = false;
     }
 
-    fn install_button(&self, krate: Crate) -> impl FnOnce(&mut Ui) {
-        let event_bus = self.event_bus.clone();
-        move |ui: &mut Ui| {
-            ui.label(krate.name.replace(EXTENSION_CRATE_PREFIX, ""));
-            if ui.button("Install").clicked() {
-                let payload = json!({
-                  "crate_name": krate.clone().name,
-                  "crate_version": krate.clone().max_version
-                })
-                .to_string();
-                debug!("Installing crate: {}", payload);
-                // warp in tokio task
-                tokio::spawn(async move {
-                    event_bus.emit("CrateInstall", payload).await;
-                });
-            }
-        }
+    // fn btn_install(&self, krate: Crate) -> impl FnOnce(&mut Ui) {
+    //     let event_bus = self.event_bus.clone();
+    //     move |ui: &mut Ui| {
+    //         ui.label(krate.name.replace(EXTENSION_CRATE_PREFIX, ""));
+    //         if ui.button("Install").clicked() {
+    //             let payload = json!({
+    //               "crate_name": krate.clone().name,
+    //               "crate_version": krate.clone().max_version
+    //             })
+    //             .to_string();
+    //             debug!("Installing crate: {}", payload);
+    //             // warp in tokio task
+    //             tokio::spawn(async move {
+    //                 event_bus.emit("CrateInstall", payload).await;
+    //             });
+    //         }
+    //     }
+    // }
+}
+// use tokio::runtime::Handle;
+// impl epi::App for NodiumApp {
+//     fn name(&self) -> &str {
+//         "Nodium"
+//     }
+
+//     fn update(&mut self, ctx: &egui::CtxRef, _frame: &mut epi::Frame<'_>) {
+//         let mut style: egui::Style = (*ctx.style()).clone();
+//         // it shoud look clean like vs code
+//         style.visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgb(0x2b, 0x2b, 0x2b);
+//         style.visuals.widgets.noninteractive.corner_radius = 0.0;
+//         style.visuals.widgets.noninteractive.expansion = 0.0;
+//         style.visuals.dark_mode = true;
+//         style.visuals.widgets.active.bg_fill = egui::Color32::from_rgb(64, 64, 64); // Set custom widget background color
+//         ctx.set_style(style);
+
+
+//         // Create a modern app layout
+//         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
+//             ui.horizontal(|ui| {
+//                 ui.label("App Title");
+//                 ui.separator();
+//                 ui.label("File");
+//                 ui.label("Edit");
+//                 ui.label("View");
+//                 // Add more menu items
+//             });
+//         });
+
+//         egui::TopBottomPanel::bottom("bottom_panel").show(ctx, |ui| {
+//             ui.label("Status bar content");
+//         });
+
+//         egui::CentralPanel::default().show(ctx, |ui| {
+//             ui.label("Main content area");
+//             // Add your main content here
+//         });
+
+//         egui::SidePanel::left("left_panel").show(ctx, |ui| {
+//             ui.label("Left sidebar content");
+//             // Add your left sidebar content here
+//         });
+
+//         egui::SidePanel::right("right_panel").show(ctx, |ui| {
+//             ui.label("Right sidebar content");
+//             // Add your right sidebar content here
+//         });
+//     }
+// }
+// nodium/libs/app/src/lib.rs
+
+use iced::{Application, Command, Element, Settings, Text};
+
+pub struct NodiumAppIced {
+    // add any state variables you may need
+}
+
+impl Application for NodiumAppIced {
+    type Executor = iced::executor::Default;
+    type Flags = ();
+    type Message = ();
+
+    fn new(_flags: ()) -> (NodiumAppIced, Command<Self::Message>) {
+        (NodiumAppIced {}, Command::none())
+    }
+
+    fn title(&self) -> String {
+        String::from("Nodium")
+    }
+
+    fn update(&mut self, _message: Self::Message) -> Command<Self::Message> {
+        Command::none()
+    }
+
+    fn view(&mut self) -> Element<'_, Self::Message> {
+        Text::new("Hello, Iced!").into()
     }
 }
-use tokio::runtime::Handle;
-impl epi::App for NodiumApp {
-    fn name(&self) -> &str {
-        "Nodium"
-    }
-
-    fn update(&mut self, ctx: &egui::CtxRef, _frame: &mut epi::Frame<'_>) {
-        let mut style: egui::Style = (*ctx.style()).clone();
-        // it shoud look clean like vs code
-        style.visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgb(0x2b, 0x2b, 0x2b);
-        style.visuals.widgets.noninteractive.corner_radius = 0.0;
-        style.visuals.widgets.noninteractive.expansion = 0.0;
-        style.visuals.dark_mode = true;
-        style.visuals.widgets.active.bg_fill = egui::Color32::from_rgb(64, 64, 64); // Set custom widget background color
-        ctx.set_style(style);
 
 
-        // Create a modern app layout
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            ui.horizontal(|ui| {
-                ui.label("App Title");
-                ui.separator();
-                ui.label("File");
-                ui.label("Edit");
-                ui.label("View");
-                // Add more menu items
-            });
-        });
-
-        egui::TopBottomPanel::bottom("bottom_panel").show(ctx, |ui| {
-            ui.label("Status bar content");
-        });
-
-        egui::CentralPanel::default().show(ctx, |ui| {
-            ui.label("Main content area");
-            // Add your main content here
-        });
-
-        egui::SidePanel::left("left_panel").show(ctx, |ui| {
-            ui.label("Left sidebar content");
-            // Add your left sidebar content here
-        });
-
-        egui::SidePanel::right("right_panel").show(ctx, |ui| {
-            ui.label("Right sidebar content");
-            // Add your right sidebar content here
-        });
-    }
-}

@@ -1,9 +1,7 @@
-use eframe::run_native;
-use nodium_app::NodiumApp;
+use nodium_app::{IcedRenderer, NodiumApp};
 use nodium_events::EventBus;
 use nodium_plugins::Plugins;
 use tokio::runtime::Runtime;
-
 use env_logger::Builder;
 use log::{debug, info, LevelFilter};
 
@@ -34,10 +32,10 @@ fn main() {
         plugins.lock().await.reload().await;
 
         info!("NodiumApp starting");
-        let app = NodiumApp::new(event_bus);
+        let app = NodiumApp::new(event_bus, Box::new(IcedRenderer));
         debug!("NodiumApp created");
+        let renderer = IcedRenderer;
+        let _ = renderer.run(app);
 
-        let options = eframe::NativeOptions::default();
-        run_native(Box::new(app), options);
     });
 }

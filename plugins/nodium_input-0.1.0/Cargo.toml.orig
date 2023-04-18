@@ -1,0 +1,14 @@
+[package]
+name = "nodium_input"
+version = "0.1.0"
+authors = ["cherob"]
+description = "Provides nodes to input data into the Nodium graph, such as a text, number, or boolean input."
+edition = "2021"
+license = "AGPL-3.0"
+
+[dependencies]
+nodium-pdk = { path = "../lib/pdk", version = "0.1.0" }
+
+[lib]
+name = "nodium_input"
+crate-type = ["cdylib"]
