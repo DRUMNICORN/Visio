@@ -1,9 +1,9 @@
 use log::{debug, error, info};
 use nodium_events::EventBus;
 use serde_json::Value;
-use tar::Archive;
 use std::process::Command;
 use std::sync::{Arc, Weak};
+use tar::Archive;
 
 use dirs_next::document_dir;
 use std::fs;
@@ -12,12 +12,14 @@ use libloading::{Library, Symbol};
 use std::collections::HashMap;
 use std::path::Path;
 
-use crate::Registry;
+use crate::{extract_crate_file, Registry};
 
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 use tokio::sync::Mutex;
 
+// const for the plugin folder
+const PLUGIN_FOLDER: &str = "plugins";
 
 pub struct Plugins {
     install_location: String,
@@ -47,18 +49,42 @@ impl Plugins {
         installer
     }
 
-    pub async fn register_event_handlers(&self) {
+    // reloads all plugins from the plugin folder
+
+    pub async fn reload(&mut self) {
+        // go in each folder and load the plugin
+        for entry in fs::read_dir(&self.install_location).unwrap() {
+            let entry = entry.unwrap();
+            let path = entry.path();
+            if path.is_dir() {
+                let mut plugin_name = path.file_name().unwrap().to_str().unwrap().to_string();
+                plugin_name = plugin_name.split_off(0);
+                debug!("Loading plugin {}", plugin_name);
+                match self.install(&plugin_name, "", true).await {
+                    Ok(_) => {
+                        info!("Plugin {} loaded", plugin_name);
+                    }
+                    Err(e) => {
+                        error!("Error loading plugin: {}", e);
+                    }
+                }
+
+            }
+        }
+    }
+
+    pub async fn listen(&self) {
         let weak_installer = self.shared_self.clone();
         self.event_bus
             .register(
                 "CrateInstall",
                 Box::new(move |payload| {
-                  debug!("Installing crate {}", payload);
+                    debug!("Installing crate {}", payload);
                     if let Some(installer) = weak_installer.upgrade() {
-                      let installer = installer.clone();
-                      tokio::spawn(async move {
-                        let mut installer = installer.lock().await;
-                            match installer.download_crate(payload).await {
+                        let installer = installer.clone();
+                        tokio::spawn(async move {
+                            let mut installer = installer.lock().await;
+                            match installer.download(payload).await {
                                 Ok(_) => {
                                     // Handle the success case, e.g., log a success message
                                     info!("Crate downloaded successfully");
@@ -75,7 +101,7 @@ impl Plugins {
             .await;
     }
 
-    async fn download_crate(&mut self, payload: String) -> Result<(), Box<dyn std::error::Error>> {
+    async fn download(&mut self, payload: String) -> Result<(), Box<dyn std::error::Error>> {
         let data: Value = serde_json::from_str(&payload).unwrap();
         debug!("Handling event: {}", payload);
         debug!("Event data: {:?}", data);
@@ -96,7 +122,7 @@ impl Plugins {
 
         debug!("Downloading crate {}-{}", crate_name, crate_version);
         match self
-            .install_crate(&cloned_crate_name, &cloned_crate_version)
+            .install(&cloned_crate_name, &cloned_crate_version, false)
             .await
         {
             Ok(_) => {
@@ -111,32 +137,38 @@ impl Plugins {
         }
     }
 
-  
-
-    pub async fn install_crate(
+    pub async fn install(
         &mut self,
         crate_name: &str,
         crate_version: &str,
+        lib: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let output_dir = format!("external_crates/{}-{}", crate_name, crate_version);
+        let output_dir = format!("{}/{}", PLUGIN_FOLDER, crate_name);
+        if lib == false {
+            let output_dir = format!("{}/{}-{}", PLUGIN_FOLDER, crate_name, crate_version);
+        }
+
         // Create the output directory if it doesn't exist
         fs::create_dir_all(&output_dir)?;
 
         // Download the crate from crates.io
-        let download_url = format!("https://crates.io/api/v1/crates/{}/{}/download", crate_name, crate_version);
+        let download_url = format!(
+            "https://crates.io/api/v1/crates/{}/{}/download",
+            crate_name, crate_version
+        );
         debug!("Downloading crate from {}", download_url);
 
         let crate_file_path = format!("{}-{}.crate", crate_name, crate_version);
-       
-        
+        extract_crate_file(&crate_file_path, &PLUGIN_FOLDER.to_string()).await?;
 
         debug!("Building crate {} to {}", crate_name, self.install_location);
+        let manifest_path = format!("{}/Cargo.toml", output_dir);
 
         let mut cmd = Command::new("cargo");
         cmd.arg("build")
             .arg("--release")
             .arg("--manifest-path")
-            .arg(format!("{}/Cargo.toml", crate_name));
+            .arg(manifest_path);
         let output = cmd.output().expect("Failed to execute cargo build command");
         match !output.status.success() {
             true => {
@@ -147,20 +179,21 @@ impl Plugins {
                 );
             }
             false => {
-                    debug!("Crate {} built successfully", crate_name);
-                    self.load_library(crate_name);
-                }
+                debug!("Crate {} built successfully", crate_name);
+                self.register(crate_name, crate_version);
+            }
         }
         Ok(())
     }
 
-    fn load_library(&mut self, crate_name: &str) {
-        let lib_path = Path::new(crate_name)
+    fn register(&mut self, crate_name: &str, crate_version: &str) {
+        let lib_path = Path::new(PLUGIN_FOLDER)
+            .join(format!("{}-{}", crate_name, crate_version))
             .join("target")
             .join("release")
             .join(if cfg!(windows) { "lib" } else { "" })
             .join(format!(
-                "{}{}",
+                "lib{}{}",
                 crate_name,
                 if cfg!(windows) {
                     ".dll"
@@ -195,4 +228,3 @@ impl Plugins {
         debug!("Plugin {} registered", plugin_name);
     }
 }
-

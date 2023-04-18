@@ -1,6 +1,6 @@
 // libs/nodium_ui/src/lib.rs TODO: https://docs.github.com/en/get-started/using-git/splitting-a-subfolder-out-into-a-new-repository
 use crates_io_api::{Crate, SyncClient};
-use egui::Ui;
+use egui::{Context, Ui};
 use log::debug;
 use regex::Regex;
 
@@ -110,7 +110,7 @@ impl NodiumApp {
         move |ui: &mut Ui| {
             ui.label(krate.name.replace(EXTENSION_CRATE_PREFIX, ""));
             if ui.button("Install").clicked() {
-                let payload = json!({ 
+                let payload = json!({
                   "crate_name": krate.clone().name,
                   "crate_version": krate.clone().max_version
                 })
@@ -125,63 +125,51 @@ impl NodiumApp {
     }
 }
 use tokio::runtime::Handle;
-
 impl epi::App for NodiumApp {
     fn name(&self) -> &str {
         "Nodium"
     }
 
     fn update(&mut self, ctx: &egui::CtxRef, _frame: &mut epi::Frame<'_>) {
-        // Create a resizable left panel
-        egui::SidePanel::left("side_panel")
-            .resizable(true)
-            .show(ctx, |ui| {
-                egui::ScrollArea::horizontal().show(ui, |ui| {
-                    // Add your sidebar content here
-                    ui.label("Extensions");
-                    if ui.button("Fetch extension crates").clicked() {
-                        let crates = self.crates.clone();
-                        let fetching = Arc::new(Mutex::new(true));
-                        self.fetching = fetching.clone();
-                        let handle = Handle::current();
-                        handle.spawn(async move {
-                            NodiumApp::fetch_nodium_extension_crates(crates, fetching).await;
-                        });
-                    }
+        let mut style: egui::Style = (*ctx.style()).clone();
+        // it shoud look clean like vs code
+        style.visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgb(0x2b, 0x2b, 0x2b);
+        style.visuals.widgets.noninteractive.corner_radius = 0.0;
+        style.visuals.widgets.noninteractive.expansion = 0.0;
+        style.visuals.dark_mode = true;
+        style.visuals.widgets.active.bg_fill = egui::Color32::from_rgb(64, 64, 64); // Set custom widget background color
+        ctx.set_style(style);
 
-                    // Display the crates with install buttons
-                    ui.separator();
-                    let crates_guard = self.crates.lock().unwrap();
 
-                    // Search pannel on top of the crates
-                    ui.horizontal(|ui| {
-                        ui.label("Search:");
-                        ui.text_edit_singleline(&mut self.search_query);
-                        if let Ok(fetching) = self.fetching.lock() {
-                            if *fetching {
-                                ui.label("Fetching...");
-                            } else {
-                                ui.label("Done!");
-                            }
-                        }
-                    });
-
-                    // Filter crates based on search query
-                    let filtered_crates = crates_guard
-                        .iter()
-                        .filter(|krate| krate.0.name.contains(&self.search_query))
-                        .collect::<Vec<_>>();
-                    for krate in filtered_crates {
-                        self.install_button(krate.0.clone())(ui);
-                    }
-                });
+        // Create a modern app layout
+        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                ui.label("App Title");
+                ui.separator();
+                ui.label("File");
+                ui.label("Edit");
+                ui.label("View");
+                // Add more menu items
             });
+        });
+
+        egui::TopBottomPanel::bottom("bottom_panel").show(ctx, |ui| {
+            ui.label("Status bar content");
+        });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            // Text: "Graph Editor"
-            ui.heading("Graph Editor");
-            // Text: "Welcome to Nodium!"
-            ui.label("Welcome to Nodium!");
+            ui.label("Main content area");
+            // Add your main content here
+        });
+
+        egui::SidePanel::left("left_panel").show(ctx, |ui| {
+            ui.label("Left sidebar content");
+            // Add your left sidebar content here
+        });
+
+        egui::SidePanel::right("right_panel").show(ctx, |ui| {
+            ui.label("Right sidebar content");
+            // Add your right sidebar content here
         });
     }
 }

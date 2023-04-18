@@ -28,8 +28,10 @@ fn main() {
         debug!("Plugins created");
 
         info!("Registering event handlers");
-        plugins.lock().await.register_event_handlers().await;
+        plugins.lock().await.listen().await;
         debug!("Event handlers registered");
+
+        plugins.lock().await.reload().await;
 
         info!("NodiumApp starting");
         let app = NodiumApp::new(event_bus);
