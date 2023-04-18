@@ -1,7 +1,7 @@
 // libs/plugins/src/plugin_manager.rs
 
 use nodium_pdk::{Plugin, Node, Service};
-use std::collections::HashMap;
+use std::{collections::HashMap};
 
 pub struct Registry {
     plugins: HashMap<String, Box<dyn Plugin>>,

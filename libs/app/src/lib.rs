@@ -110,7 +110,11 @@ impl NodiumApp {
         move |ui: &mut Ui| {
             ui.label(krate.name.replace(EXTENSION_CRATE_PREFIX, ""));
             if ui.button("Install").clicked() {
-                let payload = json!({ "crate_name": krate.clone().name }).to_string();
+                let payload = json!({ 
+                  "crate_name": krate.clone().name,
+                  "crate_version": krate.clone().max_version
+                })
+                .to_string();
                 debug!("Installing crate: {}", payload);
                 // warp in tokio task
                 tokio::spawn(async move {

@@ -24,11 +24,11 @@ fn main() {
         debug!("Event bus created");
 
         info!("Creating plugins");
-        let plugins = Plugins::new(event_bus.clone());
+        let plugins = Plugins::new(event_bus.clone()).await;
         debug!("Plugins created");
 
         info!("Registering event handlers");
-        plugins.lock().unwrap().register_event_handlers().await;
+        plugins.lock().await.register_event_handlers().await;
         debug!("Event handlers registered");
 
         info!("NodiumApp starting");
