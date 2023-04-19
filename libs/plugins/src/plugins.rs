@@ -3,7 +3,6 @@ use nodium_events::EventBus;
 use serde_json::Value;
 use std::process::Command;
 use std::sync::{Arc, Weak};
-use tar::Archive;
 
 use dirs_next::document_dir;
 use std::fs;
@@ -14,8 +13,6 @@ use std::path::Path;
 
 use crate::{extract_crate_file, Registry};
 
-use tokio::fs::File;
-use tokio::io::AsyncWriteExt;
 use tokio::sync::Mutex;
 
 // const for the plugin folder
@@ -49,10 +46,7 @@ impl Plugins {
         installer
     }
 
-    // reloads all plugins from the plugin folder
-
     pub async fn reload(&mut self) {
-        // go in each folder and load the plugin
         for entry in fs::read_dir(&self.install_location).unwrap() {
             let entry = entry.unwrap();
             let path = entry.path();
@@ -86,11 +80,9 @@ impl Plugins {
                             let mut installer = installer.lock().await;
                             match installer.download(payload).await {
                                 Ok(_) => {
-                                    // Handle the success case, e.g., log a success message
                                     info!("Crate downloaded successfully");
                                 }
                                 Err(e) => {
-                                    // Handle the error case, e.g., log an error message
                                     error!("Error downloading crate: {}", e);
                                 }
                             }
@@ -118,7 +110,6 @@ impl Plugins {
             .to_string();
         let cloned_crate_name = crate_name.clone();
         let cloned_crate_version = crate_version.clone();
-        // let mut cloned_self = self.clone(); // Make sure your struct implements Clone
 
         debug!("Downloading crate {}-{}", crate_name, crate_version);
         match self
@@ -127,7 +118,6 @@ impl Plugins {
         {
             Ok(_) => {
                 info!("Crate {}-{} installed", crate_name, crate_version);
-                // self.load_plugin(&cloned_crate_name, &cloned_crate_version).await;
                 Ok(())
             }
             Err(e) => {
@@ -143,15 +133,11 @@ impl Plugins {
         crate_version: &str,
         lib: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let output_dir = format!("{}/{}", PLUGIN_FOLDER, crate_name);
+        let mut output_dir = format!("{}/{}", PLUGIN_FOLDER, crate_name);
         if lib == false {
-            let output_dir = format!("{}/{}-{}", PLUGIN_FOLDER, crate_name, crate_version);
+            output_dir = format!("{}/{}-{}", PLUGIN_FOLDER, crate_name, crate_version);
         }
-
-        // Create the output directory if it doesn't exist
         fs::create_dir_all(&output_dir)?;
-
-        // Download the crate from crates.io
         let download_url = format!(
             "https://crates.io/api/v1/crates/{}/{}/download",
             crate_name, crate_version
@@ -208,8 +194,6 @@ impl Plugins {
 
         let lib = unsafe { Library::new(&lib_path) }.expect("Unable to load library");
         debug!("Library loaded successfully");
-
-        // let func: Symbol<unsafe extern "C" fn()> = lib.get(b"function_name").unwrap();
 
         self.libraries.insert(String::from(crate_name), lib);
         debug!("Library added to libraries map");

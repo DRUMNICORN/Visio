@@ -1,4 +1,5 @@
-use nodium_app::{IcedRenderer, NodiumApp};
+use nodium_app::NodiumApp;
+use nodium_taui::TauriRenderer;
 use nodium_events::EventBus;
 use nodium_plugins::Plugins;
 use tokio::runtime::Runtime;
@@ -32,10 +33,11 @@ fn main() {
         plugins.lock().await.reload().await;
 
         info!("NodiumApp starting");
-        let app = NodiumApp::new(event_bus, Box::new(IcedRenderer));
+
+        let renderer = TauriRenderer::new();
+
+        let app = NodiumApp::new(event_bus, Box::new(renderer));
         debug!("NodiumApp created");
-        let renderer = IcedRenderer;
-        let _ = renderer.run(app);
 
     });
 }

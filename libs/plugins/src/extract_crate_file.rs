@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{BufReader, BufWriter};
+use std::io::{BufReader};
 use std::path::Path;
 use flate2::read::GzDecoder;
 use tar::Archive;

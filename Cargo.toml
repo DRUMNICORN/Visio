@@ -8,7 +8,6 @@ license-file = "LICENSE"
 
 [dependencies]
 tokio = { version = "1.27.0", features = ["full"] }
-eframe = "0.15.0"
 
 log = "0.4"
 env_logger = "0.9"
@@ -16,3 +15,6 @@ env_logger = "0.9"
 nodium-plugins = { path = "libs/plugins", version = "0.1.0" }
 nodium-app = { path = "libs/app", version = "0.1.0" }
 nodium-events = { path = "libs/events" , version = "0.1.1" }
+
+# nodium-iced = { path = "libs/styles/iced", version = "0.1.0" }
+nodium-tauri = { path = "libs/styles/tauri", version = "0.1.0" }
