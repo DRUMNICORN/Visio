@@ -6,15 +6,27 @@ description = "Nodium is an easy-to-use data analysis and automation platform bu
 edition = "2021"
 license-file = "LICENSE"
 
+
+[build-dependencies]
+tauri-build = { version = "1.2", features = [] }
+
 [dependencies]
-tokio = { version = "1.27.0", features = ["full"] }
+# tokio = { version = "1.27.0", features = ["full"] }
+
+tauri = { version = "1.2", features = ["shell-open"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 
 log = "0.4"
 env_logger = "0.9"
+
+nodium-tauri = { path = "libs/styles/tauri", version = "0.1.0" }
 
 nodium-plugins = { path = "libs/plugins", version = "0.1.0" }
 nodium-app = { path = "libs/app", version = "0.1.0" }
 nodium-events = { path = "libs/events" , version = "0.1.1" }
 
-# nodium-iced = { path = "libs/styles/iced", version = "0.1.0" }
-nodium-tauri = { path = "libs/styles/tauri", version = "0.1.0" }
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
