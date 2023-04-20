@@ -54,11 +54,6 @@ impl NodiumApp {
         self.renderer.run(self.clone());
     }
 
-        // we then send the event bus to the app
-    pub fn set_event_bus(&mut self, tauri_event_bus: Arc<EventBus>) {
-        self.event_bus = tauri_event_bus;
-    }
-
     async fn _fetch_nodium_extension_crates(
         crates: Arc<Mutex<HashSet<WrappedCrate>>>,
         fetching: Arc<Mutex<bool>>,

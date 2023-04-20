@@ -6,28 +6,19 @@ pub struct NodiumBrowser;
 
 impl Plugin for NodiumBrowser {
     fn name(&self) -> String {
-        "nodium_base".to_string()
+        "nodium_browser".to_string()
     }
 
-    fn nodes(&self) -> Vec<Node> {
-        vec![
-            Node {
-                name: "debug".to_string(),
-                description: "Debug node for displaying messages".to_string(),
-                // Other fields
-            },
-            Node {
-                name: "init".to_string(),
-                description: "Init node for sending a message when the flow is deployed".to_string(),
-                // Other fields
-            },
-        ]
-    }
+    fn with_event_bus(&mut self, event_bus: EventBus) {
+      self.event_bus = Some(event_bus);
+  }
 
-    fn services(&self) -> Vec<Service> {
-        vec![]
-    }
-
+    // will create a browser window
+    fn windows(&self) -> Vec<Windows> {
+      vec![
+          Box::new(CratesWindow::new()),
+      ]
+  }
     // Implement other methods for additional callbacks
 }
 
@@ -37,3 +28,47 @@ impl Plugin for NodiumBrowser {
 pub extern "C" fn plugin() -> Box<dyn nodium_pdk::Plugin> {
     Box::new(NodiumBrowser)
 }
+
+pub struct CratesWindow {
+  // Window properties and state
+}
+
+impl CratesWindow {
+  pub fn new() -> Self {
+      // Initialize the window properties and state
+      CratesWindow {
+          // ...
+      }
+  }
+
+  pub fn render(&self) {
+      // Render the window content, e.g., using a WebView
+      // ...
+  }
+}
+
+use reqwest::blocking::get;
+
+fn fetch_crates() -> Result<Vec<Crate>, reqwest::Error> {
+    let url = "https://crates.io/api/v1/crates?page=1&per_page=100&sort=downloads";
+    let response = get(url)?;
+    let crates_list: CratesList = response.json()?;
+    Ok(crates_list.crates)
+}
+
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+struct CratesList {
+    crates: Vec<Crate>,
+}
+
+#[derive(Deserialize)]
+struct Crate {
+    name: String,
+    version: String,
+    // Other properties as needed
+}
+
+
+

@@ -1,12 +1,17 @@
 // nodium_input/src/lib.rs
 
-use nodium_pdk::{Plugin, Node, Service};
+use nodium_pdk::{Plugin, Node, Service, SideBarElement};
 
 pub struct NodiumInputPlugin;
 
 impl Plugin for NodiumInputPlugin {
     fn name(&self) -> String {
         "nodium_base".to_string()
+    }
+
+    // added sidebar elements with html
+    fn sidebar_elements(&self) -> Vec<SideBarElement> {
+        // icons will have a image and html and  a name on hover and a description
     }
 
     fn nodes(&self) -> Vec<Node> {

@@ -4,15 +4,18 @@ use tokio::sync::RwLock;
 use log::debug;
 
 type EventCallback = Box<dyn Fn(String) + Send + Sync>;
+type EventNotifier = Box<dyn Fn(&str, &str) + Send + Sync>;
 
 pub struct EventBus {
     event_handlers: RwLock<HashMap<String, Vec<EventCallback>>>,
+    event_notifier: EventNotifier,
 }
 
 impl EventBus {
-    pub fn new() -> Arc<Self> {
+    pub fn new(event_notifier: EventNotifier) -> Arc<Self> {
         Arc::new(Self {
             event_handlers: RwLock::new(HashMap::new()),
+            event_notifier,
         })
     }
 
@@ -30,5 +33,10 @@ impl EventBus {
                 handler(payload.clone());
             }
         }
+        (self.event_notifier)(event_name, &payload);
+    }
+
+    pub async fn listen_ui(&self, callback: EventCallback) {
+        self.register("ui", callback).await;
     }
 }

@@ -5,7 +5,7 @@ const SideBar: React.FC = () => {
   return (
     <Box
       sx={{
-        width: '20%',
+        width: '7%',
         backgroundColor: '#252526',
         color: 'white',
         overflowY: 'auto',

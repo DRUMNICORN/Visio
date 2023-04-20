@@ -198,7 +198,7 @@ impl Plugins {
         self.libraries.insert(String::from(crate_name), lib);
         debug!("Library added to libraries map");
 
-        let plugin: Symbol<unsafe extern "C" fn() -> Box<dyn nodium_pdk::Plugin>> = unsafe {
+        let plugin: Symbol<unsafe extern "C" fn() -> Box<dyn Plugin>> = unsafe {
             self.libraries
                 .get(crate_name)
                 .unwrap()
@@ -208,7 +208,10 @@ impl Plugins {
 
         let plugin = unsafe { plugin() };
         let plugin_name = plugin.name();
-        self.registry.register_plugin(plugin);
+
+        let event_bus = self.event_bus.clone();
+
+        self.registry.register_plugin(event_bus, plugin);
         debug!("Plugin {} registered", plugin_name);
     }
 }

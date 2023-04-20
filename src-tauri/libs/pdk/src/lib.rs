@@ -1,21 +1,11 @@
 // libs/nodium-pdk/src/lib.rs
 
-pub trait Plugin: Send + Sync {
-  fn name(&self) -> String;
-  fn nodes(&self) -> Vec<Node>;
-  fn services(&self) -> Vec<Service>;
-  // Other methods for additional callbacks
-}
+mod node;
+mod plugin;
+mod service;
+mod window;
 
-pub struct Node {
-  pub name: String,
-  pub description: String,
-  // Other fields
-}
-
-pub struct Service {
-  pub name: String,
-  pub description: String,
-  pub endpoint: String,
-  // Other fields
-}
+pub use node::Node;
+pub use plugin::Plugin;
+pub use service::Service;
+pub use window::Window;
