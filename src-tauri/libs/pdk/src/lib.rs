@@ -4,8 +4,10 @@ mod node;
 mod plugin;
 mod service;
 mod window;
+mod event;
 
-pub use node::Node;
-pub use plugin::Plugin;
-pub use service::Service;
-pub use window::Window;
+pub use node::NodiuimNode;
+pub use plugin::NodiuimPlugin;
+pub use service::NodiuimService;
+pub use window::NodiuimWindow;
+pub use event::NodiumEvent;

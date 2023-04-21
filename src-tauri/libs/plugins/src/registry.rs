@@ -1,14 +1,15 @@
 // libs/plugins/src/plugin_manager.rs
 
-use nodium_events::EventBus;
-use nodium_pdk::{Plugin, Node, Service, Window};
-use std::{collections::HashMap};
+use nodium_events::NodiumEvents;
+use nodium_pdk::{NodiuimPlugin, NodiuimNode, NodiuimService, NodiuimWindow};
+use tokio::sync::Mutex;
+use std::{collections::HashMap, sync::Arc};
 
 pub struct Registry {
-    plugins: HashMap<String, Plugin>,
-    windows: HashMap<String, Window>,
-    nodes: HashMap<String, Node>,
-    services: HashMap<String, Service>,
+    plugins: HashMap<String, Box<dyn NodiuimPlugin>>,
+    windows: HashMap<String, NodiuimWindow>,
+    nodes: HashMap<String, NodiuimNode>,
+    services: HashMap<String, NodiuimService>,
 }
 
 impl Registry {
@@ -21,11 +22,12 @@ impl Registry {
         }
     }
 
-  pub fn register_plugin(&mut self, event_bus: EventBus, plugin: Plugin) {
-        Plugin::new(event_bus, plugin);
+  pub fn register_plugin(&mut self, event_bus: Arc<Mutex<NodiumEvents>>, plugin: Box<dyn NodiuimPlugin>) {
+        
         let plugin_name = plugin.name();
-        let nodes = plugin.nodes();
-        let services = plugin.services();
+        let nodes = plugin.nodes(event_bus.clone());
+        let services = plugin.services(event_bus.clone());
+        let windows = plugin.windows(event_bus);
 
         self.plugins.insert(plugin_name.clone(), plugin);
 
@@ -37,8 +39,8 @@ impl Registry {
             self.services.insert(service.name.clone(), service);
         }
 
-        for window in plugin.windows() {
-            self.windows.insert(window.name(), window);
+        for window in windows {
+            self.windows.insert(window.name.clone(), window);
         }
     }
 

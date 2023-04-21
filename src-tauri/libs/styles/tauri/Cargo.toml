@@ -1,9 +1,0 @@
-[package]
-name = "nodium-tauri"
-version = "0.1.0"
-authors = ["cherob"]
-edition = "2021"
-
-[dependencies]
-tauri = { version = "1.0.0-beta.8", features = ["api-all", "system-tray", "notification"] }
-nodium-app = { path = "../../app", version = "0.1.0" }

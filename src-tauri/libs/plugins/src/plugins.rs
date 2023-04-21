@@ -1,99 +1,83 @@
-use log::{debug, error, info};
-use nodium_events::EventBus;
-use serde_json::Value;
-use std::process::Command;
-use std::sync::{Arc, Weak};
-
+use crate::plugin_utils::{download, install};
+use crate::Registry;
 use dirs_next::document_dir;
-use std::fs;
-
 use libloading::{Library, Symbol};
-use std::collections::HashMap;
+use log::{debug, error, info};
+use nodium_events::{NodiumEvents, NodiumEventType};
+use nodium_pdk::NodiuimPlugin;
+use serde_json::Value;
+use std::fs;
 use std::path::Path;
-
-use crate::{extract_crate_file, Registry};
-
+use std::sync::Arc;
 use tokio::sync::Mutex;
 
-// const for the plugin folder
-const PLUGIN_FOLDER: &str = "plugins";
-
-pub struct Plugins {
+pub struct NodiumPlugins {
     install_location: String,
-    event_bus: Arc<EventBus>,
-    shared_self: Weak<Mutex<Self>>,
-    libraries: HashMap<String, Library>,
+    event_bus: Arc<Mutex<NodiumEvents>>,
     registry: Registry,
 }
 
-impl Plugins {
-    pub async fn new(event_bus: Arc<EventBus>) -> Arc<Mutex<Self>> {
+impl NodiumPlugins {
+    pub async fn new(event_bus: Arc<Mutex<NodiumEvents>>) -> Arc<Mutex<Self>> {
         let doc_dir = document_dir().expect("Unable to get user's document directory");
         let install_location = doc_dir.join("nodium").join("plugins");
         if !install_location.exists() {
             fs::create_dir_all(&install_location).expect("Unable to create plugin directory");
         }
-
-        let installer = Arc::new(Mutex::new(Plugins {
-            install_location: String::from(install_location.to_str().unwrap()),
+        let installer = Arc::new(Mutex::new(NodiumPlugins {
+            install_location: "plugins".to_string(),
             event_bus: event_bus.clone(),
-            shared_self: Weak::new(),
-            libraries: HashMap::new(),
             registry: Registry::new(),
         }));
-        let weak_installer = Arc::downgrade(&installer);
-        installer.lock().await.shared_self = weak_installer;
         installer
     }
 
     pub async fn reload(&mut self) {
-        for entry in fs::read_dir(&self.install_location).unwrap() {
-            let entry = entry.unwrap();
-            let path = entry.path();
-            if path.is_dir() {
-                let mut plugin_name = path.file_name().unwrap().to_str().unwrap().to_string();
-                plugin_name = plugin_name.split_off(0);
-                debug!("Loading plugin {}", plugin_name);
-                match self.install(&plugin_name, "", true).await {
-                    Ok(_) => {
-                        info!("Plugin {} loaded", plugin_name);
-                    }
-                    Err(e) => {
-                        error!("Error loading plugin: {}", e);
-                    }
-                }
-
-            }
-        }
+        // ...
     }
 
-    pub async fn listen(&self) {
-        let weak_installer = self.shared_self.clone();
-        self.event_bus
+    pub async fn listen(this: Arc<Mutex<Self>>) {
+        let plugins_clone = this.clone();
+        let plugins_clone_callback = plugins_clone.clone();
+
+        let event_bus_guard = plugins_clone.lock().await.event_bus.clone();
+
+        event_bus_guard
+            .lock()
+            .await
             .register(
-                "CrateInstall",
-                Box::new(move |payload| {
-                    debug!("Installing crate {}", payload);
-                    if let Some(installer) = weak_installer.upgrade() {
-                        let installer = installer.clone();
-                        tokio::spawn(async move {
-                            let mut installer = installer.lock().await;
-                            match installer.download(payload).await {
-                                Ok(_) => {
-                                    info!("Crate downloaded successfully");
-                                }
-                                Err(e) => {
-                                    error!("Error downloading crate: {}", e);
-                                }
+                &NodiumEventType::AddPlugin.to_string(),
+                Box::new(move |payload: String| {
+                    let plugins_clone = plugins_clone_callback.clone();
+
+                    tokio::spawn(async move {
+                        let mut plugins_guard = plugins_clone.lock().await;
+                        let install_location = plugins_guard.install_location.clone();
+                        match plugins_guard
+                            .plugin_install(payload, install_location.clone())
+                            .await
+                        {
+                            Ok((crate_name, crate_version)) => {
+                                let mut plugins_guard = plugins_clone.lock().await;
+                                plugins_guard.register(&crate_name, &crate_version);
                             }
-                        });
-                    }
+                            Err(e) => {
+                                error!("Error installing crate: {}", e);
+                            }
+                        }
+                    });
                 }) as Box<dyn Fn(String) + Send + Sync>,
             )
             .await;
     }
 
-    async fn download(&mut self, payload: String) -> Result<(), Box<dyn std::error::Error>> {
+    async fn plugin_install(
+        &mut self,
+        payload: String,
+        install_location: String,
+    ) -> Result<(String, String), Box<dyn std::error::Error + Send + Sync>> {
+        let install_location = install_location.clone();
+        debug!("Installing crate {}", payload);
         let data: Value = serde_json::from_str(&payload).unwrap();
         debug!("Handling event: {}", payload);
         debug!("Event data: {:?}", data);
@@ -108,72 +92,30 @@ impl Plugins {
             .and_then(Value::as_str)
             .unwrap()
             .to_string();
-        let cloned_crate_name = crate_name.clone();
-        let cloned_crate_version = crate_version.clone();
 
-        debug!("Downloading crate {}-{}", crate_name, crate_version);
-        match self
-            .install(&cloned_crate_name, &cloned_crate_version, false)
-            .await
-        {
+        match download(&crate_name, &crate_version, &install_location).await {
             Ok(_) => {
-                info!("Crate {}-{} installed", crate_name, crate_version);
-                Ok(())
+                info!("Crate downloaded successfully");
+                match install(&crate_name, &crate_version, &install_location).await {
+                    Ok(_) => {
+                        info!("Crate installed successfully");
+                        Ok((crate_name, crate_version))
+                    }
+                    Err(e) => {
+                        error!("Error installing crate: {}", e);
+                        Err(e)
+                    }
+                }
             }
             Err(e) => {
-                error!("Error installing crate: {}", e);
+                error!("Error downloading crate: {}", e);
                 Err(e)
             }
         }
     }
 
-    pub async fn install(
-        &mut self,
-        crate_name: &str,
-        crate_version: &str,
-        lib: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut output_dir = format!("{}/{}", PLUGIN_FOLDER, crate_name);
-        if lib == false {
-            output_dir = format!("{}/{}-{}", PLUGIN_FOLDER, crate_name, crate_version);
-        }
-        fs::create_dir_all(&output_dir)?;
-        let download_url = format!(
-            "https://crates.io/api/v1/crates/{}/{}/download",
-            crate_name, crate_version
-        );
-        debug!("Downloading crate from {}", download_url);
-
-        let crate_file_path = format!("{}-{}.crate", crate_name, crate_version);
-        extract_crate_file(&crate_file_path, &PLUGIN_FOLDER.to_string()).await?;
-
-        debug!("Building crate {} to {}", crate_name, self.install_location);
-        let manifest_path = format!("{}/Cargo.toml", output_dir);
-
-        let mut cmd = Command::new("cargo");
-        cmd.arg("build")
-            .arg("--release")
-            .arg("--manifest-path")
-            .arg(manifest_path);
-        let output = cmd.output().expect("Failed to execute cargo build command");
-        match !output.status.success() {
-            true => {
-                debug!("Crate {} failed to build", crate_name);
-                error!(
-                    "Cargo build output: {}",
-                    String::from_utf8_lossy(&output.stderr)
-                );
-            }
-            false => {
-                debug!("Crate {} built successfully", crate_name);
-                self.register(crate_name, crate_version);
-            }
-        }
-        Ok(())
-    }
-
     fn register(&mut self, crate_name: &str, crate_version: &str) {
-        let lib_path = Path::new(PLUGIN_FOLDER)
+        let lib_path = Path::new(&self.install_location)
             .join(format!("{}-{}", crate_name, crate_version))
             .join("target")
             .join("release")
@@ -190,28 +132,14 @@ impl Plugins {
                 }
             ));
 
-        debug!("Loading library from {}", lib_path.to_str().unwrap());
-
         let lib = unsafe { Library::new(&lib_path) }.expect("Unable to load library");
-        debug!("Library loaded successfully");
-
-        self.libraries.insert(String::from(crate_name), lib);
-        debug!("Library added to libraries map");
-
-        let plugin: Symbol<unsafe extern "C" fn() -> Box<dyn Plugin>> = unsafe {
-            self.libraries
-                .get(crate_name)
-                .unwrap()
-                .get(b"plugin")
-                .unwrap()
-        };
+        let plugin: Symbol<unsafe extern "C" fn() -> Box<dyn NodiuimPlugin>> =
+            unsafe { lib.get(b"plugin").unwrap() };
 
         let plugin = unsafe { plugin() };
         let plugin_name = plugin.name();
-
+        debug!("Registering plugin: {}", plugin_name);
         let event_bus = self.event_bus.clone();
-
         self.registry.register_plugin(event_bus, plugin);
-        debug!("Plugin {} registered", plugin_name);
     }
 }

@@ -4,7 +4,7 @@ use std::path::Path;
 use flate2::read::GzDecoder;
 use tar::Archive;
 
-pub async fn extract_crate_file<P: AsRef<Path>>(crate_file_path: P, destination: P) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn extract_crate_file<P: AsRef<Path>>(crate_file_path: P, destination: P) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // Open the .crate file
     let crate_file = File::open(crate_file_path)?;
     let reader = BufReader::new(crate_file);

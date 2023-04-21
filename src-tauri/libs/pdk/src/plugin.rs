@@ -1,9 +1,11 @@
-use nodium_events::EventBus;
+use std::sync::Arc;
 
-pub struct Plugin {
-  name: String,
-  nodes: Vec<crate::Node>,
-  services: Vec<crate::Service>,
-  windows: Vec<crate::Window>,
-  event_bus: EventBus,
+use nodium_events::NodiumEvents;
+use tokio::sync::Mutex;
+
+pub trait NodiuimPlugin: Send + Sync {
+    fn name(&self) -> String;
+    fn nodes(&self, event_bus: Arc<Mutex<NodiumEvents>>) -> Vec<crate::NodiuimNode>;
+    fn services(&self, event_bus: Arc<Mutex<NodiumEvents>>) -> Vec<crate::NodiuimService>;
+    fn windows(&self, event_bus: Arc<Mutex<NodiumEvents>>) -> Vec<crate::NodiuimWindow>;
 }
