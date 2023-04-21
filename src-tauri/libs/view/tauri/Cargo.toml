@@ -3,6 +3,7 @@ name = "nodium-tauri"
 version = "0.1.0"
 authors = ["cherob"]
 edition = "2021"
+description = "Nodium Tauri Integration"
 
 [dependencies]
 tauri = "1.2.4"

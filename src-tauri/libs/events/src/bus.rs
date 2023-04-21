@@ -7,12 +7,12 @@ type EventCallback = Box<dyn Fn(String) + Send + Sync>;
 type EventNotifier = Box<dyn Fn(&str, &str) + Send + Sync>;
 
 
-pub struct NodiumEvents {
+pub struct NodiumEventBus {
   event_handlers: RwLock<HashMap<String, Vec<EventCallback>>>,
   event_notifier: EventNotifier,
 }
 
-impl NodiumEvents {
+impl NodiumEventBus {
   pub fn new(event_notifier: EventNotifier) -> Arc<Mutex<Self>> {
       Arc::new(Mutex::new(Self {
           event_handlers: RwLock::new(HashMap::new()),
@@ -21,6 +21,7 @@ impl NodiumEvents {
   }
 
   pub async fn register(&self, event_name: &str, callback: EventCallback) {
+    debug!("Registering event {}", event_name);
       let mut event_handlers = self.event_handlers.write().await;
       let handler_list = event_handlers.entry(event_name.to_string()).or_insert_with(Vec::new);
       handler_list.push(callback);

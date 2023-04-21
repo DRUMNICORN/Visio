@@ -3,8 +3,8 @@ use crate::Registry;
 use dirs_next::document_dir;
 use libloading::{Library, Symbol};
 use log::{debug, error, info};
-use nodium_events::{NodiumEventType, NodiumEvents};
-use nodium_pdk::NodiuimPlugin;
+use nodium_events::{NodiumEventType, NodiumEventBus};
+use nodium_pdk::NodiumPlugin;
 use serde_json::Value;
 use std::fs;
 use std::path::Path;
@@ -13,12 +13,12 @@ use tokio::sync::Mutex;
 
 pub struct NodiumPlugins {
     install_location: String,
-    event_bus: Arc<Mutex<NodiumEvents>>,
+    event_bus: Arc<Mutex<NodiumEventBus>>,
     registry: Registry,
 }
 
 impl NodiumPlugins {
-    pub async fn new(event_bus: Arc<Mutex<NodiumEvents>>) -> Arc<Mutex<Self>> {
+    pub async fn new(event_bus: Arc<Mutex<NodiumEventBus>>) -> Arc<Mutex<Self>> {
         let doc_dir = document_dir().expect("Unable to get user's document directory");
         let install_location = doc_dir.join("nodium").join("plugins");
         debug!("Plugin install location: {:?}", install_location);
@@ -26,14 +26,17 @@ impl NodiumPlugins {
             debug!("Creating plugin directory");
             fs::create_dir_all(&install_location).expect("Unable to create plugin directory");
         }
-        let installer = Arc::new(Mutex::new(NodiumPlugins {
-            install_location: install_location.to_str().unwrap().to_string(),
+        let plugins = NodiumPlugins {
+            install_location: "plugins".to_string(),
             event_bus: event_bus.clone(),
             registry: Registry::new(),
-        }));
+        };
 
+        let installer = Arc::new(Mutex::new(plugins));
+        
         // load plugins in the plugins directory
         installer.lock().await.reload().await;
+        installer.lock().await.listen(installer.clone()).await;
         installer
     }
 
@@ -107,8 +110,8 @@ impl NodiumPlugins {
         }
     }
 
-    pub async fn listen(this: Arc<Mutex<Self>>) {
-        let plugins_clone = this.clone();
+    pub async fn listen(&self, plugins: Arc<Mutex<Self>>) {
+        let plugins_clone = plugins.clone();
         let plugins_clone_callback = plugins_clone.clone();
 
         let event_bus_guard = plugins_clone.lock().await.event_bus.clone();
@@ -143,6 +146,26 @@ impl NodiumPlugins {
                                 error!("Error installing crate: {}", e);
                             }
                         }
+                    });
+                }) as Box<dyn Fn(String) + Send + Sync>,
+            )
+            .await;
+          
+        let event_bus_guard = plugins_clone.lock().await.event_bus.clone();
+        
+        event_bus_guard
+            .lock()
+            .await
+            .register(
+                &NodiumEventType::ReloadPlugins.to_string(),
+                Box::new(move |_: String| {
+                    debug!("Reloading plugins");
+                    let plugins_clone = plugins_clone.clone();
+
+                    tokio::spawn(async move {
+                        debug!("Reloading plugins");
+                        let mut plugins_guard = plugins_clone.lock().await;
+                        plugins_guard.reload().await;
                     });
                 }) as Box<dyn Fn(String) + Send + Sync>,
             )
@@ -224,7 +247,7 @@ impl NodiumPlugins {
             ));
 
         let lib = unsafe { Library::new(&lib_path) }?;
-        let plugin: Symbol<unsafe extern "C" fn() -> Box<dyn NodiuimPlugin>> =
+        let plugin: Symbol<unsafe extern "C" fn() -> Box<dyn NodiumPlugin>> =
             unsafe { lib.get(b"plugin")? };
 
         let plugin = unsafe { plugin() };

@@ -8,7 +8,7 @@ const StatusBar: React.FC = () => {
     // Emit your event or perform any desired action here
     console.log("Button clicked");
     emit("event", {
-      name: "install",
+      name: "reload",
       payload: "Hello from the frontend!",
     });
   };
@@ -26,7 +26,7 @@ const StatusBar: React.FC = () => {
     >
       {/* Add your status bar content here */}
       <Button onClick={handleButtonClick} variant="contained" size="small">
-        Click me
+        Reload
       </Button>
     </Box>
   );

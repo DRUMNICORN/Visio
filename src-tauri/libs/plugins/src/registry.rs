@@ -1,15 +1,15 @@
 // libs/plugins/src/plugin_manager.rs
 
-use nodium_events::NodiumEvents;
-use nodium_pdk::{NodiuimPlugin, NodiuimNode, NodiuimService, NodiuimWindow};
+use nodium_events::NodiumEventBus;
+use nodium_pdk::{NodiumPlugin, NodiumNode, NodiumService, NodiumWindow};
 use tokio::sync::Mutex;
 use std::{collections::HashMap, sync::Arc};
 
 pub struct Registry {
-    plugins: HashMap<String, Box<dyn NodiuimPlugin>>,
-    windows: HashMap<String, NodiuimWindow>,
-    nodes: HashMap<String, NodiuimNode>,
-    services: HashMap<String, NodiuimService>,
+    plugins: HashMap<String, Box<dyn NodiumPlugin>>,
+    windows: HashMap<String, Box<dyn NodiumWindow>>,
+    nodes: HashMap<String, NodiumNode>,
+    services: HashMap<String, NodiumService>,
 }
 
 impl Registry {
@@ -22,7 +22,7 @@ impl Registry {
         }
     }
 
-  pub fn register_plugin(&mut self, event_bus: Arc<Mutex<NodiumEvents>>, plugin: Box<dyn NodiuimPlugin>) {
+  pub fn register_plugin(&mut self, event_bus: Arc<Mutex<NodiumEventBus>>, plugin: Box<dyn NodiumPlugin>) {
         
         let plugin_name = plugin.name();
         let nodes = plugin.nodes(event_bus.clone());
@@ -40,7 +40,7 @@ impl Registry {
         }
 
         for window in windows {
-            self.windows.insert(window.name.clone(), window);
+            self.windows.insert(window.name().clone(), window);
         }
     }
 

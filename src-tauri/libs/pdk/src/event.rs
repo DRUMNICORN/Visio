@@ -6,3 +6,11 @@ pub struct NodiumEvent {
     pub payload: String,
 } 
 
+impl NodiumEvent {
+    pub fn new(name: &str, payload: String) -> Self {
+        NodiumEvent {
+            name: name.to_string(),
+            payload,
+        }
+    }
+}

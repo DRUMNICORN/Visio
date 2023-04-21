@@ -1,4 +1,4 @@
-use nodium_events::NodiumEvents;
+use nodium_events::NodiumEventBus;
 use nodium_plugins::NodiumPlugins;
 use tokio::sync::Mutex;
 
@@ -7,7 +7,7 @@ use std::sync::Arc;
 
 pub struct NodiumApp {
     plugin_manager: Arc<Mutex<NodiumPlugins>>,
-    event_manager: Arc<Mutex<NodiumEvents>>,
+    event_manager: Arc<Mutex<NodiumEventBus>>,
     view_manager: Box<dyn NodiumView>,
 }
 
@@ -26,7 +26,7 @@ impl NodiumApp {
         let event_notifier = |event_name: &str, payload: &str| {
             println!("{}: {}", event_name, payload);
         };
-        let event_bus = NodiumEvents::new(Box::new(event_notifier));
+        let event_bus = NodiumEventBus::new(Box::new(event_notifier));
         let event_bus_clone = event_bus.clone();
         NodiumApp {
             plugin_manager: NodiumPlugins::new(event_bus).await,

@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use nodium_pdk::{NodiuimNode, NodiuimWindow, NodiumEvent};
+use nodium_pdk::{NodiumNode, NodiumWindow, NodiumEvent};
 use tokio::sync::Mutex;
 
 use crate::NodiumApp;
@@ -11,13 +11,12 @@ pub trait NodiumView: NodiumRendererClone + Send + Sync {
     // fn clone_box(&self) -> Box<dyn NodiumRenderer>;
 
     // ui management
-    fn add_window(&self, window: NodiuimWindow) -> Result<(), Box<dyn std::error::Error>>;
-    fn remove_window(&self, window: NodiuimWindow) -> Result<(), Box<dyn std::error::Error>>;
+    fn add_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>>;
+    fn remove_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>>;
+    fn update_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>>;
 
-    fn update_window(&self, window: NodiuimWindow) -> Result<(), Box<dyn std::error::Error>>;
-
-    fn add_node(&self, node: NodiuimNode) -> Result<(), Box<dyn std::error::Error>>;
-    fn remove_node(&self, node: NodiuimNode) -> Result<(), Box<dyn std::error::Error>>;
+    fn add_node(&self, node: NodiumNode) -> Result<(), Box<dyn std::error::Error>>;
+    fn remove_node(&self, node: NodiumNode) -> Result<(), Box<dyn std::error::Error>>;
 
     // event management
 

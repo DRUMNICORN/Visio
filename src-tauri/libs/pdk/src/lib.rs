@@ -6,8 +6,9 @@ mod service;
 mod window;
 mod event;
 
-pub use node::NodiuimNode;
-pub use plugin::NodiuimPlugin;
-pub use service::NodiuimService;
-pub use window::NodiuimWindow;
+pub use node::NodiumNode;
+pub use plugin::NodiumPlugin;
+pub use service::NodiumService;
+pub use window::NodiumWindow;
+pub use window::NodiumUiComponent;
 pub use event::NodiumEvent;

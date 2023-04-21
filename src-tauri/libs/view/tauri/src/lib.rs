@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use log::{debug, error};
 use nodium_app::{NodiumApp, NodiumView};
-use nodium_pdk::{NodiumEvent, NodiuimNode, NodiuimWindow};
+use nodium_pdk::{NodiumEvent, NodiumNode, NodiumWindow};
 use serde_json::{from_str, to_value};
 use tauri::{Manager, async_runtime::Mutex};
 
@@ -46,34 +46,34 @@ impl NodiumView for NodiumViewTauri {
         Ok(())
     }
 
-    fn add_window(&self, window: NodiuimWindow) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("adding window: {:?}", window);
-        let event_payload = to_value(window)?;
+    fn add_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>> {
+        debug!("adding window: {:?}", window.serialize());
+        let event_payload = to_value(window.serialize())?;
         self.handle
             .app_handle()
             .emit_all("add_window", event_payload)?;
         Ok(())
     }
 
-    fn remove_window(&self, window: NodiuimWindow) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("removing window: {:?}", window);
-        let event_payload = to_value(window)?;
+    fn remove_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>> {
+        debug!("removing window: {:?}", window.serialize());
+        let event_payload = to_value(window.serialize())?;
         self.handle
             .app_handle()
             .emit_all("remove_window", event_payload)?;
         Ok(())
     }
 
-    fn update_window(&self, window: NodiuimWindow) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("updating window: {:?}", window);
-        let event_payload = to_value(window)?;
+    fn update_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>> {
+        debug!("updating window: {:?}", window.serialize());
+        let event_payload = to_value(window.serialize())?;
         self.handle
             .app_handle()
             .emit_all("update_window", event_payload)?;
         Ok(())
     }
 
-    fn add_node(&self, node: NodiuimNode) -> Result<(), Box<dyn std::error::Error>> {
+    fn add_node(&self, node: NodiumNode) -> Result<(), Box<dyn std::error::Error>> {
         debug!("adding node: {:?}", node);
         let event_payload = to_value(node)?;
         self.handle
@@ -82,7 +82,7 @@ impl NodiumView for NodiumViewTauri {
         Ok(())
     }
 
-    fn remove_node(&self, node: NodiuimNode) -> Result<(), Box<dyn std::error::Error>> {
+    fn remove_node(&self, node: NodiumNode) -> Result<(), Box<dyn std::error::Error>> {
         debug!("removing node: {:?}", node);
         let event_payload = to_value(node)?;
         self.handle

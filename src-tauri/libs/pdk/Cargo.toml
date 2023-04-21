@@ -14,3 +14,5 @@ serde = { version = "1.0", features = ["derive"] }
 
 # only featue for tokio Mutex
 tokio = { version = "1.27.0", features = ["sync"] }
+
+serde_json = "1.0"
