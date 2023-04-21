@@ -32,13 +32,14 @@ pub async fn install(
     crate_name: &str,
     crate_version: &str,
     path: &str,
+    lib: bool,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     debug!("Building crate {} to {}", crate_name, path);
 
-    // let mut output_dir = format!("{}/{}", path, crate_name);
-    // if lib == false {
-    let output_dir = format!("{}/{}-{}", path, crate_name, crate_version);
-    // }
+    let mut output_dir = format!("{}/{}", path, crate_name);
+    if lib == false {
+        output_dir = format!("{}/{}-{}", path, crate_name, crate_version);
+    }
 
     let manifest_path = format!("{}/Cargo.toml", output_dir);
 

@@ -30,14 +30,12 @@ impl NodiumEvents {
       debug!("Emitting event {}", event_name);
       let event_handlers = self.event_handlers.read().await;
       if let Some(handler_list) = event_handlers.get(event_name) {
+          debug!("Found {} handlers for event {}", handler_list.len(), event_name);
           for handler in handler_list {
-             // call each handler
-              // handler(payload.clone());
-              // cant call due it will move the handler
-              // make a copy of the handler and call it
               let handler = handler.clone();
               handler(payload.clone());
           }
+          debug!("Finished emitting event {}", event_name);
       }
       (self.event_notifier)(event_name, &payload);
   }

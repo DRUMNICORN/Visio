@@ -3,7 +3,7 @@ use std::sync::Arc;
 use log::{debug, error};
 use nodium_app::{NodiumApp, NodiumView};
 use nodium_pdk::{NodiumEvent, NodiuimNode, NodiuimWindow};
-use serde_json::from_value;
+use serde_json::{from_str, to_value};
 use tauri::{Manager, async_runtime::Mutex};
 
 // TauriRenderer
@@ -30,7 +30,7 @@ impl NodiumView for NodiumViewTauri {
                 }
             };
 
-            let event: NodiumEvent = match serde_json::from_str(&data) {
+            let event: NodiumEvent = match from_str(&data) {
                 Ok(event) => event,
                 Err(e) => {
                     error!("failed to parse event: {}", e);
@@ -48,7 +48,7 @@ impl NodiumView for NodiumViewTauri {
 
     fn add_window(&self, window: NodiuimWindow) -> Result<(), Box<dyn std::error::Error>> {
         debug!("adding window: {:?}", window);
-        let event_payload = serde_json::to_value(window)?;
+        let event_payload = to_value(window)?;
         self.handle
             .app_handle()
             .emit_all("add_window", event_payload)?;
@@ -57,7 +57,7 @@ impl NodiumView for NodiumViewTauri {
 
     fn remove_window(&self, window: NodiuimWindow) -> Result<(), Box<dyn std::error::Error>> {
         debug!("removing window: {:?}", window);
-        let event_payload = serde_json::to_value(window)?;
+        let event_payload = to_value(window)?;
         self.handle
             .app_handle()
             .emit_all("remove_window", event_payload)?;
@@ -66,7 +66,7 @@ impl NodiumView for NodiumViewTauri {
 
     fn update_window(&self, window: NodiuimWindow) -> Result<(), Box<dyn std::error::Error>> {
         debug!("updating window: {:?}", window);
-        let event_payload = serde_json::to_value(window)?;
+        let event_payload = to_value(window)?;
         self.handle
             .app_handle()
             .emit_all("update_window", event_payload)?;
@@ -75,7 +75,7 @@ impl NodiumView for NodiumViewTauri {
 
     fn add_node(&self, node: NodiuimNode) -> Result<(), Box<dyn std::error::Error>> {
         debug!("adding node: {:?}", node);
-        let event_payload = serde_json::to_value(node)?;
+        let event_payload = to_value(node)?;
         self.handle
             .app_handle()
             .emit_all("add_node", event_payload)?;
@@ -84,7 +84,7 @@ impl NodiumView for NodiumViewTauri {
 
     fn remove_node(&self, node: NodiuimNode) -> Result<(), Box<dyn std::error::Error>> {
         debug!("removing node: {:?}", node);
-        let event_payload = serde_json::to_value(node)?;
+        let event_payload = to_value(node)?;
         self.handle
             .app_handle()
             .emit_all("remove_node", event_payload)?;
@@ -93,7 +93,7 @@ impl NodiumView for NodiumViewTauri {
 
     fn add_event(&self, event: NodiumEvent) -> Result<(), Box<dyn std::error::Error>> {
         debug!("adding event: {:?}", event);
-        let event_payload = serde_json::to_value(event)?;
+        let event_payload = to_value(event)?;
         self.handle
             .app_handle()
             .emit_all("add_event", event_payload)?;
@@ -102,7 +102,7 @@ impl NodiumView for NodiumViewTauri {
 
     fn remove_event(&self, event: NodiumEvent) -> Result<(), Box<dyn std::error::Error>> {
         debug!("removing event: {:?}", event);
-        let event_payload = serde_json::to_value(event)?;
+        let event_payload = to_value(event)?;
         self.handle
             .app_handle()
             .emit_all("remove_event", event_payload)?;
@@ -111,7 +111,7 @@ impl NodiumView for NodiumViewTauri {
 
     fn update_event(&self, event: NodiumEvent) -> Result<(), Box<dyn std::error::Error>> {
         debug!("updating event: {:?}", event);
-        let event_payload = serde_json::to_value(event)?;
+        let event_payload = to_value(event)?;
         self.handle
             .app_handle()
             .emit_all("update_event", event_payload)?;

@@ -14,7 +14,7 @@ pub struct NodiumApp {
 impl Clone for NodiumApp {
     fn clone(&self) -> Self {
         NodiumApp {
-          plugin_manager: self.plugin_manager.clone(),
+            plugin_manager: self.plugin_manager.clone(),
             event_manager: self.event_manager.clone(),
             view_manager: self.view_manager.clone_box(),
         }
@@ -40,7 +40,9 @@ impl NodiumApp {
     }
 
     pub async fn event(&self, name: String, payload: String) {
-        self.event_manager.lock().await.send(&name, payload.to_string());
+        self.event_manager
+            .lock()
+            .await
+            .send(&name, payload.to_string());
     }
-
 }
