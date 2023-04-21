@@ -2,7 +2,7 @@
 name = "nodium-plugins"
 description = "Nodium plugin system"
 authors = ["cherob"]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "AGPL-3.0"
 
@@ -14,8 +14,8 @@ dirs-next = "2.0"
 tar = "0.4"
 flate2 = "1.0"
 
-nodium-events = { path = "../events", version = "0.1.1" }
-nodium-pdk = { path = "../pdk", version = "0.1.0" }
+nodium-events = { path = "../events", version = "0.1.2" }
+nodium-pdk = { path = "../pdk", version = "0.1.1" }
 
 log = "0.4"
 env_logger = "0.9"

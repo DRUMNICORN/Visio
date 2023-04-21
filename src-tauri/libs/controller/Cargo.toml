@@ -1,7 +1,0 @@
-[package]
-name = "nodium-controller"
-version = "0.1.0"
-authors = ["cherob"]
-edition = "2021"
-
-[dependencies]

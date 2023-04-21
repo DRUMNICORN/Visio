@@ -2,7 +2,7 @@
 name = "nodium-events"
 authors = ["cherob"]
 description = "A simple event system for Rust"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "AGPL-3.0"
 

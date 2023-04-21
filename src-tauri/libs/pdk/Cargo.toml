@@ -2,14 +2,14 @@
 
 [package]
 name = "nodium-pdk"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Nodium Plugin Development Kit: A Rust library for building Nodium plugins with Services and Nodes"
 authors = ["cherob"]
 license = "AGPL-3.0"
 
 [dependencies]
-nodium-events = { path = "../events", version = "0.1.1" }
+nodium-events = { path = "../events", version = "0.1.2" }
 serde = { version = "1.0", features = ["derive"] }
 
 # only featue for tokio Mutex
