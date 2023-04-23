@@ -24,7 +24,8 @@ Say what the step will be
 ```bash
 git clone https://github.com/cherob/nodium
 cd nodium
-cargo run
+yarn 
+yarn tauri dev
 ```
 
 #### Common Issues

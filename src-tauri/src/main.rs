@@ -7,21 +7,19 @@ use nodium_tauri::NodiumViewTauri;
 
 #[tokio::main]
 async fn main() {
-  Builder::new()
-      .filter(None, LevelFilter::Debug) // Change this to the desired log level
-      .init();
-  println!("Welcome to Nodium!\n");
-  
-  tauri::Builder::default()
-  .setup(|app| {
+    Builder::new()
+        .filter(None, LevelFilter::Debug) // Change this to the desired log level
+        .init();
+    println!("Welcome to Nodium!\n");
+
+    tauri::Builder::default()
+        .setup(|app| {
             let handle = app.handle();
-            
-            
+
             tokio::spawn(async move {
-              let event_bus = NodiumEventBus::new();
-              let tauri_view = NodiumViewTauri::new(handle.clone(), event_bus.clone());
-              
-              let app = NodiumApp::init(event_bus, Box::new(tauri_view)).await;
+                let tauri_view = NodiumViewTauri::new(handle.clone());
+
+                let app = NodiumApp::init(Box::new(tauri_view)).await;
             });
             Ok(())
         })

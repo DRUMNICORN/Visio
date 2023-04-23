@@ -1,99 +1,61 @@
-// nodium_plugin_browser/src/lib.rs
-use nodium_pdk::{NodiumPlugin, NodiumNode, NodiumService, NodiumEvent, NodiumWindow, NodiumUiComponent};
-use nodium_events::NodiumEventBus;
-mod crates_service;
-pub use crates_service::CratesService;
+// lib.rs
+use std::os::raw::c_char;
+use std::ffi::CStr;
 
-use tokio::sync::Mutex;
+// lib.rs
+use nodium_sdk::{NodiumApp, TableView, TableRow, TableCell, NodiumPlugin};
+use reqwest::Error;
+use serde_json::Value;
+use serde::{Deserialize, Serialize};
+use std::error::Error as StdError;
 
-use log::{debug};
-use std::sync::Arc;
+// CrateInfo and fetch_crates() implementation from previous answer
 
-pub struct NodiumPluginBrowser {
-    event_bus: Option<Arc<Mutex<NodiumEventBus>>>,
-}
+pub struct NodiumPluginBrowser;
 
 impl NodiumPlugin for NodiumPluginBrowser {
-    fn name(&self) -> String {
-        "nodium_plugin_browser".to_string()
+    type Error = Box<dyn StdError>;
+
+    fn name(&self) -> &'static str {
+        "Crates Browser Plugin"
     }
 
-    fn with_event_bus(&mut self, event_bus: NodiumEventBus) {
-        self.event_bus = Some(Arc::new(Mutex::new(event_bus)));
-    }
+    fn run(&self) -> Result<(), Self::Error> {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
 
-    // will create a browser window
-    fn windows(&self, event_bus: Arc<Mutex<NodiumEventBus>>) -> Vec<Box<dyn NodiumWindow>> {
-        let event_bus = self.event_bus.as_ref().unwrap().clone();
-        let crates_service = Arc::new(CratesService::new(event_bus));
-        vec![
-            Box::new(CratesBrowserWindow::new(crates_service)),
-        ]
-    }
+        runtime.block_on(async {
+            let crates = fetch_crates().await?;
+            let table = create_table_view(crates);
 
-    fn nodes(&self, event_bus: Arc<Mutex<NodiumEventBus>>) -> Vec<NodiumNode> {
-        vec![]
-    }
+            let app = NodiumApp::new("Crates Browser");
+            app.add_view(table);
 
-    fn services(&self, event_bus: Arc<Mutex<NodiumEventBus>>) -> Vec<NodiumService> {
-        vec![]
-    }
-}
+            app.run();
 
-pub struct CratesBrowserWindow {
-    crates_service: Arc<CratesService>,
-    content: NodiumUiComponent,
-}
-
-impl CratesBrowserWindow {
-    pub fn new(crates_service: Arc<CratesService>) -> Self {
-        let content = NodiumUiComponent::Tabs(vec![
-            NodiumUiComponent::InputField("Search".to_string(), "search".to_string()),
-            NodiumUiComponent::Button("Update".to_string(), "update".to_string()),
-        ]);
-
-        CratesBrowserWindow {
-            crates_service,
-            content,
-        }
+            Ok(())
+        })
     }
 }
 
-impl NodiumWindow for CratesBrowserWindow {
-    fn name(&self) -> String {
-        "CratesBrowserWindow".to_string()
-    }
 
-    fn icon(&self) -> String {
-        "icon.png".to_string()
-    }
+#[no_mangle]
+pub extern "C" fn plugin() -> Box<dyn NodiumPlugin> {
+    Box::new(NodiumPluginBrowser)
+}
 
-    fn title(&self) -> String {
-        "Crates Browser".to_string()
-    }
+pub fn create_plugin(name: *const c_char) -> Box<dyn NodiumPlugin> {
+    let name = unsafe {
+        CStr::from_ptr(name)
+            .to_string_lossy()
+            .into_owned()
+    };
 
-    fn content(&self) -> NodiumUiComponent {
-        self.content.clone()
-    }
-
-    fn on_event(&mut self, event_name: &str, _event_data: &str) {
-        debug!("CratesBrowserWindow received event: {}", event_name);
-        // match event_name {
-        //     "update" => {
-        //         if let Err(e) = self.crates_service.fetch_crates() {
-        //             debug!("Error fetching crates: {}", e);
-        //         } else {
-        //             let crates = self.crates_service.crates();
-        //             // Update the table with the new crates data
-        //             // self.content = NodiumUiComponent::Table(crates);
-        //         }
-        //         }
-        //     }
-        //     "install" => {
-        //         // Install the crate
-        //         debug!("Install the crate");
-        //     }
-        //     _ => {}
-        // }
+    if name == "Crates Browser Plugin" {
+        plugin()
+    } else {
+        panic!("Unknown plugin name");
     }
 }

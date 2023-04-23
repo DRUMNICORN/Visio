@@ -19,8 +19,5 @@ pub trait NodiumView: Send + Sync {
         &self,
         window: Box<dyn NodiumWindow>,
     ) -> Result<(), Box<dyn std::error::Error>>;
-    fn add_node(&self, node: NodiumNode) -> Result<(), Box<dyn std::error::Error>>;
-    fn remove_node(&self, node: NodiumNode) -> Result<(), Box<dyn std::error::Error>>;
-    // fn emit(&self, event: NodiumEvent) -> Result<(), Box<dyn std::error::Error>>;
-    // fn listen(&self, callback: Box<dyn Fn(NodiumEvent) + Send + Sync>);
+    // TODO: Extend the NodiumView trait
 }
