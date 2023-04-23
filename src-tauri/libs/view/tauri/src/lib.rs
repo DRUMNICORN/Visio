@@ -12,14 +12,13 @@ use tauri::{AppHandle, Manager};
 #[derive(Clone)]
 pub struct NodiumViewTauri {
     handle: AppHandle,
-    event_bus: Arc<Mutex<NodiumEventBus>>,
 }
 
 impl NodiumViewTauri {
-    pub fn new(handle: AppHandle, event_bus: Arc<Mutex<NodiumEventBus>>) -> Self {
+    pub fn new(handle: AppHandle
+    ) -> Self {
         NodiumViewTauri {
             handle: handle,
-            event_bus: event_bus,
         }
     }
 }
@@ -31,63 +30,8 @@ impl NodiumView for NodiumViewTauri {
     ) -> Result<(), Box<dyn std::error::Error>> {
         // debug!("running tauri view");
 
-        // // event manager will listen for events to frontend // callback in a box
-        // let event_bus_1 = self.event_bus.clone();
-        
-        // // register event
-        // let event_log = self.event_bus.lock().await;
+      // TODO: connect the event system to the tauri view events from (self.handle.listen_global("event_name", move |event| {});), and self.handle.emit_all("event_name", event_payload)?;
 
-
-        // event_log.register(
-        //     "event",
-        //     Box::new(move |payload| {
-        //         let event_bus_1 = event_bus_1.clone();
-        //         debug!("received event: {}", payload);
-        //         let event: NodiumEvent = match from_str(&payload) {
-        //             Ok(event) => event,
-        //             Err(e) => {
-        //                 error!("failed to parse event: {}", e);
-        //                 return;
-        //             }
-        //         };
-        //         debug!("received event: {:?}", event);
-        //         let event = NodiumEvent::new(&event.name, event.payload);
-        //         // event_callback(event);+
-        //         let event_json_str = serde_json::to_string(&event).unwrap();
-
-        //         tokio::spawn(async move {
-        //             event_bus_1.lock().await.emit("event", event_json_str);
-        //         });
-        //     }),
-        // );
-        // let event_bus_2 = self.event_bus.clone();
-
-        // self.handle.listen_global("event", move |event| {
-        //     let event_bus_2 = event_bus_2.clone();
-        //     debug!("received event: {:?}", event);
-        //     let data: String = match event.payload() {
-        //         Some(data) => data.to_string(),
-        //         None => {
-        //             error!("failed to get event payload");
-        //             return;
-        //         }
-        //     };
-        //     debug!("received event payload: {}", data);
-        //     let event: NodiumEvent = match from_str(&data) {
-        //         Ok(event) => event,
-        //         Err(e) => {
-        //             error!("failed to parse event: {}", e);
-        //             return;
-        //         }
-        //     };
-        //     debug!("received event: {:?}", event);
-        //     let event = NodiumEvent::new(&event.name, event.payload);
-        //     // event_callback(event);
-        //     let event_json_str = serde_json::to_string(&event).unwrap();
-        //     tokio::spawn(async move {
-        //         event_bus_2.lock().await.emit("event", event_json_str);
-        //     });
-        // });
         Ok(())
     }
 

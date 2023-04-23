@@ -18,14 +18,12 @@ pub struct Crate {
 }
 
 pub struct CratesService {
-    event_bus: Arc<Mutex<NodiumEventBus>>,
     crates: Arc<Mutex<Vec<Crate>>>,
 }
 
 impl CratesService {
-    pub fn new(event_bus: Arc<Mutex<NodiumEventBus>>) -> Self {
+    pub fn new() -> Self {
         CratesService {
-            event_bus,
             crates: Arc::new(Mutex::new(Vec::new())),
         }
     }
@@ -45,10 +43,12 @@ impl CratesService {
             "crate_version": krate.version
         })
         .to_string();
-        let event_bus = self.event_bus.clone();
-        tokio::spawn(async move {
-            event_bus.lock().await.emit("install_crate", payload).await;
-        });
+
+      // TODO: Emit event to install crate
+        // let events = self.events.clone();
+        // tokio::spawn(async move {
+        //     events.lock().await.emit("install_crate", payload).await;
+        // });
     }
 
     pub async fn crates(&self) -> Vec<Crate> {
