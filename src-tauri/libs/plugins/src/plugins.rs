@@ -234,6 +234,8 @@ impl NodiumPlugins {
                     )));
                 }
             ));
+        
+        // TODO: Check out: abi_stable and Foreign Function Interface
 
         let lib = unsafe { Library::new(&lib_path) }?;
         let plugin: Symbol<unsafe extern "C" fn() -> Box<dyn NodiumPlugin>> =

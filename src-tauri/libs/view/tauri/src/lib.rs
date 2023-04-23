@@ -67,22 +67,4 @@ impl NodiumView for NodiumViewTauri {
             .emit_all("update_window", event_payload)?;
         Ok(())
     }
-
-    fn add_node(&self, node: NodiumNode) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("adding node: {:?}", node);
-        let event_payload = to_value(node)?;
-        self.handle
-            .app_handle()
-            .emit_all("add_node", event_payload)?;
-        Ok(())
-    }
-
-    fn remove_node(&self, node: NodiumNode) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("removing node: {:?}", node);
-        let event_payload = to_value(node)?;
-        self.handle
-            .app_handle()
-            .emit_all("remove_node", event_payload)?;
-        Ok(())
-    }
 }

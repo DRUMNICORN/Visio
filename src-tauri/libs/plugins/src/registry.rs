@@ -29,6 +29,6 @@ impl Registry {
     // TODO: Event Connection from Frontend (Tauri) to Backend (Nodium)
     pub fn register_plugin(&mut self, plugin: Box<dyn NodiumPlugin>) {
         let plugin_name = plugin.name();
-        self.plugins.insert(plugin_name.clone(), plugin);
+        self.plugins.insert(plugin_name.clone().to_owned(), plugin);
     }
 }
