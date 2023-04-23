@@ -27,6 +27,14 @@ cd nodium
 cargo run
 ```
 
+#### Common Issues
+
+Installing Missing Packages:
+
+  - "pkg-config"
+  - "javascriptcoregtk"
+
+
 ## Features
 
 * Visual node-based interface with input and output pins.

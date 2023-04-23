@@ -1,0 +1,22 @@
+[package]
+name = "nodium_browser"
+version = "0.1.0"
+authors = ["cherob"]
+description = "Nodium plugin browser"
+edition = "2021"
+license = "AGPL-3.0"
+
+[dependencies]
+nodium-pdk = { path = "../../libs/pdk", version = "0.1.1" }
+
+log = "0.4"
+env_logger = "0.9"
+
+serde_json = "1.0"
+serde = { version = "1.0.130", features = ["derive"] }
+reqwest = { version = "0.11.4", features = ["blocking", "json"] }
+tokio = { version = "1.27.0", features = ["sync"] }
+
+[lib]
+name = "nodium_input"
+crate-type = ["cdylib"]
