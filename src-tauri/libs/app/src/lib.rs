@@ -1,8 +1,8 @@
 
 mod warp;
 
-mod renderer;
-pub use renderer::NodiumView;
+mod view;
+pub use view::NodiumView;
 
 mod app;
 pub use app::NodiumApp;

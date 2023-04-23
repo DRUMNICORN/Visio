@@ -3,11 +3,13 @@
 // and can be make into string 
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum NodiumEventType {
+// its strings
+pub enum NodiumEventType { 
     // the app is ready
-    AddPlugin,
-    RemovePlugin,
-    ReloadPlugins,
+    // AddPlugin,
+    // RemovePlugin,
+    PluginsReload,
+    PluginInstall,
 
 }
 
@@ -18,9 +20,8 @@ pub enum NodiumEventType {
 impl ToString for NodiumEventType {
     fn to_string(&self) -> String {
         match self {
-            NodiumEventType::AddPlugin => "AddPlugin",
-            NodiumEventType::RemovePlugin => "RemovePlugin",
-            NodiumEventType::ReloadPlugins => "ReloadPlugins",
+            NodiumEventType::PluginsReload => "PluginsReload",
+            NodiumEventType::PluginInstall => "PluginInstall",
         }
         .to_string()
     }

@@ -1,4 +1,6 @@
+use log::debug;
 use nodium_events::NodiumEventBus;
+use nodium_pdk::NodiumEvent;
 use nodium_plugins::NodiumPlugins;
 use tokio::sync::Mutex;
 
@@ -6,43 +8,39 @@ use crate::NodiumView;
 use std::sync::Arc;
 
 pub struct NodiumApp {
+    event_bus: Arc<Mutex<NodiumEventBus>>,
+    view: Box<dyn NodiumView>,
     plugin_manager: Arc<Mutex<NodiumPlugins>>,
-    event_manager: Arc<Mutex<NodiumEventBus>>,
-    view_manager: Box<dyn NodiumView>,
-}
-
-impl Clone for NodiumApp {
-    fn clone(&self) -> Self {
-        NodiumApp {
-            plugin_manager: self.plugin_manager.clone(),
-            event_manager: self.event_manager.clone(),
-            view_manager: self.view_manager.clone_box(),
-        }
-    }
 }
 
 impl NodiumApp {
-    pub async fn new(renderer: Box<dyn NodiumView>) -> Self {
-        let event_notifier = |event_name: &str, payload: &str| {
-            println!("{}: {}", event_name, payload);
-        };
-        let event_bus = NodiumEventBus::new(Box::new(event_notifier));
-        let event_bus_clone = event_bus.clone();
+    pub async fn init(
+        event_bus: Arc<Mutex<NodiumEventBus>>,
+        view: Box<dyn NodiumView>,
+    ) -> Self {
+        debug!("App init");
+
+        let plugin_manager = NodiumPlugins::new(event_bus.clone()).await;
+
         NodiumApp {
-            plugin_manager: NodiumPlugins::new(event_bus).await,
-            event_manager: event_bus_clone,
-            view_manager: renderer,
+            event_bus,
+            view,
+            plugin_manager,
         }
     }
 
-    pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        self.view_manager.run(Arc::new(Mutex::new(self.clone())))
+    pub async fn run(&mut self) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+        self.view.run()?;
+        Ok(())
     }
 
     pub async fn event(&self, name: String, payload: String) {
-        self.event_manager
+        debug!("Event: {} - {}", name, payload);
+        // self.event_bus.lock().await.send(&name, payload.to_string());
+        self.event_bus
             .lock()
             .await
-            .send(&name, payload.to_string());
+            .emit(&name, payload.to_string())
+            .await;
     }
 }

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+  "settings": {
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    "cSpell.words": [
+      "nodium",
+      "tauri"
+    ]
+  }
+}

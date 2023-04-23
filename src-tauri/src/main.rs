@@ -1,6 +1,8 @@
 use env_logger::Builder;
 use log::{debug, error, LevelFilter};
 use nodium_app::NodiumApp;
+use nodium_events::NodiumEventBus;
+use nodium_plugins::NodiumPlugins;
 use nodium_tauri::NodiumViewTauri;
 
 #[tokio::main]
@@ -13,16 +15,13 @@ async fn main() {
   tauri::Builder::default()
   .setup(|app| {
             let handle = app.handle();
+            
+            
             tokio::spawn(async move {
-                let nodium_app = NodiumApp::new(Box::new(NodiumViewTauri::new(handle)));
-                match nodium_app.await.run() {
-                    Ok(_) => {
-                        debug!("NodiumApp exited successfully");
-                    }
-                    Err(e) => {
-                        error!("NodiumApp exited with error: {}", e);
-                    }
-                }
+              let event_bus = NodiumEventBus::new();
+              let tauri_view = NodiumViewTauri::new(handle.clone(), event_bus.clone());
+              
+              let app = NodiumApp::init(event_bus, Box::new(tauri_view)).await;
             });
             Ok(())
         })

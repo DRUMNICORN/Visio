@@ -9,6 +9,7 @@ description = "Nodium Tauri Integration"
 tauri = "1.2.4"
 nodium-app = { path = "../../app", version = "0.1.1" }
 nodium-pdk = { path = "../../pdk", version = "0.1.1" }
+nodium-events = { path = "../../events", version = "0.1.1" }
 
 serde_json = "1.0.68"
 

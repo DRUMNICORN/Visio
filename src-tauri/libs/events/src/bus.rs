@@ -3,20 +3,16 @@ use std::sync::Arc;
 use tokio::sync::{RwLock, Mutex};
 use log::debug;
 
-type EventCallback = Box<dyn Fn(String) + Send + Sync>;
-type EventNotifier = Box<dyn Fn(&str, &str) + Send + Sync>;
-
+type EventCallback = Box<dyn Fn(&str) + Send + Sync>;
 
 pub struct NodiumEventBus {
   event_handlers: RwLock<HashMap<String, Vec<EventCallback>>>,
-  event_notifier: EventNotifier,
 }
 
 impl NodiumEventBus {
-  pub fn new(event_notifier: EventNotifier) -> Arc<Mutex<Self>> {
+  pub fn new() -> Arc<Mutex<Self>> {
       Arc::new(Mutex::new(Self {
           event_handlers: RwLock::new(HashMap::new()),
-          event_notifier,
       }))
   }
 
@@ -34,15 +30,9 @@ impl NodiumEventBus {
           debug!("Found {} handlers for event {}", handler_list.len(), event_name);
           for handler in handler_list {
               let handler = handler.clone();
-              handler(payload.clone());
+              handler(&payload);
           }
           debug!("Finished emitting event {}", event_name);
       }
-      (self.event_notifier)(event_name, &payload);
-  }
-
-  pub fn send(&self, event_name: &str, payload: String) {
-      debug!("Sending event {}", event_name);
-      (self.event_notifier)(event_name, &payload);
   }
 }

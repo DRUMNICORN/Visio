@@ -3,9 +3,10 @@ use crate::Registry;
 use dirs_next::document_dir;
 use libloading::{Library, Symbol};
 use log::{debug, error, info};
-use nodium_events::{NodiumEventType, NodiumEventBus};
+use nodium_events::{NodiumEventBus, NodiumEventType};
 use nodium_pdk::NodiumPlugin;
 use serde_json::Value;
+use std::fmt::Debug;
 use std::fs;
 use std::path::Path;
 use std::sync::Arc;
@@ -15,6 +16,14 @@ pub struct NodiumPlugins {
     install_location: String,
     event_bus: Arc<Mutex<NodiumEventBus>>,
     registry: Registry,
+}
+
+impl Debug for NodiumPlugins {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("NodiumPlugins")
+            .field("install_location", &self.install_location)
+            .finish()
+    }
 }
 
 impl NodiumPlugins {
@@ -33,9 +42,6 @@ impl NodiumPlugins {
         };
 
         let installer = Arc::new(Mutex::new(plugins));
-        
-        // load plugins in the plugins directory
-        installer.lock().await.reload().await;
         installer.lock().await.listen(installer.clone()).await;
         installer
     }
@@ -87,7 +93,7 @@ impl NodiumPlugins {
                         info!("Plugin registered successfully");
                     }
                     Err(e) => {
-                        info!("Error registering plugin: {} ... trying to build", e);
+                        debug!("Plugin not able to register: {}", e);
                         // get folder name of last folder in path
                         match install(
                             path.file_name().unwrap().to_str().unwrap(),
@@ -114,60 +120,45 @@ impl NodiumPlugins {
         let plugins_clone = plugins.clone();
         let plugins_clone_callback = plugins_clone.clone();
 
-        let event_bus_guard = plugins_clone.lock().await.event_bus.clone();
+        let mut event_bus = self.event_bus.lock().await;
 
-        event_bus_guard
-            .lock()
-            .await
+        // load plugins in the plugins directory
+        event_bus
             .register(
-                &NodiumEventType::AddPlugin.to_string(),
-                Box::new(move |payload: String| {
-                    let plugins_clone = plugins_clone_callback.clone();
+                &NodiumEventType::PluginInstall.to_string(),
+                Box::new(move |payload| {
+                    let payload: Value = serde_json::from_str(&payload).unwrap();
+                    debug!("Plugin install payload: {:?}", payload);
 
-                    tokio::spawn(async move {
-                        let mut plugins_guard = plugins_clone.lock().await;
-                        let install_location = plugins_guard.install_location.clone();
-                        match plugins_guard
-                            .plugin_install(payload, install_location.clone())
-                            .await
-                        {
-                            Ok((crate_name, crate_version)) => {
-                                let mut plugins_guard = plugins_clone.lock().await;
-                                match plugins_guard.register(&crate_name, &crate_version, false) {
-                                    Ok(_) => {
-                                        info!("Plugin registered successfully");
-                                    }
-                                    Err(e) => {
-                                        error!("Error registering plugin: {}", e);
-                                    }
-                                }
-                            }
-                            Err(e) => {
-                                error!("Error installing crate: {}", e);
-                            }
-                        }
-                    });
-                }) as Box<dyn Fn(String) + Send + Sync>,
+                    let plugins = plugins_clone_callback.clone();
+                    debug!("Plugins: {:?}", plugins);
+
+                    // tokio::spawn(async move {
+                    //     match plugins
+                    //         .lock()
+                    //         .await
+                    //         .register(plugin_name, plugin_version, false)
+                    //     {
+                    //         Ok(_) => {
+                    //             info!("Plugin registered successfully");
+                    //         }
+                    //         Err(e) => {
+                    //             error!("Error registering plugin: {}", e);
+                    //         }
+                    //     }
+                    // });
+                }),
             )
             .await;
-          
-        let event_bus_guard = plugins_clone.lock().await.event_bus.clone();
-        
-        event_bus_guard
-            .lock()
-            .await
+        event_bus
             .register(
-                &NodiumEventType::ReloadPlugins.to_string(),
-                Box::new(move |_: String| {
-                    debug!("Reloading plugins");
-                    let plugins_clone = plugins_clone.clone();
-
+                &NodiumEventType::PluginsReload.to_string(),
+                Box::new(move |_| {
+                    let plugins = plugins_clone.clone();
                     tokio::spawn(async move {
-                        debug!("Reloading plugins");
-                        let mut plugins_guard = plugins_clone.lock().await;
-                        plugins_guard.reload().await;
+                        plugins.lock().await.reload().await;
                     });
-                }) as Box<dyn Fn(String) + Send + Sync>,
+                }),
             )
             .await;
     }

@@ -85,7 +85,8 @@ impl NodiumWindow for CratesBrowserWindow {
         //         } else {
         //             let crates = self.crates_service.crates();
         //             // Update the table with the new crates data
-        //             // ...
+        //             // self.content = NodiumUiComponent::Table(crates);
+        //         }
         //         }
         //     }
         //     "install" => {

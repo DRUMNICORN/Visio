@@ -1,48 +1,93 @@
 use std::sync::Arc;
+use tokio::sync::Mutex;
 
 use log::{debug, error};
-use nodium_app::{NodiumApp, NodiumView};
+use nodium_app::NodiumView;
+use nodium_events::NodiumEventBus;
 use nodium_pdk::{NodiumEvent, NodiumNode, NodiumWindow};
 use serde_json::{from_str, to_value};
-use tauri::{Manager, async_runtime::Mutex};
+use tauri::{AppHandle, Manager};
 
-// TauriRenderer
+// Tauri view
 #[derive(Clone)]
 pub struct NodiumViewTauri {
-    handle: tauri::AppHandle,
+    handle: AppHandle,
+    event_bus: Arc<Mutex<NodiumEventBus>>,
 }
 
 impl NodiumViewTauri {
-    pub fn new(handle: tauri::AppHandle) -> Self {
-        NodiumViewTauri { handle: handle }
+    pub fn new(handle: AppHandle, event_bus: Arc<Mutex<NodiumEventBus>>) -> Self {
+        NodiumViewTauri {
+            handle: handle,
+            event_bus: event_bus,
+        }
     }
 }
 
 impl NodiumView for NodiumViewTauri {
-    fn run(&self, app: Arc<Mutex<NodiumApp>>) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("running tauri renderer");
-        self.handle.listen_global("event", move |event| {
-            let data: String = match event.payload() {
-                Some(data) => data.to_string(),
-                None => {
-                    error!("failed to get event payload");
-                    return;
-                }
-            };
+    fn run(
+        &self,
+        // async result
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        // debug!("running tauri view");
 
-            let event: NodiumEvent = match from_str(&data) {
-                Ok(event) => event,
-                Err(e) => {
-                    error!("failed to parse event: {}", e);
-                    return;
-                }
-            };
-            debug!("received event: {:?}", event);
-            let app = app.clone();
-            tokio::spawn(async move {
-                app.lock().await.event(event.name, event.payload).await;
-            });
-        });
+        // // event manager will listen for events to frontend // callback in a box
+        // let event_bus_1 = self.event_bus.clone();
+        
+        // // register event
+        // let event_log = self.event_bus.lock().await;
+
+
+        // event_log.register(
+        //     "event",
+        //     Box::new(move |payload| {
+        //         let event_bus_1 = event_bus_1.clone();
+        //         debug!("received event: {}", payload);
+        //         let event: NodiumEvent = match from_str(&payload) {
+        //             Ok(event) => event,
+        //             Err(e) => {
+        //                 error!("failed to parse event: {}", e);
+        //                 return;
+        //             }
+        //         };
+        //         debug!("received event: {:?}", event);
+        //         let event = NodiumEvent::new(&event.name, event.payload);
+        //         // event_callback(event);+
+        //         let event_json_str = serde_json::to_string(&event).unwrap();
+
+        //         tokio::spawn(async move {
+        //             event_bus_1.lock().await.emit("event", event_json_str);
+        //         });
+        //     }),
+        // );
+        // let event_bus_2 = self.event_bus.clone();
+
+        // self.handle.listen_global("event", move |event| {
+        //     let event_bus_2 = event_bus_2.clone();
+        //     debug!("received event: {:?}", event);
+        //     let data: String = match event.payload() {
+        //         Some(data) => data.to_string(),
+        //         None => {
+        //             error!("failed to get event payload");
+        //             return;
+        //         }
+        //     };
+        //     debug!("received event payload: {}", data);
+        //     let event: NodiumEvent = match from_str(&data) {
+        //         Ok(event) => event,
+        //         Err(e) => {
+        //             error!("failed to parse event: {}", e);
+        //             return;
+        //         }
+        //     };
+        //     debug!("received event: {:?}", event);
+        //     let event = NodiumEvent::new(&event.name, event.payload);
+        //     // event_callback(event);
+        //     let event_json_str = serde_json::to_string(&event).unwrap();
+        //     tokio::spawn(async move {
+        //         event_bus_2.lock().await.emit("event", event_json_str);
+        //     });
+        // });
         Ok(())
     }
 
@@ -55,7 +100,10 @@ impl NodiumView for NodiumViewTauri {
         Ok(())
     }
 
-    fn remove_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>> {
+    fn remove_window(
+        &self,
+        window: Box<dyn NodiumWindow>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         debug!("removing window: {:?}", window.serialize());
         let event_payload = to_value(window.serialize())?;
         self.handle
@@ -64,7 +112,10 @@ impl NodiumView for NodiumViewTauri {
         Ok(())
     }
 
-    fn update_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>> {
+    fn update_window(
+        &self,
+        window: Box<dyn NodiumWindow>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         debug!("updating window: {:?}", window.serialize());
         let event_payload = to_value(window.serialize())?;
         self.handle
@@ -88,33 +139,6 @@ impl NodiumView for NodiumViewTauri {
         self.handle
             .app_handle()
             .emit_all("remove_node", event_payload)?;
-        Ok(())
-    }
-
-    fn add_event(&self, event: NodiumEvent) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("adding event: {:?}", event);
-        let event_payload = to_value(event)?;
-        self.handle
-            .app_handle()
-            .emit_all("add_event", event_payload)?;
-        Ok(())
-    }
-
-    fn remove_event(&self, event: NodiumEvent) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("removing event: {:?}", event);
-        let event_payload = to_value(event)?;
-        self.handle
-            .app_handle()
-            .emit_all("remove_event", event_payload)?;
-        Ok(())
-    }
-
-    fn update_event(&self, event: NodiumEvent) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("updating event: {:?}", event);
-        let event_payload = to_value(event)?;
-        self.handle
-            .app_handle()
-            .emit_all("update_event", event_payload)?;
         Ok(())
     }
 }

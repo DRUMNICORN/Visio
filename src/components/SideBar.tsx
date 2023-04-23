@@ -9,6 +9,7 @@ const SideBar: React.FC = () => {
         backgroundColor: '#252526',
         color: 'white',
         overflowY: 'auto',
+        // align items to the top
       }}
     >
       {/* Add your file tree or other sidebar content here */}
