@@ -553,7 +553,7 @@
   resolved "https://registry.npmjs.org/@mui/types/-/types-7.2.4.tgz"
   integrity sha512-LBcwa8rN84bKF+f5sDyku42w1NTxaPgPyYKODsh01U1fVstTClbUoSA96oyRBnSNyEiAVjKm6Gwx9vjR+xyqHA==
 
-"@mui/utils@^5.12.0":
+"@mui/utils@^5.11.13", "@mui/utils@^5.12.0":
   version "5.12.0"
   resolved "https://registry.npmjs.org/@mui/utils/-/utils-5.12.0.tgz"
   integrity sha512-RmQwgzF72p7Yr4+AAUO6j1v2uzt6wr7SWXn68KBsnfVpdOHyclCzH2lr/Xu6YOw9su4JRtdAIYfJFXsS6Cjkmw==
@@ -563,6 +563,17 @@
     "@types/react-is" "^16.7.1 || ^17.0.0"
     prop-types "^15.8.1"
     react-is "^18.2.0"
+
+"@mui/x-data-grid@^6.2.1":
+  version "6.2.1"
+  resolved "https://registry.npmjs.org/@mui/x-data-grid/-/x-data-grid-6.2.1.tgz"
+  integrity sha512-vFobFeFJslc4JRXark5SUFIzh/hwpyB8UENqUE3m0CbqKoRf4so2nkvaiK9TPsVIJbAuF6g1xyS0IhvMU2mzWg==
+  dependencies:
+    "@babel/runtime" "^7.21.0"
+    "@mui/utils" "^5.11.13"
+    clsx "^1.2.1"
+    prop-types "^15.8.1"
+    reselect "^4.1.7"
 
 "@popperjs/core@^2.11.7":
   version "2.11.7"
@@ -663,6 +674,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-resizable@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.npmjs.org/@types/react-resizable/-/react-resizable-3.0.4.tgz"
+  integrity sha512-+QguN9CDfC1lthq+4noG1fkxh8cqkV2Fv/Mu3mdknCCBiwwNLecnBdk1MmNNN7uJpT23Nx/aVkYsbt5NuWouFw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-transition-group@^4.4.5":
   version "4.4.5"
   resolved "https://registry.npmjs.org/@types/react-transition-group/-/react-transition-group-4.4.5.tgz"
@@ -740,7 +758,7 @@ chalk@^2.0.0:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-clsx@^1.2.1:
+clsx@^1.1.1, clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/clsx/-/clsx-1.2.1.tgz"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
@@ -1019,7 +1037,7 @@ postcss@^8.4.21:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-prop-types@^15.6.2, prop-types@^15.8.1:
+prop-types@15.x, prop-types@^15.6.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -1036,6 +1054,14 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
+react-draggable@^4.0.3, react-draggable@^4.4.5:
+  version "4.4.5"
+  resolved "https://registry.npmjs.org/react-draggable/-/react-draggable-4.4.5.tgz"
+  integrity sha512-OMHzJdyJbYTZo4uQE393fHcqqPYsEtkjfMgvCHr6rejT+Ezn4OZbNyGH50vv+SunC1RMvwOTSWkEODQLzw1M9g==
+  dependencies:
+    clsx "^1.1.1"
+    prop-types "^15.8.1"
+
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
@@ -1050,6 +1076,14 @@ react-refresh@^0.14.0:
   version "0.14.0"
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.14.0.tgz"
   integrity sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==
+
+react-resizable@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/react-resizable/-/react-resizable-3.0.5.tgz#362721f2efbd094976f1780ae13f1ad7739786c1"
+  integrity sha512-vKpeHhI5OZvYn82kXOs1bC8aOXktGU5AmKAgaZS4F5JPburCtbmDPqE7Pzp+1kN4+Wb81LlF33VpGwWwtXem+w==
+  dependencies:
+    prop-types "15.x"
+    react-draggable "^4.0.3"
 
 react-transition-group@^4.4.5:
   version "4.4.5"
@@ -1072,6 +1106,11 @@ regenerator-runtime@^0.13.11:
   version "0.13.11"
   resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz"
   integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
+
+reselect@^4.1.7:
+  version "4.1.8"
+  resolved "https://registry.npmjs.org/reselect/-/reselect-4.1.8.tgz"
+  integrity sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==
 
 resolve-from@^4.0.0:
   version "4.0.0"

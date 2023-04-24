@@ -1,26 +1,32 @@
-import React, { useState } from 'react';
-import { Box } from '@mui/material';
-import SideBarIcons from './SideBarIcons';
+import React from "react";
+import { Box, Button } from "@mui/material";
 
-const SideBar: React.FC = () => {
-  const [activeIcon, setActiveIcon] = useState('fileTree');
+import { emit, listen } from "@tauri-apps/api/event";
 
-  const handleIconClick = (icon: string) => {
-    setActiveIcon(icon);
+const StatusBar: React.FC = () => {
+  const handleButtonClick = () => {
+    // Emit your event or perform any desired action here
+    console.log("Button clicked");
+    emit("event", {
+      name: "reload",
+      payload: "Hello from the frontend!",
+    });
   };
 
   return (
     <Box
       sx={{
-        width: '7%',
-        backgroundColor: '#252526',
-        color: 'white',
-        overflowY: 'auto',
+        height: "24px",
+        backgroundColor: "#333",
+        color: "white",
+        display: "flex",
+        alignItems: "center",
+        paddingLeft: "16px",
       }}
     >
-      <SideBarIcons activeIcon={activeIcon} onIconClick={handleIconClick} />
+      {/* Add your status bar content here */}
     </Box>
   );
 };
 
-export default SideBar;
+export default StatusBar;
