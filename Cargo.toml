@@ -15,7 +15,20 @@ serde_json = "1.0"
 log = "0.4"
 env_logger = "0.9"
 
-nodium-egui = { path = "libs/view/egui" , version = "0.1.0" }
+[dependencies.nodium-egui]
+path = "libs/view/egui"
+version = "0.1.0"
+optional = true
+
+[dependencies.nodium-tauri]
+path = "libs/view/tauri"
+version = "0.1.0"
+optional = true
+
 nodium-plugins = { path = "libs/plugins", version = "0.1.1" }
 nodium-app = { path = "libs/app", version = "0.1.1" }
 nodium-events = { path = "libs/events" , version = "0.1.2" }
+
+[features]
+egui = ["nodium-egui"]
+tauri = ["nodium-tauri"]
