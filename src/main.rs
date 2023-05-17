@@ -14,8 +14,7 @@ use nodium_tauri::NodiumViewTauri;
 use nodium_console::NodiumViewConsole;
 
 
-#[tokio::main]
-async fn main() {
+fn main() {
     Builder::new()
         .filter(None, LevelFilter::Debug) // Change this to the desired log level
         .init();
@@ -39,7 +38,7 @@ async fn main() {
       let app = NodiumApp::new();
       let view = NodiumViewConsole::new(app);
       
-      match view.run().await {
+      match view.run() {
             Ok(_) => {
                 println!("App exited successfully");
             }
@@ -61,9 +60,8 @@ struct NodiumViewDummy;
 use nodium_app::NodiumView;
 use nodium_pdk::NodiumWindow;
 
-#[async_trait::async_trait]
 impl NodiumView for NodiumViewDummy {
-    async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
       Ok(())
     }
 

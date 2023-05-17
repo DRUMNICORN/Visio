@@ -7,6 +7,7 @@ edition = "2021"
 license = "AGPL-3.0"
 
 [dependencies]
+abi_stable = "0.9.3"
 nodium-pdk = { path = "../../libs/pdk", version = "0.1.1" }
 
 log = "0.4"
@@ -18,5 +19,5 @@ reqwest = { version = "0.11.4", features = ["blocking", "json"] }
 tokio = { version = "1.27.0", features = ["sync"] }
 
 [lib]
-name = "nodium_input"
+name = "nodium_browser"
 crate-type = ["cdylib"]

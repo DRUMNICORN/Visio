@@ -1,47 +1,37 @@
 // libs/plugins/src/plugin_manager.rs
-
 use log::debug;
-use nodium_events::NodiumEventBus;
-use nodium_pdk::{
-    NodiumNode,
-    NodiumPlugin,
-    // NodiumService,
-    NodiumWindow,
-};
-use std::{collections::HashMap, sync::Arc};
-use tokio::sync::Mutex;
+use std::collections::HashMap;
+use nodium_pdk::NodiumPluginObject;
 
 pub struct Registry {
-    plugins: HashMap<String, Box<dyn NodiumPlugin>>, // nodium_<plugin_name>
-                                                     // windows: HashMap<String, Box<dyn NodiumWindow>>, // nodium_<plugin_name>/<window_name>
-                                                     // nodes: HashMap<String, NodiumNode>,
-                                                     // services: HashMap<String, NodiumService>,
+    plugins: HashMap<String, Box<dyn NodiumPluginObject>>,
 }
 
 impl Registry {
     pub fn new() -> Self {
         Registry {
             plugins: HashMap::new(),
-            // windows: HashMap::new(),
-            // nodes: HashMap::new(),
         }
     }
 
-    // TODO: Event Connection from Frontend (Tauri) to Backend (Nodium)
-    pub fn register_plugin(&mut self, plugin: Box<dyn NodiumPlugin>) {
+    pub fn register_plugin(&mut self, plugin: Box<dyn NodiumPluginObject>) -> Option<&Box<dyn NodiumPluginObject>> {
         let plugin_name = plugin.name();
-        self.plugins.insert(plugin_name.clone().to_owned(), plugin);
+        self.plugins.insert(plugin_name.to_string(), plugin);
+        self.get_plugin(&plugin_name)
     }
 
-    pub fn get_plugin(&self, plugin_name: &str) -> Option<&Box<dyn NodiumPlugin>> {
+    pub fn get_plugin(&self, plugin_name: &str) -> Option<&Box<dyn NodiumPluginObject>> {
         self.plugins.get(plugin_name)
     }
 
     pub fn get_plugins(&self) -> Vec<String> {
-        // create a vec and loop over plugins and insert into vec
         let mut plugins = Vec::new();
-        let plugins_amount = self.plugins.len();
+        for plugin_name in self.plugins.keys() {
+            plugins.push(plugin_name.clone());
+        }
+        let plugins_amount = plugins.len();
         debug!("Plugins amount: {}", plugins_amount);
         plugins
     }
 }
+

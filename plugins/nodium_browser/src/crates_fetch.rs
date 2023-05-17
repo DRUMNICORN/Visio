@@ -1,8 +1,7 @@
-// main.rs
-use reqwest::Error;
-use serde_json::Value;
+// use reqwest::Error;
+// use serde_json::Value;
 
-use crate::CrateInfo;
+// use crate::CrateInfo;
 
 // pub async fn crates_fetch() -> Result<Vec<CrateInfo>, Error> {
 //     let response = reqwest::get("https://crates.io/api/v1/crates")

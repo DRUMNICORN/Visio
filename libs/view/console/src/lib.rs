@@ -53,47 +53,75 @@ impl NodiumViewConsole {
         debug!("App locked, reload plugins");
         app_locked.plugins.lock().await.reload().await;
     }
+
+    async fn handle_version(&self) {
+        debug!("Handle version");
+        println!("Nodium version: {}", env!("CARGO_PKG_VERSION"));
+    }
+
+    fn handle_help(&self) {
+        debug!("Handle help");
+        println!("Nodium help");
+        println!("Commands:");
+        println!("list - list all plugins");
+        println!("version - show nodium version");
+        println!("help - show this help");
+        println!("reload - reload plugins");
+        println!("clear - clear console");
+        println!("exit - exit nodium");
+    }
+
+    fn handle_clear(&self) {
+        debug!("Handle clear");
+        match clearscreen::clear() {
+            Ok(_) => {}
+            Err(e) => {
+                println!("Error clearing screen: {}", e);
+            }
+        }
+    }
+
+    fn prompt(&self) -> Result<String, Box<dyn std::error::Error>> {
+      stdout()
+          .execute(SetForegroundColor(Color::Green))?
+          .execute(Print("nodium: "))?
+          .execute(ResetColor)?;
+        let mut input = String::new();
+        stdin().read_line(&mut input)?;
+        Ok(input)
+    }
+
+    async fn run_loop(&self) {
+        loop {
+            let input = self.prompt().unwrap();
+            let arguments: Vec<&str> = input.split_whitespace().collect();
+            let command = arguments[0];
+            let arguments = &arguments[1..];
+          match command {
+              "exit" => break,
+              "list" => self.handle_plugin_list().await,
+              "version" => self.handle_version().await,
+              "help" => self.handle_help(),
+              "reload" => self.handle_reload().await,
+              "clear" => self.handle_clear(),
+              _ => println!("Unknown command: {}", command),
+          }
+        }
+    }
 }
 
-use async_trait::async_trait;
-
-#[async_trait]
 impl NodiumView for NodiumViewConsole {
-    async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         // the console view will listen to the console for commands.
         // print in the console a message prompt like shell bash or other console
         // if possible use colors and start with "nodium:  " and wait for user command line input
 
         // clear console and print welcome message as asci art
-        clearscreen::clear().unwrap();
-        info!("Welcome to Nodium!\n");
+        self.handle_clear();
 
-        loop {
-            // Print the prompt with color
-            stdout()
-                .execute(SetForegroundColor(Color::Green))?
-                .execute(Print("nodium: "))?
-                .execute(ResetColor)?;
-
-            // Read user input
-            let mut input = String::new();
-            stdin().read_line(&mut input)?;
-
-            // Remove the newline character from the input
-            input.pop();
-
-            // check first part " " of input 
-            let init = input.split(" ").collect::<Vec<&str>>()[0];
-            match init {
-                "exit" => break,
-                "list" => self.handle_plugin_list().await,
-                "version" => println!("Nodium version: {}", env!("CARGO_PKG_VERSION")),
-                "help" => println!("Help"),
-                "reload" => self.handle_reload().await,
-                "clear" => clearscreen::clear().unwrap(),
-                _ => println!("You entered: {}", input),
-            }
-        }
+        // start the console loop as async task
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(self.run_loop());
 
         Ok(())
     }

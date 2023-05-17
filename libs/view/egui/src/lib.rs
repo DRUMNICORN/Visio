@@ -28,7 +28,6 @@ pub struct NodiumViewEgui {
     sender: Sender<Event<'static, ()>>,
 }
 
-use async_trait::async_trait;
 
 impl NodiumViewEgui {
     pub fn new() -> Self {
@@ -101,7 +100,6 @@ impl NodiumViewEgui {
     }
 }
 
-#[async_trait]
 impl NodiumView for NodiumViewEgui {
     fn add_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>> {
         debug!("add_window");

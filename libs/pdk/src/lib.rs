@@ -4,7 +4,6 @@
 
 mod node;
 mod plugin;
-// mod service;
 mod event;
 mod window;
 mod layout;
@@ -12,7 +11,7 @@ mod component;
 
 pub use node::NodiumNode;
 pub use plugin::NodiumPlugin;
-// pub use service::NodiumService;
+pub use plugin::NodiumPluginObject;
 pub use event::NodiumEvent;
 pub use component::NodiumUiComponent;
 pub use window::NodiumWindow;

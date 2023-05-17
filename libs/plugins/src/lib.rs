@@ -2,7 +2,7 @@
 mod plugins;
 mod registry;
 mod extract_crate_file;
-mod plugin_utils;
+mod utils;
 
 // export Plugins and Registry
 
