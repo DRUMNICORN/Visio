@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
-struct CrateInfo {
+pub struct CrateInfo {
     id: String,
     name: String,
     description: String,

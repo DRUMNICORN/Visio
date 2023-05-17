@@ -2,7 +2,7 @@ use crate::plugin_utils::{download, install};
 use crate::Registry;
 use dirs_next::document_dir;
 use libloading::{Library, Symbol};
-use log::{debug, error, info};
+use log::{debug, error, info, warn};
 use nodium_events::{NodiumEventBus, NodiumEventType};
 use nodium_pdk::NodiumPlugin;
 use serde_json::Value;
@@ -26,7 +26,7 @@ impl Debug for NodiumPlugins {
 }
 
 impl NodiumPlugins {
-    pub async fn new() -> Arc<Mutex<Self>> {
+    pub fn new() -> Arc<Mutex<Self>> {
         let doc_dir = document_dir().expect("Unable to get user's document directory");
         let install_location = doc_dir.join("nodium").join("plugins");
         debug!("Plugin install location: {:?}", install_location);
@@ -40,17 +40,18 @@ impl NodiumPlugins {
         };
 
         let installer = Arc::new(Mutex::new(plugins));
-        installer.lock().await.listen(installer.clone()).await;
+        let installer_clone = installer.clone();
+        tokio::spawn(async move {
+          installer_clone.lock().await.listen(installer_clone.clone()).await;
+        });
         installer
     }
 
     pub async fn reload(&mut self) {
         debug!("Reloading plugins");
-        // load plugins in the plugins directory
         let plugins_dir = Path::new(&self.install_location);
         if !plugins_dir.exists() {
             debug!("Plugins directory does not exist");
-            // create plugins directory
             match fs::create_dir_all(&plugins_dir) {
                 Ok(_) => {
                     debug!("Plugins directory created successfully");
@@ -91,7 +92,7 @@ impl NodiumPlugins {
                         info!("Plugin registered successfully");
                     }
                     Err(e) => {
-                        debug!("Plugin not able to register: {}", e);
+                        warn!("Plugin not able to register: {}", e);
                         // get folder name of last folder in path
                         match install(
                             path.file_name().unwrap().to_str().unwrap(),
@@ -102,7 +103,14 @@ impl NodiumPlugins {
                         .await
                         {
                             Ok(_) => {
-                                info!("Plugin installed successfully");
+                              match self.register(plugin_name, plugin_version, true) {
+                                Ok(_) => {
+                                    info!("Plugin registered successfully");
+                                }
+                                Err(e) => {
+                                    error!("Error registering plugin: {}", e);
+                                }
+                              }
                             }
                             Err(e) => {
                                 error!("Error installing plugin: {}", e);
@@ -227,7 +235,7 @@ impl NodiumPlugins {
                     ".dll"
                 } else if cfg!(unix) {
                     ".so"
-                } else {
+                } else { // Todo: add support for other platforms (macos, ios, android, etc.)
                     return Err(Box::new(std::io::Error::new(
                         std::io::ErrorKind::Other,
                         "Unsupported platform",
@@ -246,5 +254,12 @@ impl NodiumPlugins {
         debug!("Registering plugin: {}", plugin_name);
         self.registry.register_plugin(plugin);
         Ok(())
+    }
+
+    pub fn get_plugins(&self) -> Vec<String> {
+        debug!("Getting plugins");
+        let plugins = self.registry.get_plugins();
+        debug!("Plugins: {:?}", plugins);
+        plugins
     }
 }

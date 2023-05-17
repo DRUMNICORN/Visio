@@ -1,12 +1,9 @@
-use std::sync::Arc;
+use nodium_pdk::{NodiumWindow, NodiumLayout};
+use async_trait::async_trait;
 
-use nodium_pdk::{NodiumEvent, NodiumNode, NodiumWindow};
-use tokio::sync::Mutex;
-
-use crate::NodiumApp;
-
+#[async_trait]
 pub trait NodiumView: Send + Sync {
-    fn run(
+    async fn run(
         &self,
         // event_callback: Box<dyn Fn(NodiumEvent) + Send + Sync>,
     ) -> Result<(), Box<dyn std::error::Error>>;
@@ -19,5 +16,6 @@ pub trait NodiumView: Send + Sync {
         &self,
         window: Box<dyn NodiumWindow>,
     ) -> Result<(), Box<dyn std::error::Error>>;
-    // TODO: Extend the NodiumView trait
+    fn set_layout(&self, layout: NodiumLayout) -> Result<(), Box<dyn std::error::Error>>;
+    fn focus_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>>;
 }

@@ -23,6 +23,9 @@ impl NodiumViewTauri {
     }
 }
 
+use async_trait::async_trait;
+
+#[async_trait]
 impl NodiumView for NodiumViewTauri {
     fn run(
         &self,

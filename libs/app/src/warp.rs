@@ -1,7 +1,6 @@
 use std::hash::{Hash, Hasher};
 use crates_io_api::Crate;
 
-
 // TODO: Check Redundancy
 
 pub struct WrappedCrate(pub Crate);

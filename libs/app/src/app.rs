@@ -1,39 +1,22 @@
-use log::debug;
-use nodium_events::NodiumEventBus;
-use nodium_pdk::NodiumEvent;
 use nodium_plugins::NodiumPlugins;
 use tokio::sync::Mutex;
 
-use crate::NodiumView;
 use std::sync::Arc;
 
 pub struct NodiumApp {
     // event_bus: Arc<Mutex<NodiumEventBus>>,
-    view: Box<dyn NodiumView>,
-    plugin_manager: Arc<Mutex<NodiumPlugins>>,
+    pub plugins: Arc<Mutex<NodiumPlugins>>,
 }
 
 impl NodiumApp {
-    pub async fn init(
-      // event_bus: Arc<Mutex<NodiumEventBus>>, 
-      view: Box<dyn NodiumView>) -> Self {
-        debug!("App init");
+    pub fn new() -> Arc<Mutex<Self>> {
+        let plugins = NodiumPlugins::new();
+        // default view is console
 
-        let plugin_manager = NodiumPlugins::new().await;
+        let app =  NodiumApp {
+            plugins,
+        };
 
-        NodiumApp {
-            // event_bus,
-            view,
-            plugin_manager,
-        }
-    }
-
-    pub async fn run(&mut self) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
-        self.view.run()?;
-        Ok(())
-    }
-
-    pub async fn event(&self, name: String, payload: String) {
-        debug!("Event: {} - {}", name, payload);
+        Arc::new(Mutex::new(app))
     }
 }
