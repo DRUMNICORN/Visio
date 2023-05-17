@@ -1,0 +1,26 @@
+[package]
+name = "nodium-egui"
+version = "0.1.0"
+authors = ["cherob"]
+edition = "2021"
+description = "Nodium EGUI Integration"
+
+[dependencies]
+nodium-app = { path = "../../app", version = "0.1.1" }
+nodium-pdk = { path = "../../pdk", version = "0.1.1" }
+nodium-events = { path = "../../events", version = "0.1.1" }
+
+serde_json = "1.0.68"
+
+
+log = "0.4"
+env_logger = "0.9"
+
+# tokio only for spawn
+tokio =  { version = "1.27.0", features = ["rt-multi-thread", "macros"] }
+
+egui = "0.15.0"
+egui_winit_platform = "0.5.0"
+winit = "0.24.0"
+
+async-trait = "0.1.51"
