@@ -7,21 +7,16 @@ edition = "2021"
 license-file = "LICENSE"
 
 [dependencies]
-tokio = { version = "1.27.0", features = ["full"] }
-
-
-serde = { version = "1.0.130", features = ["derive"] }
-
-serde_json = "1.0"
-log = "0.4"
-env_logger = "0.9"
-
-async-trait = "0.1.51"
-
 nodium-plugins = { path = "libs/plugins", version = "0.1.1" }
 nodium-app = { path = "libs/app", version = "0.1.1" }
 nodium-events = { path = "libs/events", version = "0.1.2" }
 nodium-pdk = { path = "libs/pdk", version = "0.1.1" }
+log = "0.4"
+env_logger = "0.9"
+serde = { version = "1.0.130", features = ["derive"] }
+serde_json = "1.0"
+
+tokio = { version = "1.27.0", features = ["full"] }
 
 [dependencies.nodium-egui]
 path = "libs/view/egui"
@@ -44,5 +39,5 @@ egui = ["nodium-egui"]
 tauri = ["nodium-tauri"]
 console = ["nodium-console"]
 
-[build]
-rustflags = ["-A", "warnings"]
+# [build]
+# rustflags = ["-A", "warnings"]

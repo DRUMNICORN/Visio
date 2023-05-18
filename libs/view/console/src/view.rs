@@ -33,18 +33,20 @@ impl NodiumViewConsole {
     pub async fn handle_plugin_list(&self) {
         debug!("Handle plugin list");
         debug!("Try to get plugins");
-        let plugins = self.app.lock().await.plugins.lock().await.get_plugins();
+        let app_lock = self.app.lock().await;
+        let plugins_lock = app_lock.plugins.lock().await;
+        let plugins = plugins_lock.get_plugins();
 
         debug!("Plugins: {:?}", plugins);
         for plugin in plugins {
-            println!("- {}", plugin);
+            println!("- {}", plugin.name);
         }
     }
 
     pub async fn handle_reload(&self) {
-        debug!("Handle reload");
-        debug!("Try to reload plugins");
-        self.app.lock().await.plugins.lock().await.reload().await;
+      let app_lock = self.app.lock().await;
+      let mut plugins_lock = app_lock.plugins.lock().await;
+      plugins_lock.reload().await;
     }
 
     pub async fn handle_version(&self) {

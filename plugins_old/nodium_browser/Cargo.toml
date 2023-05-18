@@ -1,0 +1,15 @@
+[package]
+name = "nodium_browser"
+version = "0.1.0"
+authors = ["cherob"]
+description = "Nodium plugin browser"
+edition = "2021"
+license = "AGPL-3.0"
+
+[dependencies]
+nodium-pdk = { path = "../../libs/pdk", version = "0.1.1" }
+abi_stable = "0.9.3"
+
+[lib]
+name = "nodium_browser"
+crate-type = ["cdylib"]

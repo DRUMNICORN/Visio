@@ -1,19 +1,14 @@
+pub use crate::registry::RegistryPlugin;
 use crate::utils::{
-    download, extract_crate_version_name, extract_folder_name, extract_plugin, get_lib_path,
-    install,
+    build, extract_folder_name, extract_plugin, get_lib_path,
 };
 use crate::Registry;
-use dirs_next::document_dir;
-use libloading::{Library};
 use log::{debug, error, info, warn};
-use std::fmt::Debug;
-use std::fs;
-use std::path::Path;
-use std::sync::Arc;
+use std::{fmt::Debug, fs, path::Path, sync::Arc};
 use tokio::sync::Mutex;
 
 pub struct NodiumPlugins {
-    install_location: String,
+    install_location: Box<Path>,
     registry: Registry,
 }
 
@@ -27,11 +22,8 @@ impl Debug for NodiumPlugins {
 
 impl NodiumPlugins {
     pub fn new() -> Arc<Mutex<Self>> {
-        let _doc_dir = document_dir().expect("Unable to get user's document directory");
-        // let install_location = doc_dir.join("nodium").join("plugins");
         let install_location_str = "/home/roggen/Repos/nodium/plugins";
         let install_location = Path::new(install_location_str);
-        // print absolute path to plugins directory
         let absolute_path = fs::canonicalize(&install_location)
             .expect("Unable to get absolute path to plugins directory");
         debug!("Absolute path to plugins directory: {:?}", absolute_path);
@@ -41,8 +33,9 @@ impl NodiumPlugins {
             debug!("Creating plugin directory");
             fs::create_dir_all(&install_location).expect("Unable to create plugin directory");
         }
+
         let plugins = NodiumPlugins {
-            install_location: install_location_str.to_string(),
+            install_location: Box::from(install_location),
             registry: Registry::new(),
         };
 
@@ -52,8 +45,8 @@ impl NodiumPlugins {
 
     pub async fn reload(&mut self) {
         debug!("Reloading plugins");
-
-        let plugins_dir = Path::new(&self.install_location);
+        let unboxed_install_location = self.install_location.to_str().unwrap().to_string();
+        let plugins_dir = Path::new(&unboxed_install_location);
         if !plugins_dir.exists() {
             debug!("Plugins directory does not exist");
             if let Err(e) = fs::create_dir_all(&plugins_dir) {
@@ -63,48 +56,56 @@ impl NodiumPlugins {
             debug!("Plugins directory created successfully");
         }
 
-        debug!("Reading plugins directory");
-        match fs::read_dir(&plugins_dir) {
-            Ok(folders) => {
-                debug!("Plugins directory read successfully");
-                for entry in folders {
-                    if let Ok(entry) = entry {
-                        let path = entry.path();
-                        debug!("Plugin path: {:?}", path);
-                        if path.is_dir() {
-                            let plugin_name = path.file_name().unwrap().to_str().unwrap();
-                            debug!(
-                                "Plugin name: {}",
-                                plugin_name
-                            );
-                            if let Ok(_) = self.register(plugin_name, true) {
-                                info!("Plugin registered successfully");
-                            } else {
-                                warn!("Plugin not able to register");
-                                if let Err(e) = install(
-                                    path.file_name().unwrap().to_str().unwrap(),
-                                    "",
-                                    &self.install_location,
-                                    true,
-                                )
-                                .await
-                                {
-                                    error!("Error installing plugin: {}", e);
-                                    continue;
-                                }
-                                if let Ok(_) = self.register(plugin_name, true) {
-                                    info!("Plugin registered successfully");
-                                } else {
-                                    error!("Error registering plugin");
-                                }
-                            }
+        if let Err(e) = self.read_plugins_directory(&plugins_dir).await {
+            error!("Error reading plugins directory: {}", e);
+            return;
+        }
+
+        debug!("Plugins directory read successfully");
+    }
+
+    async fn read_plugins_directory(
+        &mut self,
+        plugins_dir: &Path,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        let folders = fs::read_dir(&plugins_dir)?;
+        for entry in folders {
+            if let Ok(entry) = entry {
+                let path = entry.path();
+                debug!("Plugin path: {:?}", path);
+                if path.is_dir() {
+                    let plugin_name = path.file_name().unwrap().to_str().unwrap();
+                    debug!("Plugin name: {}", plugin_name);
+                    if let Ok(_) = self.register(plugin_name, true) {
+                        info!("Plugin registered successfully");
+                    } else {
+                        if let Err(e) = self.build_and_register_plugin(&path, plugin_name).await {
+                            error!("Error installing plugin: {}", e);
                         }
                     }
                 }
             }
-            Err(e) => {
-                error!("Error reading plugins directory: {}", e);
-            }
+        }
+        Ok(())
+    }
+
+    async fn build_and_register_plugin(
+        &mut self,
+        path: &Path,
+        plugin_name: &str,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        let path = path.to_str().unwrap();
+        let builded = build(plugin_name, path).await;
+        if let Err(e) = builded {
+            error!("Error building plugin: {}", e);
+            return Err(e.into());
+        }
+        if let Ok(_) = self.register(plugin_name, true) {
+            info!("Plugin registered successfully");
+            Ok(())
+        } else {
+            error!("Error registering plugin");
+            Err("Error registering plugin".into())
         }
     }
 
@@ -115,36 +116,6 @@ impl NodiumPlugins {
         todo!("load plugins in the plugins directory");
     }
 
-    async fn _plugin_install(
-        &mut self,
-        payload: String,
-        install_location: String,
-    ) -> Result<(String, String), Box<dyn std::error::Error + Send + Sync>> {
-        let install_location = install_location.clone();
-        debug!("Installing crate {}", payload);
-        let (crate_version, crate_name) = extract_crate_version_name(payload);
-
-        match download(&crate_name, &crate_version, &install_location).await {
-            Ok(_) => {
-                info!("Crate downloaded successfully");
-                match install(&crate_name, &crate_version, &install_location, false).await {
-                    Ok(_) => {
-                        info!("Crate installed successfully");
-                        Ok((crate_name, crate_version))
-                    }
-                    Err(e) => {
-                        error!("Error installing crate: {}", e);
-                        Err(e)
-                    }
-                }
-            }
-            Err(e) => {
-                error!("Error downloading crate: {}", e);
-                Err(e)
-            }
-        }
-    }
-
     fn register(
         &mut self,
         crate_name: &str,
@@ -152,47 +123,36 @@ impl NodiumPlugins {
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         debug!("Registering plugin {}", crate_name);
         let folder_name = extract_folder_name(is_local, crate_name);
-        let lib_path = get_lib_path(&self.install_location, folder_name, crate_name)?;
-
-        let lib = unsafe { Library::new(lib_path) };
-
-        match lib {
-            Ok(lib) => match extract_plugin(lib) {
-                Ok(plugin) => {
-                    debug!("Plugin extracted successfully");
-                    let plugin = self.registry.register_plugin(plugin);
-                    match plugin {
-                        Some(plugin) => {
-                            debug!("Plugin registered successfully");
-                            let plugin_name = plugin.name();
-                            let plugin_version = plugin.version();
-                            info!("Plugin registered: {} {}", plugin_name, plugin_version);
-                            Ok(())
-                        }
-                        None => {
-                            error!("Error registering plugin");
-                            let error = format!("Error registering plugin");
-                            Err(error.into())
-                        }
+        let unboxed_install_location = self.install_location.to_str().unwrap();
+        let lib_path = get_lib_path(unboxed_install_location, folder_name, crate_name)?;
+        let lib_path = Path::new(&lib_path);
+        let plugin_result = unsafe { extract_plugin(&lib_path) };
+        match plugin_result {
+            Ok(plugin) => {
+                let registerd_plugin = self.registry.register_plugin(RegistryPlugin {
+                    name: plugin.name().to_string(),
+                    version: plugin.version().to_string(),
+                });
+                match registerd_plugin {
+                    Ok(_) => {
+                        info!("Plugin registered successfully");
+                        Ok(())
+                    }
+                    Err(e) => {
+                        error!("Error registering plugin: {}", e);
+                        return Err(e.into());
                     }
                 }
-                Err(e) => {
-                    error!("Error extracting plugin: {}", e);
-                    let error = format!("Error extracting plugin: {}", e);
-                    Err(error.into())
-                }
-            },
+            }
             Err(e) => {
-                error!("Error loading plugin: {}", e);
-                Err(e.into())
+                warn!("Error extracting plugin: {}", e);
+                let error = format!("Error extracting plugin: {}", e);
+                Err(error.into())
             }
         }
     }
 
-    pub fn get_plugins(&self) -> Vec<String> {
-        debug!("Getting plugins");
-        let plugins = self.registry.get_plugins();
-        debug!("Plugins: {:?}", plugins);
-        plugins
+    pub fn get_plugins(&self) -> Vec<&RegistryPlugin> {
+        self.registry.get_plugins()
     }
 }

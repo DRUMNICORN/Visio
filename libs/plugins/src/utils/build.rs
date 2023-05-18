@@ -1,18 +1,19 @@
-use log::debug;
-use log::error;
+use indicatif::{ProgressBar, ProgressStyle};
+use log::{debug, error};
 use std::process::Command;
-pub async fn install(
+
+pub async fn build(
     crate_name: &str,
-    crate_version: &str,
     path: &str,
-    lib: bool,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     debug!("Building crate {} to {}", crate_name, path);
 
-    let mut output_dir = format!("{}/{}", path, crate_name);
-    if lib == false {
-        output_dir = format!("{}/{}-{}", path, crate_name, crate_version);
-    }
+    // let mut output_dir = format!("{}/{}", path, crate_name);
+    // if lib == false {
+    //     output_dir = format!("{}/{}-{}", path, crate_name, crate_version);
+    // }
+    
+    let output_dir = path;
 
     let manifest_path = format!("{}/Cargo.toml", output_dir);
 
@@ -21,7 +22,17 @@ pub async fn install(
         .arg("--release")
         .arg("--manifest-path")
         .arg(manifest_path);
+
+    let pb = ProgressBar::new_spinner();
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .tick_chars("/|\\- ")
+            .template("{spinner:.green} {msg}"),
+    );
+    pb.set_message(&format!("Building crate {}", crate_name));
     let output = cmd.output().expect("Failed to execute cargo build command");
+    pb.finish_and_clear();
+
     match !output.status.success() {
         true => {
             debug!("Crate {} failed to build", crate_name);

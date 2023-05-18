@@ -9,12 +9,10 @@ authors = ["cherob"]
 license = "AGPL-3.0"
 
 [dependencies]
-abi_stable = "0.9.3"
 nodium-events = { path = "../events", version = "0.1.2" }
-
+serde_json = "1.0"
 serde = { version = "1.0.130", features = ["derive"] }
 
-# only featue for tokio Mutex
 tokio = { version = "1.27.0", features = ["sync"] }
 
-serde_json = "1.0"
+abi_stable = "0.8.0"

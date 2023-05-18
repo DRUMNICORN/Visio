@@ -1,10 +1,15 @@
 // libs/plugins/src/plugin_manager.rs
 use log::debug;
 use std::collections::HashMap;
-use nodium_pdk::NodiumPluginObject;
+
+#[derive(Debug)]
+pub struct RegistryPlugin {
+    pub name: String,
+    pub(crate) version: String,
+}
 
 pub struct Registry {
-    plugins: HashMap<String, Box<dyn NodiumPluginObject>>,
+    pub plugins: HashMap<String, RegistryPlugin>,
 }
 
 impl Registry {
@@ -14,24 +19,22 @@ impl Registry {
         }
     }
 
-    pub fn register_plugin(&mut self, plugin: Box<dyn NodiumPluginObject>) -> Option<&Box<dyn NodiumPluginObject>> {
-        let plugin_name = plugin.name();
-        self.plugins.insert(plugin_name.to_string(), plugin);
-        self.get_plugin(&plugin_name)
-    }
-
-    pub fn get_plugin(&self, plugin_name: &str) -> Option<&Box<dyn NodiumPluginObject>> {
-        self.plugins.get(plugin_name)
-    }
-
-    pub fn get_plugins(&self) -> Vec<String> {
-        let mut plugins = Vec::new();
-        for plugin_name in self.plugins.keys() {
-            plugins.push(plugin_name.clone());
+    pub fn register_plugin(&mut self, plugin: RegistryPlugin) -> Result<(), String> {
+        debug!("Registering plugin {} v{}", plugin.name, plugin.version);
+        if self.plugins.contains_key(&plugin.name) {
+            return Err(format!("Plugin {} already registered", plugin.name));
         }
-        let plugins_amount = plugins.len();
-        debug!("Plugins amount: {}", plugins_amount);
-        plugins
+        self.plugins.insert(plugin.name.clone(), plugin);
+        Ok(())
+    }
+
+    pub fn get_plugin(&self, plugin_name: &str) -> Option<&String> {
+        self.plugins.get(plugin_name)
+            .map(|plugin| &plugin.name)
+    }
+
+    pub fn get_plugins(&self) -> Vec<&RegistryPlugin> {
+        self.plugins.values().collect()
     }
 }
 

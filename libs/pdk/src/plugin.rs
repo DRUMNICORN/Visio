@@ -1,24 +1,11 @@
-use abi_stable::{StableAbi, std_types::RString};
+// libs/pdk/src/plugin.rs
+use abi_stable::{StableAbi, sabi_trait, std_types::RString};
+use serde::{Serialize, Deserialize};
+use std::fmt::Debug;
+use std::error::Error;
 
-
-pub trait NodiumPlugin: StableAbi<> + Send + Sync {
-  fn name(&self) -> String;
-  fn version(&self) -> String;
-  fn as_object(&self) -> Box<dyn NodiumPluginObject>;
-}
-
-pub trait NodiumPluginObject: Send + Sync {
-  fn name(&self) -> RString;
-  fn version(&self) -> RString;
-  // Add any other required methods here
-}
-
-impl<T: NodiumPlugin + Send + Sync + ?Sized> NodiumPluginObject for T {
-  fn name(&self) -> RString {
-      NodiumPlugin::name(self).into()
-  }
-  fn version(&self) -> RString {
-      NodiumPlugin::version(self).into()
-  }
-  // Implement any other required methods here
+#[sabi_trait]
+pub trait NodiumPlugin {
+    fn name(&self) -> RString;
+    fn version(&self) -> RString;
 }

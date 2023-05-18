@@ -11,9 +11,6 @@ impl NodiumView for NodiumViewConsole {
         // print in the console a message prompt like shell bash or other console
         // if possible use colors and start with "nodium:  " and wait for user command line input
 
-        // clear console and print welcome message as asci art
-        self.handle_clear();
-
         // start the console loop as async task
         let rt = tokio::runtime::Runtime::new().unwrap();
         rt.block_on(self.run_loop());
