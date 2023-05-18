@@ -36,7 +36,7 @@ fn main() {
     #[cfg(not(any(feature = "egui", feature = "tauri")))]
     {
       let app = NodiumApp::new();
-      let view = NodiumViewConsole::new(app);
+      let mut view = NodiumViewConsole::new(app);
       
       match view.run() {
             Ok(_) => {
@@ -61,7 +61,7 @@ use nodium_app::NodiumView;
 use nodium_pdk::NodiumWindow;
 
 impl NodiumView for NodiumViewDummy {
-    fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn run(&mut self) -> Result<(), Box<dyn std::error::Error>> {
       Ok(())
     }
 

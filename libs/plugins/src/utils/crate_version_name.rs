@@ -1,7 +1,7 @@
 use log::debug;
 use serde_json::Value;
 
-
+#[allow(dead_code)]
 pub fn extract_crate_version_name(payload: String) -> (String, String) {
   let data: Value = serde_json::from_str(&payload).unwrap();
   debug!("Handling event: {}", payload);

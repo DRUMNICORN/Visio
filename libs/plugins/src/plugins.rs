@@ -4,10 +4,8 @@ use crate::utils::{
 };
 use crate::Registry;
 use dirs_next::document_dir;
-use libloading::{Library, Symbol};
+use libloading::{Library};
 use log::{debug, error, info, warn};
-use nodium_pdk::NodiumPluginObject;
-use serde_json::Value;
 use std::fmt::Debug;
 use std::fs;
 use std::path::Path;
@@ -29,15 +27,22 @@ impl Debug for NodiumPlugins {
 
 impl NodiumPlugins {
     pub fn new() -> Arc<Mutex<Self>> {
-        let doc_dir = document_dir().expect("Unable to get user's document directory");
-        let install_location = doc_dir.join("nodium").join("plugins");
+        let _doc_dir = document_dir().expect("Unable to get user's document directory");
+        // let install_location = doc_dir.join("nodium").join("plugins");
+        let install_location_str = "/home/roggen/Repos/nodium/plugins";
+        let install_location = Path::new(install_location_str);
+        // print absolute path to plugins directory
+        let absolute_path = fs::canonicalize(&install_location)
+            .expect("Unable to get absolute path to plugins directory");
+        debug!("Absolute path to plugins directory: {:?}", absolute_path);
+
         debug!("Plugin install location: {:?}", install_location);
         if !install_location.exists() {
             debug!("Creating plugin directory");
             fs::create_dir_all(&install_location).expect("Unable to create plugin directory");
         }
         let plugins = NodiumPlugins {
-            install_location: "plugins".to_string(),
+            install_location: install_location_str.to_string(),
             registry: Registry::new(),
         };
 
@@ -58,20 +63,21 @@ impl NodiumPlugins {
             debug!("Plugins directory created successfully");
         }
 
+        debug!("Reading plugins directory");
         match fs::read_dir(&plugins_dir) {
             Ok(folders) => {
+                debug!("Plugins directory read successfully");
                 for entry in folders {
                     if let Ok(entry) = entry {
                         let path = entry.path();
                         debug!("Plugin path: {:?}", path);
                         if path.is_dir() {
                             let plugin_name = path.file_name().unwrap().to_str().unwrap();
-                            let plugin_version = path.file_name().unwrap().to_str().unwrap();
                             debug!(
-                                "Plugin name and version: {} {}",
-                                plugin_name, plugin_version
+                                "Plugin name: {}",
+                                plugin_name
                             );
-                            if let Ok(_) = self.register(plugin_name, plugin_version, true) {
+                            if let Ok(_) = self.register(plugin_name, true) {
                                 info!("Plugin registered successfully");
                             } else {
                                 warn!("Plugin not able to register");
@@ -86,7 +92,7 @@ impl NodiumPlugins {
                                     error!("Error installing plugin: {}", e);
                                     continue;
                                 }
-                                if let Ok(_) = self.register(plugin_name, plugin_version, true) {
+                                if let Ok(_) = self.register(plugin_name, true) {
                                     info!("Plugin registered successfully");
                                 } else {
                                     error!("Error registering plugin");
@@ -142,19 +148,22 @@ impl NodiumPlugins {
     fn register(
         &mut self,
         crate_name: &str,
-        crate_version: &str,
         is_local: bool,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        let folder_name = extract_folder_name(is_local, crate_name, crate_version);
+        debug!("Registering plugin {}", crate_name);
+        let folder_name = extract_folder_name(is_local, crate_name);
         let lib_path = get_lib_path(&self.install_location, folder_name, crate_name)?;
 
         let lib = unsafe { Library::new(lib_path) };
+
         match lib {
             Ok(lib) => match extract_plugin(lib) {
                 Ok(plugin) => {
+                    debug!("Plugin extracted successfully");
                     let plugin = self.registry.register_plugin(plugin);
                     match plugin {
                         Some(plugin) => {
+                            debug!("Plugin registered successfully");
                             let plugin_name = plugin.name();
                             let plugin_version = plugin.version();
                             info!("Plugin registered: {} {}", plugin_name, plugin_version);

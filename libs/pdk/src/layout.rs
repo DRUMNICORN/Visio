@@ -1,4 +1,4 @@
-use crate::{NodiumUiComponent, NodiumWindow};
+use crate::{NodiumWindow};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 

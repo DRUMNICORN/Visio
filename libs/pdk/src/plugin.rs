@@ -1,10 +1,10 @@
 use abi_stable::{StableAbi, std_types::RString};
 
-pub trait NodiumPlugin : StableAbi {
+
+pub trait NodiumPlugin: StableAbi<> + Send + Sync {
   fn name(&self) -> String;
   fn version(&self) -> String;
   fn as_object(&self) -> Box<dyn NodiumPluginObject>;
-  // fn run(&self) -> Result<(), Self::Error>;
 }
 
 pub trait NodiumPluginObject: Send + Sync {

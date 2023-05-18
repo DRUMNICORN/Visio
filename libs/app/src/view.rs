@@ -1,7 +1,7 @@
 use nodium_pdk::{NodiumWindow, NodiumLayout};
 pub trait NodiumView {
     fn run(
-        &self,
+        &mut self,
         // event_callback: Box<dyn Fn(NodiumEvent) + Send + Sync>,
     ) -> Result<(), Box<dyn std::error::Error>>;
     fn add_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>>;

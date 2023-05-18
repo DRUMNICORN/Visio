@@ -1,4 +1,4 @@
-use abi_stable::{std_types::RString, StableAbi};
+use abi_stable::{StableAbi};
 use nodium_pdk::{NodiumPlugin, NodiumPluginObject};
 
 // CrateInfo and fetch_crates() implementation from previous answer
@@ -16,22 +16,32 @@ mod crates_fetch;
 pub struct NodiumPluginBrowser;
 
 impl NodiumPlugin for NodiumPluginBrowser {
-    fn name(&self) -> String {
-        "Browser".to_string()
-    }
+  fn name(&self) -> String {
+      "Browser".to_string()
+  }
 
-    fn version(&self) -> String {
-        "0.1.0".to_string()
-    }
+  fn version(&self) -> String {
+      "0.1.0".to_string()
+  }
 
-    fn as_object(&self) -> Box<dyn NodiumPluginObject> {
-        Box::new(NodiumPluginBrowser)
-    }
-
+  fn as_object(&self) -> Box<dyn NodiumPluginObject> {
+      Box::new(NodiumPluginBrowser)
+  }
 }
 
 impl NodiumPluginBrowser {
-    pub fn new() -> Self {
-        NodiumPluginBrowser
-    }
+  pub fn new() -> Self {
+      NodiumPluginBrowser
+  }
+}
+
+
+#[no_mangle]
+pub extern "C" fn plugin() -> *mut NodiumPluginBrowser {
+  Box::into_raw(Box::new(NodiumPluginBrowser::new()))
+}
+
+#[no_mangle]
+pub extern "C" fn free_plugin(ptr: *mut NodiumPluginBrowser) {
+    let _ = unsafe { Box::from_raw(ptr) };
 }
