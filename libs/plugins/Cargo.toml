@@ -7,21 +7,15 @@ edition = "2021"
 license = "AGPL-3.0"
 
 [dependencies]
-abi_stable = "0.9.0"
-
-
-libloading = "0.7"
+nodium-events = { path = "../events", version = "0.1.2" }
+nodium-pdk = { path = "../pdk", version = "0.1.1" }
+log = "0.4"
+env_logger = "0.9"
 serde_json = "1.0"
-dirs-next = "2.0"
+
+tokio = { version = "1.27.0", features = ["full"] }
+
+libloading = "0.7.4"
 
 tar = "0.4"
 flate2 = "1.0"
-
-nodium-events = { path = "../events", version = "0.1.2" }
-nodium-pdk = { path = "../pdk", version = "0.1.1" }
-
-log = "0.4"
-env_logger = "0.9"
-
-reqwest = "0.11"
-tokio = { version = "1.27.0", features = ["full"] }
