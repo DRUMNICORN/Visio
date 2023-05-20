@@ -22,10 +22,9 @@ A step by step series of examples that tell you how to get a development env run
 Say what the step will be
 
 ```bash
-git clone https://github.com/cherob/nodium
+git clone https://github.com/drumni/nodium
 cd nodium
-yarn 
-yarn tauri dev
+cargo run
 ```
 
 #### Common Issues
