@@ -1,6 +1,6 @@
 # Nodium
 
->Nodium is currently in development and is not yet ready for production use.
+> Nodium is currently in development and is not yet ready for production use.
 
 Nodium is an easy-to-use data analysis and automation platform built using Rust, designed to be versatile and modular. Nodium aims to provide a user-friendly visual node-based interface for various tasks.
 
@@ -14,7 +14,7 @@ If you want to contribute to the project, you can clone the repository and run t
 
 What things you need to install the software and how to install them
 
-* [Rust](https://www.rust-lang.org/tools/install)
+- [Rust](https://www.rust-lang.org/tools/install)
 
 ### Installing
 
@@ -31,41 +31,40 @@ cargo run
 
 Installing Missing Packages:
 
-  - "pkg-config"
-  - "javascriptcoregtk"
-
+- "pkg-config"
+- "javascriptcoregtk"
 
 ## Features
 
-* Visual node-based interface with input and output pins.
-* Dynamic loading of crates and runtime imports using libloading for plugin support
-* Task-based recursive computation of nodes to execute user-created graphs
-* Support for sub-flows as nodes, increasing modularity
-* Save and reuse flows across multiple locations
-* Async programming and a robust tasking system for performance and usability
+- Visual node-based interface with input and output pins.
+- Dynamic loading of crates and runtime imports using libloading for plugin support
+- Task-based recursive computation of nodes to execute user-created graphs
+- Support for sub-flows as nodes, increasing modularity
+- Save and reuse flows across multiple locations
+- Async programming and a robust tasking system for performance and usability
 
 ## Milestones
 
 ### Milestone 1: Basic Nodes
 
-* [ ] Basic Input Node (Text, Number, etc.)
-* [ ] Debbugging Node (Print, Log, etc.)
-* [ ] Node Connection
+- [ ] Basic Input Node (Text, Number, etc.)
+- [ ] Debbugging Node (Print, Log, etc.)
+- [ ] Node Connection
 
 ### Milestone 2: Basic Data Manipulation
 
-* [ ] File Node (Read, Write, etc.)
-* [ ] Basic data manipulation (filter, sort, etc.)
-* [ ] APIs (REST, GraphQL, etc.)
-* [ ] Databases (SQL, NoSQL, etc.)
-* [ ] Basic math operations (add, subtract, etc.)
+- [ ] File Node (Read, Write, etc.)
+- [ ] Basic data manipulation (filter, sort, etc.)
+- [ ] APIs (REST, GraphQL, etc.)
+- [ ] Databases (SQL, NoSQL, etc.)
+- [ ] Basic math operations (add, subtract, etc.)
 
 ### Milestone 3: Basic Data Analysis
 
-* [ ] Machine learning processes (text, image, audio, etc.)
-* [ ] Web Dashboard creation (HTML, CSS, JS, etc.)
-* [ ] Machine learning training
-* [ ] IoT (MQTT, UDP, TCP, etc.)
+- [ ] Machine learning processes (text, image, audio, etc.)
+- [ ] Web Dashboard creation (HTML, CSS, JS, etc.)
+- [ ] Machine learning training
+- [ ] IoT (MQTT, UDP, TCP, etc.)
 
 ## Contributing
 
@@ -74,7 +73,7 @@ Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
 
 ## Authors
 
-* **Cherob** - *Initial work* - [Cherob](https://github.com/cherob)  
+- **Cherob** - _Initial work_ - [Cherob](https://github.com/cherob)
 
 ## Inspiration
 
