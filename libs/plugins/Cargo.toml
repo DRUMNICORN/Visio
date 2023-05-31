@@ -7,12 +7,10 @@ edition = "2021"
 license = "AGPL-3.0"
 
 [dependencies]
-libloading = "0.7"
+dlopen = "0.1"
+dlopen_derive = "0.1"
 serde_json = "1.0"
 dirs-next = "2.0"
-
-tar = "0.4"
-flate2 = "1.0"
 
 nodium-events = { path = "../events", version = "0.1.2" }
 nodium-pdk = { path = "../pdk", version = "0.1.1" }

@@ -1,15 +1,10 @@
 // libs/plugins/src/plugin_manager.rs
 
 use log::debug;
-use nodium_events::NodiumEventBus;
 use nodium_pdk::{
-    NodiumNode,
     NodiumPlugin,
-    // NodiumService,
-    NodiumWindow,
 };
-use std::{collections::HashMap, sync::Arc};
-use tokio::sync::Mutex;
+use std::{collections::HashMap};
 
 pub struct Registry {
     plugins: HashMap<String, Box<dyn NodiumPlugin>>, // nodium_<plugin_name>
@@ -33,6 +28,14 @@ impl Registry {
         self.plugins.insert(plugin_name.clone().to_owned(), plugin);
     }
 
+    pub fn unregister_plugin(&mut self, plugin_name: &str) {
+        self.plugins.remove(plugin_name);
+    }
+
+    pub fn unregister_all_plugins(&mut self) {
+        self.plugins.clear();
+    }
+
     pub fn get_plugin(&self, plugin_name: &str) -> Option<&Box<dyn NodiumPlugin>> {
         self.plugins.get(plugin_name)
     }
@@ -42,6 +45,11 @@ impl Registry {
         let mut plugins = Vec::new();
         let plugins_amount = self.plugins.len();
         debug!("Plugins amount: {}", plugins_amount);
+        let plugins_names = self.plugins.keys();
+        for plugin_name in plugins_names {
+            
+            plugins.push(plugin_name.to_owned());
+        }
         plugins
     }
 }

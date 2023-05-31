@@ -42,6 +42,3 @@ default = ["nodium-console"]
 egui = ["nodium-egui"]
 tauri = ["nodium-tauri"]
 console = ["nodium-console"]
-
-[build]
-rustflags = ["-A", "warnings"]
