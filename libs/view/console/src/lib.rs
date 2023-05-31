@@ -53,6 +53,14 @@ impl NodiumViewConsole {
         debug!("App locked, reload plugins");
         app_locked.plugins.lock().await.reload().await;
     }
+
+    async fn handle_rebuild(&self) {
+        debug!("Handle rebuild");
+        debug!("Try to get plugins, lock app");
+        let app_locked = self.app.lock().await;
+        debug!("App locked, rebuild plugins");
+        app_locked.plugins.lock().await.rebuild().await;
+    }
 }
 
 use async_trait::async_trait;
@@ -91,6 +99,7 @@ impl NodiumView for NodiumViewConsole {
                 "help" => println!("Help"),
                 "reload" => self.handle_reload().await,
                 "clear" => clearscreen::clear().unwrap(),
+                "rebuild" => self.handle_rebuild().await,
                 _ => println!("You entered: {}", input),
             }
         }

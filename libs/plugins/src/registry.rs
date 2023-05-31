@@ -1,15 +1,10 @@
 // libs/plugins/src/plugin_manager.rs
 
 use log::debug;
-use nodium_events::NodiumEventBus;
 use nodium_pdk::{
-    NodiumNode,
     NodiumPlugin,
-    // NodiumService,
-    NodiumWindow,
 };
-use std::{collections::HashMap, sync::Arc};
-use tokio::sync::Mutex;
+use std::{collections::HashMap};
 
 pub struct Registry {
     plugins: HashMap<String, Box<dyn NodiumPlugin>>, // nodium_<plugin_name>

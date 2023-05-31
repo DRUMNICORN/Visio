@@ -1,6 +1,4 @@
 use crate::{NodiumUiComponent, NodiumWindow};
-use serde::ser::{Serialize, SerializeStruct, Serializer};
-use std::fmt;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
@@ -37,12 +35,12 @@ impl NodiumLayout {
         }
     }
 
-    pub fn add_window(&self, window: Arc<Mutex<dyn NodiumWindow>>) {
+    pub fn add_window(&self, _window: Arc<Mutex<dyn NodiumWindow>>) {
         match &self.layout_type {
-            LayoutType::Vertical(window_list) => {
+            LayoutType::Vertical(_window_list) => {
                 // window_list.push(window);
             }
-            LayoutType::Horizontal(window_list) => {
+            LayoutType::Horizontal(_window_list) => {
                 // window_list.push(window);
             }
             LayoutType::Grid(_) => {
@@ -51,15 +49,15 @@ impl NodiumLayout {
         }
     }
 
-    pub fn remove_window(&self, window: Arc<Mutex<dyn NodiumWindow>>) {
+    pub fn remove_window(&self, _window: Arc<Mutex<dyn NodiumWindow>>) {
         match &self.layout_type {
-            LayoutType::Vertical(window_list) => {
+            LayoutType::Vertical(_window_list) => {
                 // window_list.retain(|w| !Arc::ptr_eq(w, &window));
             }
-            LayoutType::Horizontal(window_list) => {
+            LayoutType::Horizontal(_window_list) => {
                 // window_list.retain(|w| !Arc::ptr_eq(w, &window));
             }
-            LayoutType::Grid(grid) => {
+            LayoutType::Grid(_grid) => {
                 // Implement grid window removing logic
             }
         }
