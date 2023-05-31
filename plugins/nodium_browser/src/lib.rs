@@ -1,12 +1,13 @@
 // lib.rs
-
+mod extract_crate_file;
+pub use extract_crate_file::extract_crate_file;
 use  nodium_pdk::NodiumPlugin;
 
 pub struct NodiumPluginBrowser;
 
 impl NodiumPlugin for NodiumPluginBrowser {
     fn name(&self) -> &'static str {
-        "Crates Browser Plugin"
+        "browser"
     }
 
 }

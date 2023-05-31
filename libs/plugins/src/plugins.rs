@@ -1,10 +1,9 @@
-use crate::plugin_utils::{ download, install };
+use crate::plugin_utils::{ install };
 use crate::{ Registry, PluginApi };
 use dirs_next::document_dir;
 use dlopen::wrapper::Container;
 use log::{ debug, error, info, warn };
 use nodium_pdk::NodiumPlugin;
-use serde_json::Value;
 use std::fmt::Debug;
 use std::fs;
 use std::path::Path;
@@ -48,6 +47,7 @@ impl NodiumPlugins {
     }
 
     pub async fn rebuild(&mut self) {
+        self.unregister_all().await;
         rebuild(&self.install_location).await.unwrap_or_else(|e| {
             error!("Error rebuilding plugins: {}", e);
         });
@@ -63,7 +63,8 @@ impl NodiumPlugins {
             error!("Error creating plugins directory: {}", e);
             return;
         });
-    
+
+
         if let Ok(folders) = fs::read_dir(&plugins_dir) {
             for entry in folders.filter_map(Result::ok) {
                 let path = entry.path();
@@ -99,10 +100,13 @@ impl NodiumPlugins {
         }
     }
     
+    async fn unregister_all(&mut self) {
+        self.registry.unregister_all_plugins();
+    } 
 
     pub async fn listen(&self, plugins: Arc<Mutex<Self>>) {
         let plugins_clone = plugins.clone();
-        let plugins_clone_callback = plugins_clone.clone();
+        let _plugins_clone_callback = plugins_clone.clone();
         // TODO: load plugins in the plugins directory
         todo!("Load plugins in the plugins directory");
     }
@@ -154,9 +158,7 @@ impl NodiumPlugins {
     }
 
     pub fn get_plugins(&self) -> Vec<String> {
-        debug!("Getting plugins");
         let plugins = self.registry.get_plugins();
-        debug!("Plugins: {:?}", plugins);
         plugins
     }
 }
