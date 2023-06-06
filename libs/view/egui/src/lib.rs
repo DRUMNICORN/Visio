@@ -9,7 +9,6 @@ use log::debug;
 use egui::{CtxRef, Label, Rgba};
 use egui_winit_platform::{Platform, PlatformDescriptor};
 use nodium_app::NodiumView;
-use nodium_events::NodiumEventBus;
 use nodium_pdk::{NodiumEvent, NodiumLayout, NodiumNode, NodiumWindow};
 use serde_json::{de, from_str, to_value};
 use tokio::sync::mpsc::Sender;

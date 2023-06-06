@@ -17,9 +17,7 @@ env_logger = "0.9"
 
 async-trait = "0.1.51"
 
-nodium-plugins = { path = "libs/plugins", version = "0.1.1" }
 nodium-app = { path = "libs/app", version = "0.1.1" }
-nodium-events = { path = "libs/events", version = "0.1.2" }
 nodium-pdk = { path = "libs/pdk", version = "0.1.1" }
 
 [dependencies.nodium-egui]

@@ -9,13 +9,12 @@ description = "Nodium Tauri Integration"
 tauri = "1.2.4"
 nodium-app = { path = "../../app", version = "0.1.1" }
 nodium-pdk = { path = "../../pdk", version = "0.1.1" }
-nodium-events = { path = "../../events", version = "0.1.1" }
 
 serde_json = "1.0.68"
 
 
 log = "0.4"
-env_logger = "0.9"
+env_logger = "0.10"
 
 # tokio only for spawn
 tokio =  { version = "1.27.0", features = ["rt-multi-thread", "macros"] }

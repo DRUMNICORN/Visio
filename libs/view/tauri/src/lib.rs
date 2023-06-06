@@ -3,7 +3,6 @@ use tokio::sync::Mutex;
 
 use log::{debug, error};
 use nodium_app::NodiumView;
-use nodium_events::NodiumEventBus;
 use nodium_pdk::{NodiumEvent, NodiumNode, NodiumWindow};
 use serde_json::{from_str, to_value};
 use tauri::{AppHandle, Manager};
