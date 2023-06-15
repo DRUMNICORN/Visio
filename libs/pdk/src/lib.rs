@@ -9,7 +9,11 @@ mod layout;
 mod component;
 
 pub use node::NodiumNode;
+
 pub use plugin::NodiumPlugin;
+pub use plugin::DynNodiumPlugin;
+pub use plugin::StaticStr;
+
 pub use event::NodiumEvent;
 pub use component::NodiumUiComponent;
 pub use window::NodiumWindow;

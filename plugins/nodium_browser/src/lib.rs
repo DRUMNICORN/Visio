@@ -1,18 +1,18 @@
 // lib.rs
 mod extract_crate_file;
 pub use extract_crate_file::extract_crate_file;
-use  nodium_pdk::NodiumPlugin;
+use  nodium_pdk::{NodiumPlugin, DynNodiumPlugin};
 
 pub struct NodiumPluginBrowser;
 
 impl NodiumPlugin for NodiumPluginBrowser {
-    fn name(&self) -> &'static str {
-        "browser"
+    extern fn name(&self) -> nodium_pdk::StaticStr {
+        nodium_pdk::StaticStr::new("browser")
     }
 
 }
 
 #[no_mangle]
-pub extern "C" fn create_plugin() -> *mut dyn NodiumPlugin {
-    Box::into_raw(Box::new(NodiumPluginBrowser))
+pub extern "C" fn create_plugin() -> DynNodiumPlugin {
+   DynNodiumPlugin::new(&NodiumPluginBrowser)
 }

@@ -3,7 +3,7 @@ use crate::{ Registry, PluginApi };
 use dirs_next::document_dir;
 use dlopen::wrapper::Container;
 use log::{ debug, error, info, warn };
-use nodium_pdk::NodiumPlugin;
+use nodium_pdk::DynNodiumPlugin;
 use std::fmt::Debug;
 use std::fs;
 use std::path::Path;
@@ -148,12 +148,14 @@ impl NodiumPlugins {
         let plugin_api_wrapper: Container<PluginApi> = (unsafe { Container::load(lib_path) })?;
 
         // Load the plugin using the dlopen crate.
-        let plugin: Box<dyn NodiumPlugin> = unsafe {
-            Box::from_raw((plugin_api_wrapper.create_plugin)())
+        let plugin: DynNodiumPlugin = unsafe {
+            (plugin_api_wrapper.create_plugin)()
         };
         let plugin_name = plugin.name();
         debug!("Registering plugin: {}", plugin_name);
+        
         self.registry.register_plugin(plugin);
+
         Ok(())
     }
 

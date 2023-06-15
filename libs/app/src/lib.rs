@@ -1,6 +1,6 @@
 // export Plugins and Registry
 
-use nodium_pdk::NodiumPlugin;
+use nodium_pdk::DynNodiumPlugin;
 
 mod view;
 mod app;
@@ -19,6 +19,6 @@ use dlopen::wrapper::{WrapperApi};
 
 #[derive(WrapperApi)]
 struct PluginApi {
-    create_plugin: extern "C" fn() -> *mut dyn NodiumPlugin,
+    create_plugin: extern "C" fn() -> DynNodiumPlugin,
 }
 
