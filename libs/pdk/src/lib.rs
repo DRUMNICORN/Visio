@@ -7,12 +7,14 @@ mod event;
 mod window;
 mod layout;
 mod component;
+mod types; 
 
 pub use node::NodiumNode;
 
 pub use plugin::NodiumPlugin;
 pub use plugin::DynNodiumPlugin;
-pub use plugin::StaticStr;
+
+pub use types::StaticStr;
 
 pub use event::NodiumEvent;
 pub use component::NodiumUiComponent;
