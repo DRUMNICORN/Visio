@@ -10,8 +10,6 @@
   "settings": {
     "rust-analyzer.showUnlinkedFileNotification": false,
     "cSpell.words": [
-      "cherob",
-      "clearscreen",
       "egui",
       "nodium",
       "rustflags",

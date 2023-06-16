@@ -1,7 +1,7 @@
-use nodium_plugins::NodiumPlugins;
 use tokio::sync::Mutex;
-
 use std::sync::Arc;
+
+use crate::plugins::NodiumPlugins;
 
 pub struct NodiumApp {
     // event_bus: Arc<Mutex<NodiumEventBus>>,
