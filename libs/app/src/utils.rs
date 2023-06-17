@@ -1,9 +1,11 @@
 use std::process::{Command, Stdio};
 use std::io::{BufRead, BufReader};
-
+use log::{debug, error, 
+//    info, 
+//    warn
+};
 use std::fs;
 use std::path::Path;
-use log::{debug, error};
 
 pub async fn rebuild(install_location: &str) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let plugins_dir = Path::new(install_location);
@@ -140,4 +142,26 @@ pub fn create_plugins_directory(plugins_dir: &Path) -> Result<(), std::io::Error
         debug!("Plugins directory created successfully");
     }
     Ok(())
+}
+
+use std::path::PathBuf;
+
+pub fn get_lib_path(install_location: &str, folder_name: &str, crate_name: &str) -> Result<PathBuf, Box<dyn std::error::Error + Send + Sync>> {
+    let lib_name = if cfg!(windows) {
+        format!("lib{}.dll", crate_name)
+    } else if cfg!(unix) {
+        format!("lib{}.so", crate_name)
+    } else {
+        return Err(Box::new(std::io::Error::new(
+            std::io::ErrorKind::Other,
+            "Unsupported platform",
+        )));
+    };
+
+    Ok(Path::new(install_location)
+        .join(folder_name)
+        .join("target")
+        .join("release")
+        .join(if cfg!(windows) { "lib" } else { "" })
+        .join(lib_name))
 }

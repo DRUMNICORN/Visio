@@ -6,6 +6,7 @@ edition = "2021"
 description = "Nodium EGUI Integration"
 
 [dependencies]
+ctrlc = "3.4.0"
 
 nodium-app = { path = "../../app", version = "0.1.1" }
 nodium-pdk = { path = "../../pdk", version = "0.1.1" }
@@ -13,7 +14,7 @@ nodium-pdk = { path = "../../pdk", version = "0.1.1" }
 serde_json = "1.0.68"
 
 clearscreen = "2.0.1"
-crossterm = { version = "0.22", features = ["serde"] }
+crossterm = { version = "0.22", features = ["serde", "event-stream"] }
 
 log = "0.4"
 env_logger = "0.10"

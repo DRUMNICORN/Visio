@@ -5,12 +5,12 @@ use nodium_pdk::DynNodiumPlugin;
 mod view;
 mod app;
 mod plugins;
-mod registry;
-mod plugin_utils;
+mod utils;
+mod flows;
+mod flow; 
 
 pub use app::NodiumApp;
 pub use plugins::NodiumPlugins;
-pub use registry::Registry;
 pub use view::NodiumView;
 
 #[macro_use]
