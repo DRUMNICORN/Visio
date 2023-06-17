@@ -1,7 +1,7 @@
 // libs/nodium-pdk/src/lib.rs
 // Plugin Development Kit for Nodium
 
-mod node;
+pub mod node;
 mod plugin;
 mod event;
 mod window;

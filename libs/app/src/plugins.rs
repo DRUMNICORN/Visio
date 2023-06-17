@@ -1,8 +1,7 @@
-use crate::plugin_utils::{ install };
-use crate::{ Registry, PluginApi };
+use crate::utils::{install, create_plugins_directory, rebuild, get_lib_path};
 use dirs_next::document_dir;
 use dlopen::wrapper::Container;
-use log::{ debug, error, info, warn };
+use log::{debug, error, info, warn};
 use nodium_pdk::DynNodiumPlugin;
 use std::fmt::Debug;
 use std::fs;
@@ -10,17 +9,21 @@ use std::path::Path;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use crate::plugin_utils::create_plugins_directory;
-use crate::plugin_utils::rebuild;
+use std::collections::HashMap;
+
+
+use crate::PluginApi;
 
 pub struct NodiumPlugins {
     install_location: String,
-    registry: Registry,
+    plugins: HashMap<String, DynNodiumPlugin>,
 }
 
 impl Debug for NodiumPlugins {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("NodiumPlugins").field("install_location", &self.install_location).finish()
+        f.debug_struct("NodiumPlugins")
+            .field("install_location", &self.install_location)
+            .finish()
     }
 }
 
@@ -31,11 +34,12 @@ impl NodiumPlugins {
         debug!("Plugin install location: {:?}", install_location);
         if !install_location.exists() {
             debug!("Creating plugin directory");
-            fs::create_dir_all(&install_location).expect("Unable to create plugin directory");
+            fs::create_dir_all(&install_location)
+                .expect("Unable to create plugin directory");
         }
         let plugins = NodiumPlugins {
             install_location: "plugins".to_string(),
-            registry: Registry::new(),
+            plugins: HashMap::new(),
         };
 
         let installer = Arc::new(Mutex::new(plugins));
@@ -48,23 +52,25 @@ impl NodiumPlugins {
 
     pub async fn rebuild(&mut self) {
         self.unregister_all().await;
-        rebuild(&self.install_location).await.unwrap_or_else(|e| {
-            error!("Error rebuilding plugins: {}", e);
-        });
+        rebuild(&self.install_location)
+            .await
+            .unwrap_or_else(|e| {
+                error!("Error rebuilding plugins: {}", e);
+            });
 
         // Call the reload function after rebuilding
         self.reload().await;
     }
 
     pub async fn reload(&mut self) {
+        let install_location = self.install_location.clone();
         debug!("Reloading plugins");
-        let plugins_dir = Path::new(&self.install_location);
+        let plugins_dir = Path::new(&install_location);
         create_plugins_directory(&plugins_dir).unwrap_or_else(|e| {
             error!("Error creating plugins directory: {}", e);
             return;
         });
-
-
+    
         if let Ok(folders) = fs::read_dir(&plugins_dir) {
             for entry in folders.filter_map(Result::ok) {
                 let path = entry.path();
@@ -100,67 +106,48 @@ impl NodiumPlugins {
         }
     }
     
+    
+
     async fn unregister_all(&mut self) {
-        self.registry.unregister_all_plugins();
-    } 
+        self.plugins.clear();
+    }
 
     pub async fn listen(&self, plugins: Arc<Mutex<Self>>) {
         let plugins_clone = plugins.clone();
         let _plugins_clone_callback = plugins_clone.clone();
         // TODO: load plugins in the plugins directory
-        todo!("Load plugins in the plugins directory");
+        //todo!("Load plugins in the plugins directory");
     }
 
     pub fn register(
         &mut self,
         crate_name: &str,
         crate_version: &str,
-        is_local: bool
+        is_local: bool,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let folder_name = if is_local {
             crate_name.to_string()
         } else {
             format!("{}-{}", crate_name, crate_version)
         };
-        let lib_path = Path::new(&self.install_location)
-            .join(folder_name)
-            .join("target")
-            .join("release")
-            .join(if cfg!(windows) { "lib" } else { "" })
-            .join(
-                format!("lib{}{}", crate_name, if cfg!(windows) {
-                    ".dll"
-                } else if cfg!(unix) {
-                    ".so"
-                } else {
-                    // Todo: add support for other platforms (macos, ios, android, etc.)
-                    return Err(
-                        Box::new(
-                            std::io::Error::new(std::io::ErrorKind::Other, "Unsupported platform")
-                        )
-                    );
-                })
-            );
-
-        // TODO: Check out: abi_stable and Foreign Function Interface
-
+    
+        let lib_path = get_lib_path(&self.install_location, &folder_name, crate_name)?;
+    
         // Load the plugin using the dlopen crate.
         let plugin_api_wrapper: Container<PluginApi> = (unsafe { Container::load(lib_path) })?;
-
+    
         // Load the plugin using the dlopen crate.
-        let plugin: DynNodiumPlugin = unsafe {
-            (plugin_api_wrapper.create_plugin)()
-        };
+        let plugin: DynNodiumPlugin = (plugin_api_wrapper.create_plugin)();
         let plugin_name = plugin.name();
         debug!("Registering plugin: {}", plugin_name);
-        
-        self.registry.register_plugin(plugin);
-
+    
+        self.plugins.insert(plugin_name.clone().to_owned(), plugin);
+    
         Ok(())
     }
+    
 
     pub fn get_plugins(&self) -> Vec<String> {
-        let plugins = self.registry.get_plugins();
-        plugins
+        self.plugins.keys().cloned().collect()
     }
 }
