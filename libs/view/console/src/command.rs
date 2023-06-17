@@ -6,8 +6,10 @@ use std::io::{stdout, Write};
 use crossterm::{
     style::{Color, Print, SetForegroundColor},
     terminal::{Clear, ClearType},
-    execute, queue,
+     queue,
 };
+
+use crate::command_executor::{print_nodium_prompt};
 
 pub struct Command {
     pub name: String,
@@ -59,6 +61,8 @@ impl CommandRegistry {
         for command in commands.values() {
             println!("- {}: {}", command.name, command.description);
         }
+
+        print_nodium_prompt();
     }
     
 }

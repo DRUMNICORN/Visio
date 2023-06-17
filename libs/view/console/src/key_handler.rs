@@ -18,7 +18,6 @@ pub fn handle_key_event(
 ) {
     match key_event.code {
         KeyCode::Enter => {
-            println!("");
             *input = input.trim().to_string(); // Trim the input to remove leading/trailing whitespace
         }
         KeyCode::Backspace => {

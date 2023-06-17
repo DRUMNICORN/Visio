@@ -3,6 +3,7 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 use tokio::task::spawn;
 
+use crate::command_executor::{print_nodium_prompt};
 use crate::command::{CommandRegistry, Command};
 
 #[derive(Clone)]
@@ -80,6 +81,8 @@ async fn handle_plugin_list(app: &Arc<Mutex<NodiumApp>>) {
     for plugin in plugins {
         println!("- {}", plugin);
     }
+
+    print_nodium_prompt();
 }
 
 async fn handle_reload(app: &Arc<Mutex<NodiumApp>>) {
@@ -88,6 +91,7 @@ async fn handle_reload(app: &Arc<Mutex<NodiumApp>>) {
     let app_locked = app.lock().await;
     println!("App locked, reload plugins");
     app_locked.plugins.lock().await.reload().await;
+    print_nodium_prompt();
 }
 
 async fn handle_rebuild(app: &Arc<Mutex<NodiumApp>>) {
@@ -96,4 +100,5 @@ async fn handle_rebuild(app: &Arc<Mutex<NodiumApp>>) {
     let app_locked = app.lock().await;
     println!("App locked, rebuild plugins");
     app_locked.plugins.lock().await.rebuild().await;
+    print_nodium_prompt();
 }

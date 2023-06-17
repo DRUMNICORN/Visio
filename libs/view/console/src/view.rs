@@ -30,9 +30,9 @@ impl NodiumView for NodiumConsole {
             let mut pressed = ctrl_c_pressed_clone.lock().await;
             *pressed = true;
         });
+        print_nodium_prompt();
 
         loop {
-            print_nodium_prompt();
 
             let mut input = String::new();
             let mut ctrl_c_pressed = ctrl_c_pressed.lock().await;
