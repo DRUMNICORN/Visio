@@ -77,10 +77,8 @@ impl NodiumPlugins {
                 debug!("Plugin path: {:?}", path);
                 if path.is_dir() {
                     let plugin_name = path.file_name().unwrap().to_str().unwrap();
-                    let plugin_version = path.file_name().unwrap().to_str().unwrap();
-                    debug!("Plugin name and version: {} {}", plugin_name, plugin_version);
 
-                    if let Err(e) = self.register(plugin_name, plugin_version, true) {
+                    if let Err(e) = self.register(plugin_name, true) {
                         warn!("Plugin not able to register: {}", e);
                         if
                             let Err(e) = install(
@@ -91,7 +89,7 @@ impl NodiumPlugins {
                             ).await
                         {
                             error!("Error installing plugin: {}", e);
-                        } else if let Err(e) = self.register(plugin_name, plugin_version, true) {
+                        } else if let Err(e) = self.register(plugin_name, true) {
                             error!("Error registering plugin: {}", e);
                         } else {
                             info!("Plugin registered successfully");
@@ -122,13 +120,12 @@ impl NodiumPlugins {
     pub fn register(
         &mut self,
         crate_name: &str,
-        crate_version: &str,
         is_local: bool,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let folder_name = if is_local {
             crate_name.to_string()
         } else {
-            format!("{}-{}", crate_name, crate_version)
+            format!("{}", crate_name)
         };
     
         let lib_path = get_lib_path(&self.install_location, &folder_name, crate_name)?;

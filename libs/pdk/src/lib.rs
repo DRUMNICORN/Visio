@@ -10,11 +10,13 @@ mod component;
 mod types; 
 
 pub use node::NodiumNode;
+pub use node::DynNodiumNode;
 
 pub use plugin::NodiumPlugin;
 pub use plugin::DynNodiumPlugin;
 
 pub use types::StaticStr;
+pub use types::FfiSafeHashMap;
 
 pub use event::NodiumEvent;
 pub use component::NodiumUiComponent;

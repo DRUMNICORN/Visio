@@ -1,37 +1,36 @@
-
-use nodium_pdk::node::NodiumNode;
-use std::collections::HashMap;
-use log::debug;
+use nodium_pdk::node::{DynNodiumNode};
+use tokio::sync::{mpsc};
 
 pub struct NodiumFlow {
-    pub nodes: Vec<NodiumNode>,
+    pub name: String, // or pub name: &'static str,
+    pub nodes: Vec<DynNodiumNode>,
+    pub connections: Vec<NodiumConnection>,
 }
 
 impl NodiumFlow {
-    pub fn new() -> Self {
-        Self { nodes: Vec::new() }
+    pub fn new(name: &str) -> NodiumFlow {
+        Self {
+            name: name.to_string(), // or name: name,
+            nodes: Vec::new(),
+            connections: Vec::new(),
+        }
     }
 
-    pub fn add_node(&mut self, node: NodiumNode) {
+    pub fn add_node(&mut self, node: DynNodiumNode) {
         self.nodes.push(node);
     }
 
-    pub fn list_connected_types(&self) {
-        let mut connected_types: HashMap<String, String> = HashMap::new();
-
-        for node in &self.nodes {
-            for (input_key, input_value) in &node.input_params {
-                connected_types.insert(input_key.clone(), input_value.clone());
-            }
-
-            for (output_key, output_value) in &node.output_params {
-                connected_types.insert(output_key.clone(), output_value.clone());
-            }
-        }
-
-        debug!("Connected Types:");
-        for (key, value) in &connected_types {
-            debug!("{}: {}", key, value);
-        }
+    pub fn add_connection(&mut self, sender: mpsc::Sender<String>, receiver: mpsc::Receiver<String>) {
+        let connection = NodiumConnection { sender, receiver };
+        self.connections.push(connection);
     }
+
+    pub fn get_name(&self) -> String {
+        self.name.clone() // or &self.name if name is &'static str,
+    }
+}
+
+pub struct NodiumConnection {
+    pub sender: mpsc::Sender<String>,
+    pub receiver: mpsc::Receiver<String>,
 }

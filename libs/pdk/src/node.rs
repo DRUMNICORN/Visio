@@ -1,36 +1,56 @@
-use std::collections::HashMap;
+use crate::StaticStr;
+use crate::FfiSafeHashMap;
 
-pub struct NodiumNode {
-    pub name: String,
-    pub description: String,
-    pub input_params: HashMap<String, String>,
-    pub output_params: HashMap<String, String>,
-    // Other fields
+pub trait NodiumNode: Send + Sync {
+    extern "C" fn name(&self) -> StaticStr;
+    extern "C" fn description(&self) -> StaticStr;
+    extern "C" fn input_params(&self) -> FfiSafeHashMap;
+    extern "C" fn output_params(&self) -> FfiSafeHashMap;
+    extern "C" fn process(&mut self);
 }
 
-impl NodiumNode {
-    pub fn new(name: &str, description: &str) -> Self {
-        Self {
-            name: String::from(name),
-            description: String::from(description),
-            input_params: HashMap::new(),
-            output_params: HashMap::new(),
+#[repr(C)]
+pub struct DynNodiumNode {
+    pointer: *const (),
+    name_fn: extern "C" fn(*const ()) -> StaticStr,
+    description_fn: extern "C" fn(*const ()) -> StaticStr,
+    input_params_fn: extern "C" fn(*const ()) -> FfiSafeHashMap,
+    output_params_fn: extern "C" fn(*const ()) -> FfiSafeHashMap,
+    process_fn: extern "C" fn(*mut ()),
+}
+
+unsafe impl Send for DynNodiumNode {}
+unsafe impl Sync for DynNodiumNode {}
+
+impl DynNodiumNode {
+    pub fn new<T: NodiumNode>(val: &'static T) -> Self {
+        DynNodiumNode {
+            pointer: (val as *const _ as *const ()),
+            name_fn: unsafe { std::mem::transmute(<T as NodiumNode>::name as *const ()) },
+            description_fn: unsafe { std::mem::transmute(<T as NodiumNode>::description as *const ()) },
+            input_params_fn: unsafe { std::mem::transmute(<T as NodiumNode>::input_params as *const ()) },
+            output_params_fn: unsafe { std::mem::transmute(<T as NodiumNode>::output_params as *const ()) },
+            process_fn: unsafe { std::mem::transmute(<T as NodiumNode>::process as *const ()) },
         }
     }
 
-    pub fn add_input_param(&mut self, key: &str, value: &str) {
-        self.input_params.insert(String::from(key), String::from(value));
+    pub fn name(&self) -> &'static str {
+        (self.name_fn)(self.pointer).as_str()
     }
 
-    pub fn add_output_param(&mut self, key: &str, value: &str) {
-        self.output_params.insert(String::from(key), String::from(value));
+    pub fn description(&self) -> &'static str {
+        (self.description_fn)(self.pointer).as_str()
     }
 
-    // Process the input parameters and generate output parameters
+    pub fn input_params(&self) -> FfiSafeHashMap {
+        (self.input_params_fn)(self.pointer)
+    }
+
+    pub fn output_params(&self) -> FfiSafeHashMap {
+        (self.output_params_fn)(self.pointer)
+    }
+
     pub fn process(&mut self) {
-        // Implement the logic for processing the input parameters and generating the output parameters
-        // For example, you could concatenate all input parameters
-        let output_value = self.input_params.values().cloned().collect::<Vec<String>>().join(", ");
-        self.output_params.insert(String::from("output"), output_value);
+        (self.process_fn)(self.pointer as *mut ())
     }
 }

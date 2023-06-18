@@ -37,4 +37,10 @@ impl NodiumFlows {
             Err(format!("Flow not found: {}", name))
         }
     }
+
+    // get_flows
+    pub async fn get_flows(&self) -> HashMap<String, Arc<Mutex<NodiumFlow>>> {
+        self.flows.clone()
+    }
+    
 }
