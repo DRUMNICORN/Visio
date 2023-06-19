@@ -7,7 +7,7 @@ use crossterm::{
 };
 use std::io::stdout;
 
-pub fn execute_command(command: &str, command_registry: &CommandRegistry) {
+pub async fn execute_command(command: &str, command_registry: &CommandRegistry) {
     let command_parts: Vec<String> = command.split_whitespace().map(String::from).collect();
 
     match command_parts.get(0) {
@@ -15,9 +15,13 @@ pub fn execute_command(command: &str, command_registry: &CommandRegistry) {
             match cmd.as_str() {
                 "exit" => return,
                 "help" => {
-                    command_registry.list_commands();
+                    command_registry.list_commands(0);
                 }
-                _ => command_registry.execute(cmd, command_parts[1..].to_vec()), // Check for the entire command
+                _ => {
+                    if let Some(handle) = command_registry.execute(cmd, command_parts[1..].to_vec()) {
+                        handle.await.unwrap();
+                    }
+                }
             }
         }
         None => {}
@@ -28,9 +32,7 @@ pub fn execute_command(command: &str, command_registry: &CommandRegistry) {
     stdout().execute(Clear(ClearType::CurrentLine)).unwrap();
 
     // Print nodium prompt
-    if command.trim() == "help" {
-        print_nodium_prompt();
-    }
+    print_nodium_prompt();
 }
 
 pub fn print_nodium_prompt() {

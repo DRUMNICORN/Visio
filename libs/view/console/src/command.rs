@@ -1,20 +1,24 @@
-use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
-use log::debug;
-use std::io::{stdout, Write};
 use crossterm::{
+    queue,
     style::{Color, Print, SetForegroundColor},
     terminal::{Clear, ClearType},
-    queue,
 };
+use log::debug;
+use std::collections::HashSet;
+use std::io::{stdout, Write};
+use std::sync::{Arc, Mutex};
 
-use crate::command_executor::print_nodium_prompt;
+// use HashMap
+use std::collections::HashMap;
 
+use tokio::task::JoinHandle;
+pub type CommandHandler = Box<dyn Fn(Vec<&str>) -> JoinHandle<()> + Send + Sync>;
 pub struct Command {
     pub name: String,
     pub description: String,
-    pub handler: Box<dyn Fn(Vec<String>) + Send + Sync>,
+    pub handler: CommandHandler,
     pub sub_commands: Option<Arc<CommandRegistry>>,
+    pub aliases: HashSet<String>,
 }
 
 pub struct CommandRegistry {
@@ -22,19 +26,14 @@ pub struct CommandRegistry {
 }
 
 impl CommandRegistry {
-    pub fn fromCommandArgs(commands: Vec<Command>) -> CommandRegistry {
-        let commands: HashMap<String, Command> = HashMap::new();
-        for command in commands {
-            commands.insert(command.0.clone(), command.1);
-        }
-        let commands = Arc::new(Mutex::new(commands));
-        CommandRegistry { commands }
-    }
+    pub fn new(commands: Vec<Command>) -> Self {
+        let command_map = commands
+            .into_iter()
+            .map(|command| (command.name.clone(), command))
+            .collect();
 
-
-    pub fn new() -> Self {
-        CommandRegistry {
-            commands: Arc::new(Mutex::new(HashMap::new())),
+        Self {
+            commands: Arc::new(Mutex::new(command_map)),
         }
     }
 
@@ -46,16 +45,21 @@ impl CommandRegistry {
             .insert(command.name.clone(), command);
     }
 
-    pub fn execute(&self, name: &str, args: Vec<String>) {
-        if let Some(command) = self.commands.lock().unwrap().get(name) {
+    pub fn execute(&self, name: &str, args: Vec<String>) -> Option<JoinHandle<()>> {
+        let binding = self.commands.lock().unwrap();
+        if let Some((_, command)) = binding
+            .iter()
+            .find(|(_, command)| command.name == name || command.aliases.contains(name))
+        {
             if let Some(sub_commands) = &command.sub_commands {
                 if args.is_empty() {
-                    sub_commands.list_commands();
+                    sub_commands.list_commands(0);
                 } else if let Some(sub_command_name) = args.get(0) {
                     sub_commands.execute(sub_command_name, args[1..].to_vec());
                 }
             } else {
-                (command.handler)(args);
+                let args_str: Vec<&str> = args.iter().map(|s| s.as_str()).collect();
+                return Some((command.handler)(args_str));
             }
         } else {
             queue!(
@@ -69,15 +73,47 @@ impl CommandRegistry {
             .unwrap();
             stdout().flush().unwrap();
         }
+        None
     }
-
-    pub fn list_commands(&self) {
+    pub fn list_commands(&self, depth: usize) {
         let commands = self.commands.lock().unwrap();
-        println!("Registered commands:");
-        for command in commands.values() {
-            println!("- {}: {}", command.name, command.description);
+        if depth == 0 {
+            println!("Commands:");
         }
-
-        print_nodium_prompt();
+    
+        for command in commands.values() {
+            let tabs = "    ".repeat(depth);
+            let prefix = format!("{}- ", tabs);
+    
+            // Display aliases in parentheses after the command name
+            let aliases = if !command.aliases.is_empty() {
+                format!(" ({})", command.aliases.iter().map(|s| s.as_str()).collect::<Vec<_>>().join(", "))
+            } else {
+                String::new()
+            };
+    
+            queue!(
+                stdout(),
+                SetForegroundColor(Color::Cyan),
+                Print(&prefix),
+                SetForegroundColor(Color::Green),
+                Print(&command.name),
+                SetForegroundColor(Color::Yellow),
+                Print(&aliases),
+                SetForegroundColor(Color::White),
+                Print(": "),
+                SetForegroundColor(Color::Reset),
+                Print(&command.description),
+                Print("\n"),
+            )
+            .unwrap();
+    
+            if let Some(sub_commands) = &command.sub_commands {
+                sub_commands.list_commands(depth + 1);
+            }
+        }
+    
+        // Flush the output to ensure all queued operations are executed.
+        stdout().flush().unwrap();
     }
 }

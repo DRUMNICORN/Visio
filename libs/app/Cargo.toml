@@ -20,9 +20,8 @@ nodium-pdk = { path = "../pdk", version = "0.1.1" }
 
 log = "0.4"
 env_logger = "0.10"
-
-dlopen = "0.1"
-dlopen_derive = "0.1"
+dlopen = "0.1.8"
+dlopen_derive = "0.1.4"
 dirs-next = "2.0"
 
 

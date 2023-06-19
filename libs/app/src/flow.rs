@@ -1,16 +1,16 @@
-use nodium_pdk::node::{DynNodiumNode};
-use tokio::sync::{mpsc};
+use nodium_pdk::node::DynNodiumNode;
+use tokio::sync::mpsc;
 
 pub struct NodiumFlow {
-    pub name: String, // or pub name: &'static str,
+    pub name: String,
     pub nodes: Vec<DynNodiumNode>,
     pub connections: Vec<NodiumConnection>,
 }
 
 impl NodiumFlow {
     pub fn new(name: &str) -> NodiumFlow {
-        Self {
-            name: name.to_string(), // or name: name,
+        NodiumFlow {
+            name: name.to_string(),
             nodes: Vec::new(),
             connections: Vec::new(),
         }
@@ -26,7 +26,7 @@ impl NodiumFlow {
     }
 
     pub fn get_name(&self) -> String {
-        self.name.clone() // or &self.name if name is &'static str,
+        self.name.clone()
     }
 }
 

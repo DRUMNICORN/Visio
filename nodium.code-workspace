@@ -1,25 +1,12 @@
 {
-	"folders": [
-    {
-      "path": "."
-    },
-    {
-      "path": "plugins/nodium_browser"
-    }
-  ],
-  "settings": {
-    "rust-analyzer.showUnlinkedFileNotification": false,
-    "cSpell.words": [
-      "egui",
-      "nodium",
-      "rustflags",
-      "serde",
-      "tauri",
-      "winit"
+    "folders": [
+        {
+            "path": "."
+        }
     ],
-    "workbench.view.alwaysShowHeaderActions": true,
-    "editor.tabCompletion": "on",
-    "diffEditor.codeLens": true,
-    "MutableAI.upsell": true,
-  }
+    "settings": {
+        "editor.tabCompletion": "on",
+        "diffEditor.codeLens": true,
+        "MutableAI.upsell": true
+    }
 }

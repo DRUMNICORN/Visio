@@ -30,8 +30,9 @@ impl NodiumView for NodiumConsole {
             let mut pressed = ctrl_c_pressed_clone.lock().await;
             *pressed = true;
         });
-        print_nodium_prompt();
 
+        
+        print_nodium_prompt();
         loop {
 
             let mut input = String::new();
@@ -59,7 +60,7 @@ impl NodiumView for NodiumConsole {
             }
             history.push(input.clone());
 
-            execute_command(&input, &self.command_registry);
+            execute_command(&input, &self.command_registry).await;
 
             if input.trim() == "exit" {
                 break;
