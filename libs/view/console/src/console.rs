@@ -8,13 +8,13 @@ use log::{info, warn};
 
 pub struct NodiumConsole {
     pub app: Arc<Mutex<NodiumApp>>,
-    pub command_registry: Arc<CommandRegistry>,
+    pub command_registry: Arc<Mutex<CommandRegistry>>,
 }
 
 impl NodiumConsole {
     pub fn new(app: Arc<Mutex<NodiumApp>>) -> Self {
         // Initialize the logging backend (env_logger in this case)
-        let command_registry = Arc::new(CommandRegistry::new(vec![
+        let command_registry = Arc::new(Mutex::new(CommandRegistry::new(vec![
             Command {
                 name: String::from("exit"),
                 aliases: vec!["^C".to_string()].into_iter().collect(),
@@ -143,15 +143,15 @@ impl NodiumConsole {
                     },
                 ]))),
             },
-        ]));
+        ])));
 
         Self {
             app,
             command_registry,
         }
     }
-    pub fn execute_command(&self, command: &str, args: Vec<String>) {
-        if let Some(join_handle) = self.command_registry.execute(command, args.clone()) {
+    pub async fn execute_command(&self, command: &str, args: Vec<String>) {
+        if let Some(join_handle) = self.command_registry.lock().await.execute(command, args.clone()) {
             // Spawn the command handler task and await its completion
             spawn(async move {
                 join_handle.await.expect("Command execution failed");
@@ -161,8 +161,8 @@ impl NodiumConsole {
         }
     }
 
-    pub fn print_help(&self) {
+    pub async fn print_help(&self) {
         info!("Available commands:");
-        self.command_registry.list_commands(0);
-    }
+        self.command_registry.lock().await;
+      }
 }

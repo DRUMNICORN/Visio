@@ -1,25 +1,19 @@
-// plugin.rs
-
 use std::sync::Arc;
 
-
-use crate::dyn_node::DynNodiumNodeList;
+use crate::node::DynNodiumNodeList;
 
 pub trait NodiumPlugin: Send + Sync {
     fn name(&self) -> &'static str;
     fn nodes(&self) -> DynNodiumNodeList;
 }
 
-#[repr(C)]
 pub struct DynNodiumPlugin {
-    pointer: *const (),
     plugin: Arc<dyn NodiumPlugin>,
 }
 
 impl DynNodiumPlugin {
-    pub fn new<T: 'static + NodiumPlugin>(val: T) -> Self {
+    pub fn new<T: 'static + NodiumPlugin + Send + Sync>(val: T) -> Self {
         DynNodiumPlugin {
-            pointer: &val as *const _ as *const (),
             plugin: Arc::new(val),
         }
     }
@@ -32,4 +26,3 @@ impl DynNodiumPlugin {
         self.plugin.nodes()
     }
 }
-

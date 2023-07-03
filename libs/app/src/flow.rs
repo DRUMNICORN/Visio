@@ -1,6 +1,7 @@
 use nodium_pdk::node::DynNodiumNode;
 use tokio::sync::mpsc;
 
+
 pub struct NodiumFlow {
     pub name: String,
     pub nodes: Vec<DynNodiumNode>,
@@ -33,4 +34,28 @@ impl NodiumFlow {
 pub struct NodiumConnection {
     pub sender: mpsc::Sender<String>,
     pub receiver: mpsc::Receiver<String>,
+}
+
+unsafe impl Send for NodiumFlow {}
+unsafe impl Sync for NodiumFlow {} 
+
+use std::fmt;
+
+impl fmt::Debug for NodiumConnection {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.debug_struct("NodiumConnection")
+            .field("sender", &"Sender<String>")
+            .field("receiver", &"Receiver<String>")
+            .finish()
+    }
+}
+
+impl fmt::Debug for NodiumFlow {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.debug_struct("NodiumFlow")
+            .field("name", &self.name)
+            .field("nodes", &self.nodes)
+            .field("connections", &self.connections)
+            .finish()
+    }
 }

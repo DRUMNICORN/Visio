@@ -2,8 +2,8 @@ use nodium_pdk::node::{NodiumNode, NodiumParam};
 use crate::utils::download::process_download_node;
 use std::{ffi::{CString, CStr}};
 
-use std::sync::{Arc, Mutex};
-
+use std::sync::Arc;
+use tokio::sync::Mutex;
 pub struct NodiumDownloadNode {
     input_params: Arc<Mutex<Vec<NodiumParam>>>,
     output_params: Arc<Mutex<Vec<NodiumParam>>>,

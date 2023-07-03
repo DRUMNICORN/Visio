@@ -6,12 +6,12 @@ use crossterm::{
 use log::debug;
 use std::collections::HashSet;
 use std::io::{stdout, Write};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 // use HashMap
 use std::collections::HashMap;
 
-use tokio::task::JoinHandle;
+use tokio::{task::JoinHandle, sync::Mutex};
 pub type CommandHandler = Box<dyn Fn(Vec<&str>) -> JoinHandle<()> + Send + Sync>;
 pub struct Command {
     pub name: String,
@@ -37,16 +37,16 @@ impl CommandRegistry {
         }
     }
 
-    pub fn register(&self, command: Command) {
+    pub async fn register(&self, command: Command) {
         debug!("Registering command: {}", command.name);
         self.commands
             .lock()
-            .unwrap()
+            .await
             .insert(command.name.clone(), command);
     }
 
-    pub fn execute(&self, name: &str, args: Vec<String>) -> Option<JoinHandle<()>> {
-        let binding = self.commands.lock().unwrap();
+    pub async fn execute(&self, name: &str, args: Vec<String>) -> Option<JoinHandle<()>> {
+        let binding = self.commands.lock().await;
         if let Some((_, command)) = binding
             .iter()
             .find(|(_, command)| command.name == name || command.aliases.contains(name))
@@ -75,8 +75,8 @@ impl CommandRegistry {
         }
         None
     }
-    pub fn list_commands(&self, depth: usize) {
-        let commands = self.commands.lock().unwrap();
+    pub async fn list_commands(&self, depth: usize) {
+        let commands = self.commands.lock().await;
         if depth == 0 {
             println!("Commands:");
         }

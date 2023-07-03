@@ -60,7 +60,7 @@ impl NodiumView for NodiumConsole {
             }
             history.push(input.clone());
 
-            execute_command(&input, &self.command_registry).await;
+            execute_command(&input, self.command_registry).await;
 
             if input.trim() == "exit" {
                 break;

@@ -38,8 +38,8 @@ impl NodiumView for NodiumViewTauri {
     }
 
     fn add_window(&self, window: Box<dyn NodiumWindow>) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("adding window: {:?}", window.serialize());
-        let event_payload = to_value(window.serialize())?;
+        debug!("adding window: {:?}", window.to_dict());
+        let event_payload = to_value(window.to_dict())?;
         self.handle
             .app_handle()
             .emit_all("add_window", event_payload)?;
@@ -50,8 +50,8 @@ impl NodiumView for NodiumViewTauri {
         &self,
         window: Box<dyn NodiumWindow>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("removing window: {:?}", window.serialize());
-        let event_payload = to_value(window.serialize())?;
+        debug!("removing window: {:?}", window.to_dict());
+        let event_payload = to_value(window.to_dict())?;
         self.handle
             .app_handle()
             .emit_all("remove_window", event_payload)?;
@@ -62,8 +62,8 @@ impl NodiumView for NodiumViewTauri {
         &self,
         window: Box<dyn NodiumWindow>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        debug!("updating window: {:?}", window.serialize());
-        let event_payload = to_value(window.serialize())?;
+        debug!("updating window: {:?}", window.to_dict());
+        let event_payload = to_value(window.to_dict())?;
         self.handle
             .app_handle()
             .emit_all("update_window", event_payload)?;

@@ -1,9 +1,10 @@
 use dlopen::wrapper::Container;
-use nodium_pdk::{DynNodiumPlugin, DynNodiumNode};
+use nodium_pdk::{DynNodiumNode, DynNodiumPlugin};
 
+use crate::utils::{create_plugins_directory, get_lib_path, install, rebuild};
 use crate::PluginApi;
-use std::str;use std::path::PathBuf;
-use crate::utils::{install, create_plugins_directory, rebuild, get_lib_path};
+use std::path::PathBuf;
+use std::str;
 // use dirs_next::document_dir;
 use log::{debug, error, info, warn};
 
@@ -29,10 +30,10 @@ impl Debug for NodiumRegistry {
 }
 
 impl NodiumRegistry {
-    pub fn new() -> Arc<Mutex<Self>> {
- //       let doc_dir = document_dir().expect("Unable to get user's document directory");
+    pub fn new() -> Self {
+        //       let doc_dir = document_dir().expect("Unable to get user's document directory");
         //let install_location = "/home/roggen/Documents/GitHub/nodium/plugins".to_string();
-        
+
         // use fixxed location in current dir inside plugins
         let install_location = PathBuf::from("/home/roggen/Documents/GitHub/nodium/plugins/");
 
@@ -46,32 +47,15 @@ impl NodiumRegistry {
             plugins: Arc::new(Mutex::new(HashMap::new())),
             nodes: Arc::new(Mutex::new(HashMap::new())),
         };
-        let registry_mutex = Arc::new(Mutex::new(registry));
-        let registry_clone = registry_mutex.clone();
-        tokio::spawn(async move {
-            let registry = registry_clone.lock().await;
-            registry.listen(registry_clone.clone()).await;
-        });
-    
-        let registry_mutex = Arc::new(Mutex::new(registry));
 
-        let registry_mutex_clone = registry_mutex.clone();
-        tokio::spawn(async move {
-            let mut registry_lock = registry_mutex_clone.lock().await;
-            registry_lock.rebuild().await;
-            registry_lock.reload().await;
-        });
-    
-        registry_mutex
+        registry
     }
-    
+
     pub async fn rebuild(&mut self) {
-//        self.unregister_all().await; // TODO
-        rebuild(&self.install_location)
-            .await
-            .unwrap_or_else(|e| {
-                error!("Error rebuilding plugins: {}", e);
-            });
+        //        self.unregister_all().await; // TODO
+        rebuild(&self.install_location).await.unwrap_or_else(|e| {
+            error!("Error rebuilding plugins: {}", e);
+        });
 
         // Call the reload function after rebuilding
         self.reload().await;
@@ -84,7 +68,7 @@ impl NodiumRegistry {
             error!("Error creating plugins directory: {}", e);
             return;
         });
-        
+
         if let Ok(folders) = fs::read_dir(&plugins_dir) {
             for entry in folders.filter_map(Result::ok) {
                 let path = entry.path();
@@ -103,7 +87,9 @@ impl NodiumRegistry {
                         .await
                         {
                             error!("Error installing plugin: {}", e);
-                        } else if let Err(e) = self.register_plugin_and_nodes(plugin_name, true).await {
+                        } else if let Err(e) =
+                            self.register_plugin_and_nodes(plugin_name, true).await
+                        {
                             error!("Error registering plugin: {}", e);
                         } else {
                             info!("Plugin registered successfully");
@@ -118,7 +104,6 @@ impl NodiumRegistry {
         }
     }
 
-
     pub async fn listen(&self, registry: Arc<Mutex<Self>>) {
         let _registry_clone = registry.clone();
         // TODO: Load plugins in the plugins directory
@@ -130,7 +115,7 @@ impl NodiumRegistry {
         crate_name: &str,
         is_local: bool,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-          let folder_name = if is_local {
+        let folder_name = if is_local {
             crate_name.to_string()
         } else {
             format!("{}", crate_name)
@@ -145,21 +130,24 @@ impl NodiumRegistry {
         let plugin: DynNodiumPlugin = (plugin_api_wrapper.create_plugin)();
 
         let plugin_name = plugin.name();
-        let plugin_nodes = plugin.nodes();
+        let _plugin_nodes = plugin.nodes();
         debug!("Registering plugin: {}", plugin_name);
 
         let plugin_arc = Arc::new(plugin);
-        self.plugins.lock().await.insert(plugin_name.clone().to_owned(), plugin_arc.clone());
+        self.plugins
+            .lock()
+            .await
+            .insert(plugin_name.clone().to_owned(), plugin_arc.clone());
 
-        for node in plugin_nodes.iter() {
-            let node_name = str::from_utf8(node.name().as_bytes())
-                .unwrap_or_else(|e| {
-                    panic!("Invalid UTF-8 sequence in node name: {:?}", e);
-                })
-                .to_owned();
-            debug!("Registering node: {}", node_name);
-            self.nodes.lock().await.insert(node_name, Arc::new((*node).clone()));
-        }
+        // plugin_nodes.iter().into_iter().for_each(|node| {
+        //     let node_name = str::from_utf8(node.name().as_bytes())
+        //         .unwrap_or_else(|e| {
+        //             panic!("Invalid UTF-8 sequence in node name: {:?}", e);
+        //         })
+        //         .to_owned();
+        //     debug!("Registering node: {}", node_name);
+        //     self.nodes.lock().await.insert(node_name, Arc::new((*node).clone()));
+        // });
 
         Ok(())
     }

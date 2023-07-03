@@ -6,7 +6,7 @@ mod view;
 mod app;
 mod registry;
 mod utils;
-mod flow;
+pub mod flow;
 
 pub use app::NodiumApp;
 pub use registry::NodiumRegistry;
