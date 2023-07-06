@@ -1,4 +1,4 @@
-// libs/nodium-pdk/src/lib.rs
+// libs/nodium-dev/src/lib.rs
 // Plugin Development Kit for Nodium
 
 pub mod node;

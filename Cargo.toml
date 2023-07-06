@@ -18,25 +18,8 @@ env_logger = "0.9"
 async-trait = "0.1.51"
 
 nodium-app = { path = "libs/app", version = "0.1.1" }
-nodium-pdk = { path = "libs/pdk", version = "0.1.1" }
-
-[dependencies.nodium-egui]
-path = "libs/view/egui"
-version = "0.1.0"
-optional = true
-
-[dependencies.nodium-tauri]
-path = "libs/view/tauri"
-version = "0.1.0"
-optional = true
+nodium-pdk = { path = "libs/dev", version = "0.1.1" }
 
 [dependencies.nodium-console]
-path = "libs/view/console"
+path = "libs/console"
 version = "0.1.0"
-optional = true
-
-[features]
-default = ["nodium-console"]
-egui = ["nodium-egui"]
-tauri = ["nodium-tauri"]
-console = ["nodium-console"]

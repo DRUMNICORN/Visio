@@ -19,7 +19,7 @@ pub async fn execute_command(command: &str, command_registry: Arc<Mutex<CommandR
                     command_registry.lock().await.list_commands(0);
                 }
                 _ => {
-                    if let Some(handle) = command_registry.lock().await.execute(cmd, command_parts[1..].to_vec()) {
+                    if let Some(handle) = command_registry.lock().await.execute(cmd, command_parts[1..].to_vec()).await {
                         handle.await.unwrap();
                     }
                 }

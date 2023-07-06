@@ -130,15 +130,15 @@ impl NodiumRegistry {
         let plugin: DynNodiumPlugin = (plugin_api_wrapper.create_plugin)();
 
         let plugin_name = plugin.name();
-        let _plugin_nodes = plugin.nodes();
         debug!("Registering plugin: {}", plugin_name);
-
+        
         let plugin_arc = Arc::new(plugin);
         self.plugins
             .lock()
             .await
             .insert(plugin_name.clone().to_owned(), plugin_arc.clone());
-
+        
+        // let plugin_nodes = plugin.nodes();
         // plugin_nodes.iter().into_iter().for_each(|node| {
         //     let node_name = str::from_utf8(node.name().as_bytes())
         //         .unwrap_or_else(|e| {

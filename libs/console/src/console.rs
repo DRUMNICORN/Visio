@@ -13,7 +13,7 @@ pub struct NodiumConsole {
 
 impl NodiumConsole {
     pub fn new(app: Arc<Mutex<NodiumApp>>) -> Self {
-        // Initialize the logging backend (env_logger in this case)
+        let app_clone = Arc::clone(&app);
         let command_registry = Arc::new(Mutex::new(CommandRegistry::new(vec![
             Command {
                 name: String::from("exit"),
@@ -29,61 +29,50 @@ impl NodiumConsole {
                 aliases: vec!["f".to_string()].into_iter().collect(),
                 description: String::from("Manage flows"),
                 handler: Box::new(|_| {
-                    spawn(async {()})
+                    spawn(async {})
                 }),
                 sub_commands: Some(Arc::new(CommandRegistry::new(vec![
                     Command {
                         name: String::from("list"),
                         aliases: vec!["l".to_string()].into_iter().collect(),
                         description: String::from("List available flows"),
-                        handler: {
-                            let app_clone = Arc::clone(&app);
-                            Box::new(move |_args| {
-                                let app_clone_inner = Arc::clone(&app_clone);
-                                spawn(async move {
-                                    handle_flow_list(&app_clone_inner).await
-                                })
+                        handler: Box::new(move |_args| {
+                            let app_clone_inner = Arc::clone(&app);
+                            spawn(async move {
+                                handle_flow_list(&app_clone_inner).await
                             })
-                        },
+                        }),
                         sub_commands: None,
                     },
-                    
                     Command {
                         name: String::from("add"),
                         aliases: vec!["a".to_string()].into_iter().collect(),
                         description: String::from("Create flows"),
-                        handler: {
-                            let app_clone = Arc::clone(&app);
-                            Box::new(move |args| {
-                                let app_clone = Arc::clone(&app_clone);
-                                let args = args.into_iter().map(|s| s.to_string()).collect::<Vec<String>>();
-                                spawn(async move {
-                                    handle_flow_add(&app_clone, args).await
-                                })
+                        handler: Box::new(move |args| {
+                            let app_clone = Arc::clone(&app_clone);
+                            let args = args.into_iter().map(|s| s.to_string()).collect::<Vec<String>>();
+                            spawn(async move {
+                                handle_flow_add(&app_clone, args).await
                             })
-                        },
+                        }),
                         sub_commands: None,
                     },
                     Command {
                         name: String::from("remove"),
                         aliases: vec!["r".to_string()].into_iter().collect(),
                         description: String::from("Remove flows"),
-                        handler: {
-                            let app_clone = Arc::clone(&app);
-                            Box::new(move |args| {
-                                if let Some(flow_name) = args.get(0) {
-                                    let app_clone = Arc::clone(&app_clone);
-                                    let flow_name = flow_name.to_string();
-                                    spawn(async move {
-                                        handle_flow_remove(&app_clone, flow_name).await
-                                    })
-                                    
-                                } else {
-                                    println!("Error: You must provide a name for the flow.");
-                                    spawn(async {()})
-                                }
-                            })
-                        },
+                        handler: Box::new(move |args| {
+                            if let Some(flow_name) = args.get(0) {
+                                let app_clone = Arc::clone(&app);
+                                let flow_name = flow_name.to_string();
+                                spawn(async move {
+                                    handle_flow_remove(&app_clone, flow_name).await
+                                })
+                            } else {
+                                println!("Error: You must provide a name for the flow.");
+                                spawn(async {})
+                            }
+                        }),
                         sub_commands: None,
                     },                      
                 ]))),
@@ -93,52 +82,43 @@ impl NodiumConsole {
                 aliases: vec!["p".to_string()].into_iter().collect(),
                 description: String::from("Manage plugins"),
                 handler: Box::new(|_| {
-                    spawn(async {()})
+                    spawn(async {})
                 }),
                 sub_commands: Some(Arc::new(CommandRegistry::new(vec![
                     Command {
                         name: String::from("list"),
                         aliases: vec!["l".to_string()].into_iter().collect(),
-                        description: String::from("List registered commands"),
-                        handler: {
-                            let app_clone = Arc::clone(&app);
-                            Box::new(move |_| {
-                                let app_clone_inner = Arc::clone(&app_clone);
-                                spawn(async move {
-                                    handle_plugins_list(&app_clone_inner).await
-                                })
+                        description: String::from("Listregistered commands"),
+                        handler: Box::new(move |_| {
+                            let app_clone_inner = Arc::clone(&app_clone);
+                            spawn(async move {
+                                handle_plugins_list(&app_clone_inner).await
                             })
-                        },
+                        }),
                         sub_commands: None,
                     },
                     Command {
                         name: String::from("reload"),
                         aliases: vec!["rl".to_string()].into_iter().collect(),
                         description: String::from("Reload plugins"),
-                        handler: {
-                            let app_clone = Arc::clone(&app);
-                            Box::new(move |_| {
-                                let app_clone_inner = Arc::clone(&app_clone);
-                                spawn(async move {
-                                    handle_plugins_reload(&app_clone_inner).await
-                                })
+                        handler: Box::new(move |_| {
+                            let app_clone_inner = Arc::clone(&app_clone);
+                            spawn(async move {
+                                handle_plugins_reload(&app_clone_inner).await
                             })
-                        },
+                        }),
                         sub_commands: None,
                     },
                     Command {
                         name: String::from("rebuild"),
                         aliases: vec!["rb".to_string()].into_iter().collect(),
                         description: String::from("Rebuild plugins"),
-                        handler: {
-                            let app_clone = Arc::clone(&app);
-                            Box::new(move |_| {
-                                let app_clone_inner = Arc::clone(&app_clone);
-                                spawn(async move {
-                                    handle_plugins_rebuild(&app_clone_inner).await
-                                })
+                        handler: Box::new(move |_| {
+                            let app_clone_inner = Arc::clone(&app_clone);
+                            spawn(async move {
+                                handle_plugins_rebuild(&app_clone_inner).await
                             })
-                        },
+                        }),
                         sub_commands: None,
                     },
                 ]))),
@@ -150,8 +130,10 @@ impl NodiumConsole {
             command_registry,
         }
     }
+
     pub async fn execute_command(&self, command: &str, args: Vec<String>) {
-        if let Some(join_handle) = self.command_registry.lock().await.execute(command, args.clone()) {
+        let handler = self.command_registry.lock().await.execute(command, args.clone()).await;
+        if let Some(join_handle) = handler {
             // Spawn the command handler task and await its completion
             spawn(async move {
                 join_handle.await.expect("Command execution failed");
@@ -163,6 +145,7 @@ impl NodiumConsole {
 
     pub async fn print_help(&self) {
         info!("Available commands:");
-        self.command_registry.lock().await;
-      }
+        let command_registry = self.command_registry.lock().await;
+        command_registry.list_commands(0);
+    }
 }

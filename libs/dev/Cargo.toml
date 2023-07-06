@@ -1,4 +1,4 @@
-# libs/nodium-pdk/Cargo.toml
+# libs/nodium-dev/Cargo.toml
 
 [package]
 name = "nodium-pdk"

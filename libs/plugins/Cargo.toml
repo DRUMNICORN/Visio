@@ -1,9 +1,0 @@
-[package]
-name = "nodium-plugins"
-description = "42"
-authors = ["42"]
-version = "0.4.2"
-edition = "2021"
-license = "MIT"
-
-[dependencies]

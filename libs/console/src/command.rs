@@ -116,4 +116,5 @@ impl CommandRegistry {
         // Flush the output to ensure all queued operations are executed.
         stdout().flush().unwrap();
     }
+    
 }
