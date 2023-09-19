@@ -1,5 +1,25 @@
 # Nodium
 
+## Welcome to Nodium, your ultimate Integrated Development Environment (IDE) for any project. 
+
+In the future, Nodium will have evolved beyond just an Integrated Development Environment (IDE). It will have transformed into a comprehensive visual system that redefines the way you engage with programming. Its innovative interface empowers you to construct a project layout effortlessly, enabling you to concentrate on the essence and conception of your ideas, rather than becoming entangled in the intricacies of code. Nodium will continue to push the boundaries of software development, making it an indispensable tool for developers worldwide.
+
+### AI-Powered Coding Assistance
+
+With Nodium, you get an AI assistant who codes new extensions for you. It's like having an expert developer by your side, taking care of the technical details so that you can focus on the big picture. The AI assistant doesn't just write code - it generates complete workflows, ensuring that the coding process is as smooth and efficient as possible.
+
+### Community Plugins
+
+Nodium harnesses the power of community through its extensive list of plugins. These plugins are contributed by a vibrant community of developers, and they add a new dimension of dynamism to your programming. With these plugins, you can extend the functionality of Nodium and tailor it to your specific needs. You can also contribute your own plugins, helping to grow and enrich the community.
+
+### Dynamic Programming
+
+Nodium is designed to make programming as dynamic and flexible as possible. The visual system and AI assistant work together to automate the coding process, freeing you up to focus on the conceptual and structural aspects of your project. With Nodium, programming becomes less about writing code and more about realizing your vision.
+
+### Embrace the Future of Development
+
+Nodium is not just a tool - it's a new way of thinking about programming. It's a platform that brings together visual design, AI-assisted coding, and community plugins to create a truly dynamic programming environment. With Nodium, you don't just write code - you create ideas. Start your journey with Nodium today, and experience the future of development.
+
 >Nodium is currently in development and is not yet ready for production use.
 
 Nodium is an easy-to-use data analysis and automation platform built using Rust, designed to be versatile and modular. Nodium aims to provide a user-friendly visual node-based interface for various tasks.
@@ -74,7 +94,7 @@ Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
 
 ## Authors
 
-* **Cherob** - *Initial work* - [Cherob](https://github.com/cherob)  
+* **Drumni** - *Initial work* - [Drumni](https://github.com/drumni)  
 
 ## Inspiration
 
