@@ -113,3 +113,9 @@ Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
 [Doc Blueprints](https://docs.unrealengine.com/5.0/en-US/blueprint-tutorials-in-unreal-engine/)
 
 ![blueprints](https://user-images.githubusercontent.com/15168847/232058249-2f7ccaa3-887b-4248-8d1d-e354a52ad33a.png)
+
+### Obsidian: Graph View
+
+[Obsidian](https://obsidian.md/)
+
+![Graph View](image.png)
