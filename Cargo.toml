@@ -8,11 +8,15 @@ repository = ""
 edition = "2021"
 
 [dependencies]
-winit = "0.28.7"
-wgpu = "0.17.1"
 env_logger = "0.10"
 log = "0.4"
 pollster = "0.3"
 toml = "0.8.1"
 serde = { version = "1.0.130", features = ["derive"] }
+rand = "0.8.4"
 # serde_json = "1.0.68"
+
+# use lib/flow
+nodium_flow = { path = "./libs/flow" }
+nodium_view = { path = "./libs/view" }
+nodium_controller = { path = "./libs/controller" }

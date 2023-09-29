@@ -1,3 +1,5 @@
+use nodium_flow::flow::Flow;
+
 
 #[derive(Debug, Clone)]
 pub struct InputHandler;
@@ -7,7 +9,7 @@ impl InputHandler {
         Self
     }
 
-    pub fn handle_keyboard_input(&self, input: winit::event::KeyboardInput, flow: std::sync::Arc<std::sync::Mutex<crate::flow::Flow>>) {
+    pub fn handle_keyboard_input(&self, input: winit::event::KeyboardInput, flow: std::sync::Arc<std::sync::Mutex<Flow>>) {
         // Handle keyboard input and update the flow accordingly.
         log::debug!("Handling keyboard input: {:?}", input);
         let flow = match flow.lock() {
