@@ -1,4 +1,7 @@
 # Nodium
+![GitHub all releases](https://img.shields.io/github/downloads/cherob/nodium/total?label=GitHub%20downloads&style=for-the-badge&logo=github)![Crates.io](https://img.shields.io/crates/v/nodium?label=Crates.io&style=for-the-badge&logo=crates.io)![Crates.io](https://img.shields.io/crates/d/nodium?label=Crates.io%20downloads&style=for-the-badge&logo=crates.io)![Discord](https://img.shields.io/discord/1096210659588452422?label=Discord&style=for-the-badge&logo=discord)
+
+> Nodium is currently in development and is not yet ready for production use.
 
 ## Welcome to Nodium, your ultimate Integrated Development Environment (IDE) for any project. 
 
@@ -20,11 +23,8 @@ Nodium is designed to make programming as dynamic and flexible as possible. The 
 
 Nodium is not just a tool - it's a new way of thinking about programming. It's a platform that brings together visual design, AI-assisted coding, and community plugins to create a truly dynamic programming environment. With Nodium, you don't just write code - you create ideas. Start your journey with Nodium today, and experience the future of development.
 
->Nodium is currently in development and is not yet ready for production use.
 
 Nodium is an easy-to-use data analysis and automation platform built using Rust, designed to be versatile and modular. Nodium aims to provide a user-friendly visual node-based interface for various tasks.
-
-![GitHub all releases](https://img.shields.io/github/downloads/cherob/nodium/total?label=GitHub%20downloads&style=for-the-badge&logo=github)![Crates.io](https://img.shields.io/crates/v/nodium?label=Crates.io&style=for-the-badge&logo=crates.io)![Crates.io](https://img.shields.io/crates/d/nodium?label=Crates.io%20downloads&style=for-the-badge&logo=crates.io)![Discord](https://img.shields.io/discord/1096210659588452422?label=Discord&style=for-the-badge&logo=discord)
 
 ## Getting Started
 
