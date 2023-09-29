@@ -1,0 +1,18 @@
+[package]
+name = "nodium-app"
+version = "0.0.0"
+description = "An IDE with a focus on simplicity and speed."
+authors = ["drumni"]
+license = ""
+repository = ""
+edition = "2021"
+
+[dependencies]
+winit = "0.28.7"
+wgpu = "0.17.1"
+env_logger = "0.10"
+log = "0.4"
+pollster = "0.3"
+toml = "0.8.1"
+serde = { version = "1.0.130", features = ["derive"] }
+# serde_json = "1.0.68"
