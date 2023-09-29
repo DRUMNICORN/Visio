@@ -51,9 +51,8 @@ cargo run
 
 Installing Missing Packages:
 
-  - "pkg-config"
-  - "javascriptcoregtk"
-
+* "pkg-config"
+* "javascriptcoregtk"
 
 ## Features
 
@@ -133,3 +132,39 @@ Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
 [Doc Blueprints](https://docs.unrealengine.com/5.0/en-US/blueprint-tutorials-in-unreal-engine/)
 
 ![blueprints](https://user-images.githubusercontent.com/15168847/232058249-2f7ccaa3-887b-4248-8d1d-e354a52ad33a.png)
+
+### Obsidian: Graph View
+
+[Obsidian](https://obsidian.md/)
+
+![Graph View](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.ylrThQHkTiKS5BLL3fdhQwHaGD%26pid%3DApi&f=1&ipt=7470813d96d050197f7dab3987a61d75917120a6ae854cd905bb5a84508ce579&ipo=images)
+
+### Mindustry: Logic
+
+[Mindustry](https://mindustrygame.github.io/)
+
+![Logic](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgamehelp.guru%2Fwp-content%2Fuploads%2F2020%2F02%2Fm2-min-1.png&f=1&nofb=1&ipt=d6825f99424a4e7ffb4ccc6dca9d8cd2ca920ec7db238b7e454cbe6b22e5c7c4&ipo=images)
+
+### Factorio: Circuit Network
+
+[Factorio](https://www.factorio.com/)
+
+![Circuit Network](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fsimcitycoon.weebly.com%2Fuploads%2F2%2F7%2F7%2F1%2F27716059%2F5980052_orig.jpg&f=1&nofb=1&ipt=777b8d046e072d70c583098933f2c67382aa07183fcf530c5c9f4726b6d13ebc&ipo=images)
+
+### Godot: Visual Scripting
+
+[Godot](https://godotengine.org/)
+
+![Visual Scripting](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpreview.redd.it%2Fw2rpdli94h361.jpg%3Fwidth%3D1512%26format%3Dpjpg%26auto%3Dwebp%26s%3Dce4241cfa994df0b01f38c00e80c433fd53e4d84&f=1&nofb=1&ipt=1af59dbb1cdc3067ecd86dd575ebbc2f078ec66fd7265dbd2d8f82082d67d643&ipo=images)
+
+### Houdini: VEX
+
+[Houdini](https://www.sidefx.com/)
+
+![VEX](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.7fL5PFkK6zEwdnjpS-gTBQHaFe%26pid%3DApi&f=1&ipt=ce329d2732dfcb38a39bab7da4b3ea8770b190df92908397c9563efda06adee7&ipo=images)
+
+### Mini Metro: Metro Map
+
+[Mini Metro](https://dinopoloclub.com/minimetro/)
+
+![Metro Map](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimgs.6sqft.com%2Fwp-content%2Fuploads%2F2015%2F11%2F20042557%2Fmini-metro-nyc-subway-.gif&f=1&nofb=1&ipt=eef7eebfd7a81d78dc04a18fde9eba402f017be82f853c426bf1b99f47ad3ea5&ipo=images)

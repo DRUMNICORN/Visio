@@ -1,42 +1,18 @@
 [package]
-name = "nodium"
-version = "0.1.2"
-authors = ["cherob"]
-description = "Nodium is an easy-to-use data analysis and automation platform built using Rust, designed to be versatile and modular. Nodium aims to provide a user-friendly visual node-based interface for various tasks."
+name = "nodium-app"
+version = "0.0.0"
+description = "An IDE with a focus on simplicity and speed."
+authors = ["drumni"]
+license = ""
+repository = ""
 edition = "2021"
-license-file = "LICENSE"
 
 [dependencies]
-tokio = { version = "1.27.0", features = ["full"] }
-
-serde = { version = "1.0", features = ["derive"] }
-
-serde_json = "1.0"
+winit = "0.28.7"
+wgpu = "0.17.1"
+env_logger = "0.10"
 log = "0.4"
-env_logger = "0.9"
-
-async-trait = "0.1.51"
-
-nodium-app = { path = "libs/app", version = "0.1.1" }
-nodium-pdk = { path = "libs/pdk", version = "0.1.1" }
-
-[dependencies.nodium-egui]
-path = "libs/view/egui"
-version = "0.1.0"
-optional = true
-
-[dependencies.nodium-tauri]
-path = "libs/view/tauri"
-version = "0.1.0"
-optional = true
-
-[dependencies.nodium-console]
-path = "libs/view/console"
-version = "0.1.0"
-optional = true
-
-[features]
-default = ["nodium-console"]
-egui = ["nodium-egui"]
-tauri = ["nodium-tauri"]
-console = ["nodium-console"]
+pollster = "0.3"
+toml = "0.8.1"
+serde = { version = "1.0.130", features = ["derive"] }
+# serde_json = "1.0.68"
