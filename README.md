@@ -3,6 +3,11 @@
 
 > Nodium is currently in development and is not yet ready for production use.
 
+## Contributing
+
+Create a pull request and I'll review it.
+Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
+
 ## Welcome to Nodium, your ultimate Integrated Development Environment (IDE) for any project. 
 
 In the future, Nodium will have evolved beyond just an Integrated Development Environment (IDE). It will have transformed into a comprehensive visual system that redefines the way you engage with programming. Its innovative interface empowers you to construct a project layout effortlessly, enabling you to concentrate on the essence and conception of your ideas, rather than becoming entangled in the intricacies of code. Nodium will continue to push the boundaries of software development, making it an indispensable tool for developers worldwide.
@@ -78,11 +83,6 @@ cargo run
 * [ ] Web Dashboard creation (HTML, CSS, JS, etc.)
 * [ ] Machine learning training
 * [ ] IoT (MQTT, UDP, TCP, etc.)
-
-## Contributing
-
-Create a pull request and I'll review it.
-Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
 
 ## Authors
 
