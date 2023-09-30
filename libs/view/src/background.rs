@@ -25,7 +25,29 @@ impl BackgroundRenderer {
         let queue = self.queue.lock().unwrap();
         let surface = self.surface.lock().unwrap();
 
-        let output = surface.get_current_texture().unwrap();
+        let output = match surface.get_current_texture() {
+            Ok(output) => output,
+            Err(_) => {
+                surface.configure(
+                    &device,
+                    &wgpu::SurfaceConfiguration {
+                        usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+                        format: wgpu::TextureFormat::Bgra8UnormSrgb,
+                        width: 0,
+                        height: 0,
+                        present_mode: wgpu::PresentMode::Fifo,
+                        alpha_mode: wgpu::CompositeAlphaMode::Opaque,
+                        view_formats: vec![
+                            wgpu::TextureFormat::Bgra8UnormSrgb,
+                        ]
+                    },
+                );
+                surface
+                    .get_current_texture()
+                    .expect("Failed to acquire next swap chain texture!")
+            }
+        };
+        
         let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
             label: Some("Background Render Encoder"),
