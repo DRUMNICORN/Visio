@@ -74,7 +74,7 @@ impl App {
     }
 
     pub fn generate_example_flows(&mut self) {
-        // create root node and randamly decide how many children it should have
+        // create root node and randomly decide how many children it should have
         // and do this 4 times
 
         let mut flow = self.flow.lock().unwrap();

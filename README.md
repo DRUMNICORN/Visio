@@ -1,7 +1,13 @@
 # Nodium
+
+> [!WARNING]  
+> Nodium is currently in development and is not yet ready for production use.
+
 ![GitHub all releases](https://img.shields.io/github/downloads/cherob/nodium/total?label=GitHub%20downloads&style=for-the-badge&logo=github)![Crates.io](https://img.shields.io/crates/v/nodium?label=Crates.io&style=for-the-badge&logo=crates.io)![Crates.io](https://img.shields.io/crates/d/nodium?label=Crates.io%20downloads&style=for-the-badge&logo=crates.io)![Discord](https://img.shields.io/discord/1096210659588452422?label=Discord&style=for-the-badge&logo=discord)
 
-> Nodium is currently in development and is not yet ready for production use.
+
+> Nodium will be a IDE focused on users building structure and ai will create the tests and code for the user.
+
 
 ## Contributing
 
