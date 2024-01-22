@@ -1,9 +1,0 @@
-[package]
-name = "nodium_controller"
-version = "0.1.0"
-edition = "2018"
-
-[dependencies]
-winit = "0.28.7"
-log = "0.4"
-nodium_flow = { path = "../flow" }
