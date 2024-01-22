@@ -5,16 +5,32 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/cherob/nodium/total?label=GitHub%20downloads&style=for-the-badge&logo=github)![Crates.io](https://img.shields.io/crates/v/nodium?label=Crates.io&style=for-the-badge&logo=crates.io)![Crates.io](https://img.shields.io/crates/d/nodium?label=Crates.io%20downloads&style=for-the-badge&logo=crates.io)![Discord](https://img.shields.io/discord/1096210659588452422?label=Discord&style=for-the-badge&logo=discord)
 
-
 > Nodium will be a IDE focused on users building structure and ai will create the tests and code for the user.
 
+## Installation
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/en/download/)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install/#windows-stable)
+- [Rust](https://www.rust-lang.org/tools/install)
+- [Obsidian](https://obsidian.md/)
+
+### Comments
+
+```bash
+git clone https://github.com/drumni/nodium-app
+cd nodium-app
+yarn
+yarn tauri dev
+```
 
 ## Contributing
 
 Create a pull request and I'll review it.
 Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
 
-## Welcome to Nodium, your ultimate Integrated Development Environment (IDE) for any project. 
+## Welcome to Nodium, your ultimate Integrated Development Environment (IDE) for any project
 
 In the future, Nodium will have evolved beyond just an Integrated Development Environment (IDE). It will have transformed into a comprehensive visual system that redefines the way you engage with programming. Its innovative interface empowers you to construct a project layout effortlessly, enabling you to concentrate on the essence and conception of your ideas, rather than becoming entangled in the intricacies of code. Nodium will continue to push the boundaries of software development, making it an indispensable tool for developers worldwide.
 
@@ -34,65 +50,43 @@ Nodium is designed to make programming as dynamic and flexible as possible. The 
 
 Nodium is not just a tool - it's a new way of thinking about programming. It's a platform that brings together visual design, AI-assisted coding, and community plugins to create a truly dynamic programming environment. With Nodium, you don't just write code - you create ideas. Start your journey with Nodium today, and experience the future of development.
 
-
 Nodium is an easy-to-use data analysis and automation platform built using Rust, designed to be versatile and modular. Nodium aims to provide a user-friendly visual node-based interface for various tasks.
-
-## Getting Started
-
-If you want to contribute to the project, you can clone the repository and run the project locally. Think about solving an issue or adding a feature.
-
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-* [Rust](https://www.rust-lang.org/tools/install)
-
-### Installing (Dev Only)
-
-A step by step series of examples that tell you how to get a development env running
-Say what the step will be
-
-```bash
-git clone https://github.com/drumni/nodium
-cd nodium
-cargo run
-```
 
 ## Features
 
-* Visual node-based interface with input and output pins.
-* Dynamic loading of crates and runtime imports using libloading for plugin support
-* Task-based recursive computation of nodes to execute user-created graphs
-* Support for sub-flows as nodes, increasing modularity
-* Save and reuse flows across multiple locations
-* Async programming and a robust tasking system for performance and usability
+- Visual node-based interface with input and output pins.
+- Dynamic loading of crates and runtime imports using libloading for plugin support
+- Task-based recursive computation of nodes to execute user-created graphs
+- Support for sub-flows as nodes, increasing modularity
+- Save and reuse flows across multiple locations
+- Async programming and a robust tasking system for performance and usability
 
 ## Milestones
 
 ### Milestone 1: Basic Nodes
 
-* [ ] Basic Input Node (Text, Number, etc.)
-* [ ] Debbugging Node (Print, Log, etc.)
-* [ ] Node Connection
+- [ ] Basic Input Node (Text, Number, etc.)
+- [ ] Debbugging Node (Print, Log, etc.)
+- [ ] Node Connection
 
 ### Milestone 2: Basic Data Manipulation
 
-* [ ] File Node (Read, Write, etc.)
-* [ ] Basic data manipulation (filter, sort, etc.)
-* [ ] APIs (REST, GraphQL, etc.)
-* [ ] Databases (SQL, NoSQL, etc.)
-* [ ] Basic math operations (add, subtract, etc.)
+- [ ] File Node (Read, Write, etc.)
+- [ ] Basic data manipulation (filter, sort, etc.)
+- [ ] APIs (REST, GraphQL, etc.)
+- [ ] Databases (SQL, NoSQL, etc.)
+- [ ] Basic math operations (add, subtract, etc.)
 
 ### Milestone 3: Basic Data Analysis
 
-* [ ] Machine learning processes (text, image, audio, etc.)
-* [ ] Web Dashboard creation (HTML, CSS, JS, etc.)
-* [ ] Machine learning training
-* [ ] IoT (MQTT, UDP, TCP, etc.)
+- [ ] Machine learning processes (text, image, audio, etc.)
+- [ ] Web Dashboard creation (HTML, CSS, JS, etc.)
+- [ ] Machine learning training
+- [ ] IoT (MQTT, UDP, TCP, etc.)
 
 ## Authors
 
-* **Drumni** - *Initial work* - [Drumni](https://github.com/drumni)  
+- --Drumni-- - -Initial work- - [Drumni](https://github.com/drumni)  
 
 ## Inspiration
 
