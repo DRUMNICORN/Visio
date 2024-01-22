@@ -7,6 +7,8 @@
 
 > Nodium will be a IDE focused on users building structure and ai will create the tests and code for the user.
 
+![image](https://github.com/drumni/nodium/assets/15168847/bfe43d91-471c-458d-82a3-00421ca1b163)
+
 ## Installation
 
 ### Prerequisites
@@ -19,7 +21,7 @@
 ### Comments
 
 ```bash
-git clone https://github.com/drumni/nodium-app
+git clone https://github.com/drumni/nodium
 cd nodium-app
 yarn
 yarn tauri dev
