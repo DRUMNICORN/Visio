@@ -4,7 +4,7 @@ import { SiObsidian } from 'react-icons/si';
 
 const OpenInObsidianButton = ({ className, onClick }: { className?: string; onClick: () => void }) => {
   return (
-    <button type="button" onClick={onClick} className={className} disabled={true}>
+    <button type="button" onClick={onClick} className={className}>
       Open Obsidian &nbsp; <SiObsidian />
     </button>
   );

@@ -124,7 +124,7 @@ const ItemsContainer: React.FC<ItemsContainerProps> = ({ paths, filters, onToggl
         const filterResult = filters.some(filterRegex => gitignoreToRegexp(filterRegex).test(path + '/'));
 
         // Check if path includes default paths
-        const defaultPathResult = ['obsidian', 'docs', '.gitignore', '.git'].some(defaultPath => path.includes(defaultPath));
+        const defaultPathResult = ['.obsidian', 'docs', '.gitignore', '.git'].some(defaultPath => path.includes(defaultPath));
 
         // Final result
         return filterResult || defaultPathResult;

@@ -129,7 +129,7 @@ function App() {
           <div className="container">
             <div className="row">
               <AnalyzeButton className="row" onClick={handleFolderLoad} disabled={isLoadButtonDisabled} loading={isLoading} />
-              <OpenInObsidianButton className="row" onClick={() => invoke('open_in_obsidian', { path: encodeURIComponent(name + '/docs') })} />
+              <OpenInObsidianButton className="row" onClick={() => invoke('open_in_obsidian', { path: name })} />
               <FilterInput className="row" filter={filter} setFilter={setFilter} />
               <AddFilterButton className="row" onClick={handleAddFilter} disabled={filter.trim() === ''} />
             </div>

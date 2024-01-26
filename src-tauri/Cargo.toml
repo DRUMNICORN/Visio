@@ -13,6 +13,7 @@ edition = "2021"
 tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
+percent-encoding = "2.1.0"
 ignore = "0.4.22"
 webbrowser = "0.5.2"
 tauri = { version = "1.5", features = [ "dialog-all", "shell-open"] }
