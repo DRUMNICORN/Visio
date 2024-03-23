@@ -22,10 +22,12 @@
 
 ```bash
 git clone https://github.com/drumni/nodium
-cd nodium-app
+cd nodium
 yarn
 yarn tauri dev
 ```
+
+Nodium uses [tauri](https://crates.io/crates/tauri). Compiling Nodium may fail if your system doesn't have [dependencies required by it](https://tauri.app/v1/guides/getting-started/prerequisites/).
 
 ## Contributing
 
