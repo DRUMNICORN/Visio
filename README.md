@@ -23,6 +23,41 @@ Or join the [Discord](https://discord.gg/ZTVfME7RyN), and we can talk about it.
 
 - [DRUMNICORN](https://github.com/drumnicorn)
 
+## Nodium Development Roadmap
+
+### Phase 1: Initial Integration
+
+#### Milestone 1: Protocol and Backend Architecture
+
+- Define communication protocol, data formats, and API endpoints.
+- Design modular backend architecture with Rust and dynamic plugin loading.
+- Implement core services, node execution engine, and database integration.
+
+#### Milestone 2: CLI Tool Implementation
+
+- Develop commands for flow and plugin management, node operations, and configuration setup.
+- Implement flow execution, monitoring, debugging, and general configuration commands.
+
+#### Milestone 3: Integration with Minecraft, Godot, Tauri
+
+- Enable in-game file manipulation and node interaction interfaces.
+
+### Phase 2: Advanced Capabilities and Plugin Ecosystem
+
+#### Milestone 4: Expand Core Features and Plugin Ecosystem
+
+- Implement file nodes, database support, and basic math operations.
+- Release community plugins, establish a marketplace, and iterate based on user feedback.
+
+#### Milestone 5: Data Analysis, IoT, and Visual Interface Enhancements
+
+- Implement machine learning, web dashboard tools, IoT nodes, and real-time data processing.
+- Enhance the node-based interface, enable flow saving/reuse, and optimize for usability.
+
+#### Milestone 6: UX Optimizations and Mobile Integration
+
+- Optimize UI/UX, streamline workflows, and develop mobile versions for iOS and Android with accessibility in mind.
+
 ## Applications
 
 For Nodium to be accessible, it will need a dynamic solution for using it.  
@@ -36,11 +71,13 @@ All functionalities should be available as CLI commands to make it easy for Linu
 
 A Minecraft JAVA and BEDROCK mod would provide the opportunity to creatively start developing on the backend.
 
-#### Control Minecraft With Arduino
+#### Control Minecraft With Arduino (YT Video)
 
 [![YT Video](https://img.youtube.com/vi/xBf9fIEuX_o/0.jpg)](https://www.youtube.com/watch?v=xBf9fIEuX_o)
 
 ### Tauri (Rust): React + TypeScript
+
+![image](https://github.com/drumnicorn/nodium/assets/15168847/bfe43d91-471c-458d-82a3-00421ca1b163)
 
 The desktop application would be the solution for primary companies and people who prefer a flat layout like [NodeRED](https://github.com/node-red/node-red).
 
@@ -49,103 +86,9 @@ The desktop application would be the solution for primary companies and people w
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Obsidian](https://obsidian.md/)
 
-![image](https://github.com/drumnicorn/nodium/assets/15168847/bfe43d91-471c-458d-82a3-00421ca1b163)
-
 ### Godot 3D Game
 
 It will be a game with plugins for reading files on PC, like audio, which will then be visible in 3D as a vinyl, for example, and in-game you can do anything with it. It will be like Garry's Mod!
-
-
-## Nodium Development Roadmap
-
-### Phase 1: Initial Integration
-
-#### Milestone 1: Protocol and Backend Architecture
-
-1. **Protocol Specification**
-   - Define communication protocol for node interactions
-   - Establish data formats and serialization methods
-   - Document API endpoints for backend services
-
-2. **Backend Architecture Design**
-   - Design modular backend architecture using Rust
-   - Define core components and interactions
-   - Establish a plugin system with dynamic loading using libloading
-
-3. **Initial Backend Implementation**
-   - Implement core services and APIs for node management
-   - Develop basic node execution engine
-   - Set up database schema and integrate database support
-
-#### Milestone 2: CLI Tool Implementation
-
-1. **Create and Manage Flows**
-   - Develop commands for flow management:
-     - Add, remove, list, rename, duplicate, export, and import flows
-   - Implement basic node operations and configuration
-
-2. **Plugin Operations**
-   - Enable plugin management commands:
-     - List, install, remove, update, reload, and get plugin info
-
-3. **Flow Execution and Monitoring**
-   - Implement commands for flow execution:
-     - Start, stop, pause, resume, monitor, log, debug, and get stats
-
-4. **General Configuration and Setup**
-   - Provide commands for general configuration and setup:
-     - Set, get, reset config parameters, and initialize/update environment
-
-#### Milestone 3: Minecraft, Godot, Tauri Integration
-
-1. **In-game Functionality**
-   - Enable file manipulation features within the game and application.
-   - Create in-game interfaces for node interactions
-
-### Phase 2: Advanced Capabilities and Plugin Ecosystem
-
-#### Milestone 4: Expand Core Features and Plugin Ecosystem
-
-1. **Expand Core Features**
-   - Implement file nodes (Read, Write) and basic data manipulation
-   - Add support for REST, GraphQL, SQL, and NoSQL databases
-   - Implement basic math operations (add, subtract)
-
-2. **Plugin Ecosystem**
-   - Release initial community plugins
-   - Provide tools and documentation for plugin development
-   - Set up a marketplace for plugins
-
-3. **User Feedback and Iteration**
-   - Continuously gather and analyze user feedback
-   - Iterate on core functionality based on feedback
-
-#### Milestone 5: Data Analysis, IoT, and Visual Interface Enhancements
-
-1. **Machine Learning and Data Analysis**
-   - Implement machine learning processes
-   - Develop tools for creating web dashboards
-   - Integrate machine learning training
-
-2. **IoT Integration**
-   - Develop nodes for IoT
-   - Support real-time data processing and analysis
-
-3. **Visual Interface Enhancements**
-   - Enhance the visual node-based interface
-   - Implement sub-flows for modularity
-   - Enable saving and reusing flows
-
-#### Milestone 6: UX Optimizations and Mobile Integration
-
-1. **User Experience Improvements**
-   - Optimize user interface for better usability
-   - Streamline workflows for smoother navigation
-
-2. **Mobile Integration**
-   - Develop mobile versions for iOS and Android platforms
-   - Enable sharing of processing power for collaborative usage
-   - Aim for accessibility and ease of use, making it free for all users
 
 ## Inspiration
 
