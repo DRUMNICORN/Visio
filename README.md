@@ -1,3 +1,5 @@
+![LOGO](https://github.com/DRUMNICORN/nodium/assets/15168847/406e7536-1b76-4c8a-94c9-fa8197011753)
+
 # Nodium
 
 > [!WARNING]  
