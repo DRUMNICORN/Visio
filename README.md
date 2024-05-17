@@ -3,94 +3,149 @@
 > [!WARNING]  
 > Nodium is currently in development and is not yet ready for production use.
 
-![GitHub all releases](https://img.shields.io/github/downloads/cherob/nodium/total?label=GitHub%20downloads&style=for-the-badge&logo=github)![Crates.io](https://img.shields.io/crates/v/nodium?label=Crates.io&style=for-the-badge&logo=crates.io)![Crates.io](https://img.shields.io/crates/d/nodium?label=Crates.io%20downloads&style=for-the-badge&logo=crates.io)![Discord](https://img.shields.io/discord/1096210659588452422?label=Discord&style=for-the-badge&logo=discord)
+![GitHub all releases](https://img.shields.io/github/downloads/cherob/nodium/total?label=GitHub%20downloads&style=for-the-badge&logo=github) ![Crates.io](https://img.shields.io/crates/v/nodium?label=Crates.io&style=for-the-badge&logo=crates.io) ![Crates.io](https://img.shields.io/crates/d/nodium?label=Crates.io%20downloads&style=for-the-badge&logo=crates.io) [![Discord](https://img.shields.io/discord/1096210659588452422?label=Discord&style=for-the-badge&logo=discord)](https://discord.gg/ZTVfME7RyN)
 
-> Nodium will be a IDE focused on users building structure and ai will create the tests and code for the user.
 
-![image](https://github.com/drumni/nodium/assets/15168847/bfe43d91-471c-458d-82a3-00421ca1b163)
+## Your Ultimate Integrated Development Environment (IDE) for Any Project
 
-## Installation
+In the future, Nodium will have evolved beyond just an Integrated Development Environment (IDE). It will have transformed into a comprehensive visual system that redefines the way you engage with programming. Its innovative interface empowers you to construct a project layout effortlessly, enabling you to concentrate on the essence and conception of your ideas, rather than becoming entangled in the intricacies of code. Nodium will continue to push the boundaries of software development, making it an indispensable tool for developers worldwide.
 
-### Prerequisites
+...is not just a tool - it's a new way of thinking about programming. It's a platform that brings together **visual design**, **AI-assisted coding**, and **community plugins** to create a truly dynamic programming environment. With Nodium, you don't just write code - you create ideas. Start your journey with Nodium today, and experience the future of development.
+
+## Contributing
+
+> Nodium will be an IDE focused on users building structures, and AI will create the tests and code for the user.
+
+Create a pull request and I'll review it.  
+Or join the [Discord](https://discord.gg/ZTVfME7RyN), and we can talk about it.
+
+## Authors
+
+- [DRUMNICORN](https://github.com/drumnicorn)
+
+## Applications
+
+For Nodium to be accessible, it will need a dynamic solution for using it.  
+Nodium itself will be a backend architecture like [PIPEWIRE](https://pipewire.org/), and it will have different view applications.
+
+### CLI Application
+
+All functionalities should be available as CLI commands to make it easy for Linux users to adopt.
+
+### Minecraft Mod
+
+A Minecraft JAVA and BEDROCK mod would provide the opportunity to creatively start developing on the backend.
+
+#### Control Minecraft With Arduino
+
+[![YT Video](https://img.youtube.com/vi/xBf9fIEuX_o/0.jpg)](https://www.youtube.com/watch?v=xBf9fIEuX_o)
+
+### Tauri (Rust): React + TypeScript
+
+The desktop application would be the solution for primary companies and people who prefer a flat layout like [NodeRED](https://github.com/node-red/node-red).
 
 - [Node.js](https://nodejs.org/en/download/)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install/#windows-stable)
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Obsidian](https://obsidian.md/)
 
-### Comments
+![image](https://github.com/drumnicorn/nodium/assets/15168847/bfe43d91-471c-458d-82a3-00421ca1b163)
 
-```bash
-git clone https://github.com/drumni/nodium
-cd nodium
-yarn
-yarn tauri dev
-```
+### Godot 3D Game
 
-Nodium uses [tauri](https://crates.io/crates/tauri). Compiling Nodium may fail if your system doesn't have [dependencies required by it](https://tauri.app/v1/guides/getting-started/prerequisites/).
+It will be a game with plugins for reading files on PC, like audio, which will then be visible in 3D as a vinyl, for example, and in-game you can do anything with it. It will be like Garry's Mod!
 
-## Contributing
 
-Create a pull request and I'll review it.
-Or join the [Discord](https://discord.gg/ZTVfME7RyN) and we can talk about it.
+## Nodium Development Roadmap
 
-## Welcome to Nodium, your ultimate Integrated Development Environment (IDE) for any project
+### Phase 1: Initial Integration
 
-In the future, Nodium will have evolved beyond just an Integrated Development Environment (IDE). It will have transformed into a comprehensive visual system that redefines the way you engage with programming. Its innovative interface empowers you to construct a project layout effortlessly, enabling you to concentrate on the essence and conception of your ideas, rather than becoming entangled in the intricacies of code. Nodium will continue to push the boundaries of software development, making it an indispensable tool for developers worldwide.
+#### Milestone 1: Protocol and Backend Architecture
 
-### AI-Powered Coding Assistance
+1. **Protocol Specification**
+   - Define communication protocol for node interactions
+   - Establish data formats and serialization methods
+   - Document API endpoints for backend services
 
-With Nodium, you get an AI assistant who codes new extensions for you. It's like having an expert developer by your side, taking care of the technical details so that you can focus on the big picture. The AI assistant doesn't just write code - it generates complete workflows, ensuring that the coding process is as smooth and efficient as possible.
+2. **Backend Architecture Design**
+   - Design modular backend architecture using Rust
+   - Define core components and interactions
+   - Establish a plugin system with dynamic loading using libloading
 
-### Community Plugins
+3. **Initial Backend Implementation**
+   - Implement core services and APIs for node management
+   - Develop basic node execution engine
+   - Set up database schema and integrate database support
 
-Nodium harnesses the power of community through its extensive list of plugins. These plugins are contributed by a vibrant community of developers, and they add a new dimension of dynamism to your programming. With these plugins, you can extend the functionality of Nodium and tailor it to your specific needs. You can also contribute your own plugins, helping to grow and enrich the community.
+#### Milestone 2: CLI Tool Implementation
 
-### Dynamic Programming
+1. **Create and Manage Flows**
+   - Develop commands for flow management:
+     - Add, remove, list, rename, duplicate, export, and import flows
+   - Implement basic node operations and configuration
 
-Nodium is designed to make programming as dynamic and flexible as possible. The visual system and AI assistant work together to automate the coding process, freeing you up to focus on the conceptual and structural aspects of your project. With Nodium, programming becomes less about writing code and more about realizing your vision.
+2. **Plugin Operations**
+   - Enable plugin management commands:
+     - List, install, remove, update, reload, and get plugin info
 
-### Embrace the Future of Development
+3. **Flow Execution and Monitoring**
+   - Implement commands for flow execution:
+     - Start, stop, pause, resume, monitor, log, debug, and get stats
 
-Nodium is not just a tool - it's a new way of thinking about programming. It's a platform that brings together visual design, AI-assisted coding, and community plugins to create a truly dynamic programming environment. With Nodium, you don't just write code - you create ideas. Start your journey with Nodium today, and experience the future of development.
+4. **General Configuration and Setup**
+   - Provide commands for general configuration and setup:
+     - Set, get, reset config parameters, and initialize/update environment
 
-Nodium is an easy-to-use data analysis and automation platform built using Rust, designed to be versatile and modular. Nodium aims to provide a user-friendly visual node-based interface for various tasks.
+#### Milestone 3: Minecraft, Godot, Tauri Integration
 
-## Features
+1. **In-game Functionality**
+   - Enable file manipulation features within the game and application.
+   - Create in-game interfaces for node interactions
 
-- Visual node-based interface with input and output pins.
-- Dynamic loading of crates and runtime imports using libloading for plugin support
-- Task-based recursive computation of nodes to execute user-created graphs
-- Support for sub-flows as nodes, increasing modularity
-- Save and reuse flows across multiple locations
-- Async programming and a robust tasking system for performance and usability
+### Phase 2: Advanced Capabilities and Plugin Ecosystem
 
-## Milestones
+#### Milestone 4: Expand Core Features and Plugin Ecosystem
 
-### Milestone 1: Basic Nodes
+1. **Expand Core Features**
+   - Implement file nodes (Read, Write) and basic data manipulation
+   - Add support for REST, GraphQL, SQL, and NoSQL databases
+   - Implement basic math operations (add, subtract)
 
-- [ ] Basic Input Node (Text, Number, etc.)
-- [ ] Debbugging Node (Print, Log, etc.)
-- [ ] Node Connection
+2. **Plugin Ecosystem**
+   - Release initial community plugins
+   - Provide tools and documentation for plugin development
+   - Set up a marketplace for plugins
 
-### Milestone 2: Basic Data Manipulation
+3. **User Feedback and Iteration**
+   - Continuously gather and analyze user feedback
+   - Iterate on core functionality based on feedback
 
-- [ ] File Node (Read, Write, etc.)
-- [ ] Basic data manipulation (filter, sort, etc.)
-- [ ] APIs (REST, GraphQL, etc.)
-- [ ] Databases (SQL, NoSQL, etc.)
-- [ ] Basic math operations (add, subtract, etc.)
+#### Milestone 5: Data Analysis, IoT, and Visual Interface Enhancements
 
-### Milestone 3: Basic Data Analysis
+1. **Machine Learning and Data Analysis**
+   - Implement machine learning processes
+   - Develop tools for creating web dashboards
+   - Integrate machine learning training
 
-- [ ] Machine learning processes (text, image, audio, etc.)
-- [ ] Web Dashboard creation (HTML, CSS, JS, etc.)
-- [ ] Machine learning training
-- [ ] IoT (MQTT, UDP, TCP, etc.)
+2. **IoT Integration**
+   - Develop nodes for IoT
+   - Support real-time data processing and analysis
 
-## Authors
+3. **Visual Interface Enhancements**
+   - Enhance the visual node-based interface
+   - Implement sub-flows for modularity
+   - Enable saving and reusing flows
 
-- --Drumni-- - -Initial work- - [Drumni](https://github.com/drumni)  
+#### Milestone 6: UX Optimizations and Mobile Integration
+
+1. **User Experience Improvements**
+   - Optimize user interface for better usability
+   - Streamline workflows for smoother navigation
+
+2. **Mobile Integration**
+   - Develop mobile versions for iOS and Android platforms
+   - Enable sharing of processing power for collaborative usage
+   - Aim for accessibility and ease of use, making it free for all users
 
 ## Inspiration
 
