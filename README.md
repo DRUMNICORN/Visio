@@ -18,10 +18,14 @@ In the future, Nodium will have evolved beyond just an Integrated Development En
 
 Create a pull request and I'll review it.  
 Or join the [Discord](https://discord.gg/ZTVfME7RyN), and we can talk about it.
+You can reach me with mail aswell! 
+
+[Email me!](mailto:42@drumni.com)
+
 
 ## Authors
 
-- [DRUMNICORN](https://github.com/drumnicorn)
+- [DRUMNICORN](https://github.com/drumnicorn) 
 
 ## Nodium Development Roadmap
 
