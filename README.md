@@ -1,171 +1,54 @@
-![LOGO](https://github.com/DRUMNICORN/nodium/assets/15168847/406e7536-1b76-4c8a-94c9-fa8197011753)
+# Visio: A Concept for the Future of Software Development
 
-# Nodium
+Visio is a conceptual framework for an Integrated Development Environment (IDE) that envisions a radically new approach to programming. This idea will only come to life when Artificial General Intelligence (AGI) becomes a reality. The purpose of this concept is to provide a blueprint that an AGI could use to create a groundbreaking visual and intuitive programming environment.
 
-> [!WARNING]  
-> Nodium is currently in development and is not yet ready for production use.
+## The Vision
 
-![GitHub all releases](https://img.shields.io/github/downloads/cherob/nodium/total?label=GitHub%20downloads&style=for-the-badge&logo=github) ![Crates.io](https://img.shields.io/crates/v/nodium?label=Crates.io&style=for-the-badge&logo=crates.io) ![Crates.io](https://img.shields.io/crates/d/nodium?label=Crates.io%20downloads&style=for-the-badge&logo=crates.io) [![Discord](https://img.shields.io/discord/1096210659588452422?label=Discord&style=for-the-badge&logo=discord)](https://discord.gg/ZTVfME7RyN)
+Visio imagines a future where software development is no longer bound by traditional coding paradigms. Instead, it becomes a highly visual and interactive process that emphasizes creativity, design, and concept over syntax and manual coding. The goal is to enable users to build, visualize, and manipulate projects in an entirely new way, making programming accessible to everyone, regardless of their technical background.
 
+## Key Concepts
 
-## Your Ultimate Integrated Development Environment (IDE) for Any Project
+- **Visual-First Development**: The core of Visio is a visual interface that allows users to construct projects as if they are designing a blueprint. This method focuses on the user's ability to conceptualize and visualize their ideas rather than getting caught up in the technical details of code.
 
-In the future, Nodium will have evolved beyond just an Integrated Development Environment (IDE). It will have transformed into a comprehensive visual system that redefines the way you engage with programming. Its innovative interface empowers you to construct a project layout effortlessly, enabling you to concentrate on the essence and conception of your ideas, rather than becoming entangled in the intricacies of code. Nodium will continue to push the boundaries of software development, making it an indispensable tool for developers worldwide.
+- **AI and AGI Integration**: Visio relies on the power of AGI to automate the coding process. The AGI will interpret the visual structures and interactions defined by the user and translate them into functional code, tests, and configurations. This approach eliminates the need for users to learn or write code themselves.
 
-...is not just a tool - it's a new way of thinking about programming. It's a platform that brings together **visual design**, **AI-assisted coding**, and **community plugins** to create a truly dynamic programming environment. With Nodium, you don't just write code - you create ideas. Start your journey with Nodium today, and experience the future of development.
+- **Dynamic and Adaptive Environment**: The environment will continuously evolve based on user interaction and feedback, becoming more intuitive and responsive over time. As AGI advances, so too will the capabilities of Visio, making it a perpetually cutting-edge tool.
 
-## Contributing
+## No Constraints on Technology
 
-> Nodium will be an IDE focused on users building structures, and AI will create the tests and code for the user.
+Since Visio is purely a conceptual framework waiting for AGI to bring it to life, there are no recommendations for programming languages, platforms, or specific technologies. The realization of this concept will depend entirely on the capabilities of future AGI systems and their interpretation of these ideas.
 
-Create a pull request and I'll review it.  
-Or join the [Discord](https://discord.gg/ZTVfME7RyN), and we can talk about it.
-You can reach me with mail aswell! 
+## Showcase: What Visio Could Look Like
 
-[Email me!](mailto:42@drumni.com)
+Although Visio is currently just a concept, here are some visual inspirations that could represent what Visio might look like in the future. These examples provide a glimpse into a potential interface and user experience, focusing on visual programming and interactive design.
 
+### Inspirations for Visio's Visual Interface
 
-## Authors
+1. **NodeRED**  
+   NodeRED provides a flow-based programming interface that allows users to visually connect nodes representing different functionalities.
+   - [GitHub NodeRED](https://github.com/node-red/node-red)  
+   ![NodeRED Example](https://user-images.githubusercontent.com/15168847/232058437-213eb8a7-4eeb-4a6d-9752-60e12abf9bb7.png)
 
-- [DRUMNICORN](https://github.com/drumnicorn) 
+2. **Blender: Geometry Nodes**  
+   Blender's Geometry Nodes allow users to create complex 3D models using a visual node-based interface, showcasing how intricate logic can be made accessible through visual representation.
+   - [Blender Geometry Nodes Documentation](https://docs.blender.org/manual/en/latest/modeling/geometry_nodes/index.html#index-0)  
+   ![Blender Geometry Nodes](https://user-images.githubusercontent.com/15168847/232055166-b1cabd5e-a89b-4139-9a18-ae96e809d7e6.png)
 
-## Nodium Development Roadmap
+3. **Unity: Shader Graph**  
+   Unity's Shader Graph allows developers to create shaders using a visual interface, simplifying complex processes into manageable components.
+   - [Unity Shader Graph Documentation](https://docs.unity3d.com/Packages/com.unity.shadergraph@14.0/manual/First-Shader-Graph.html)  
+   ![Unity Shader Graph](https://user-images.githubusercontent.com/15168847/232060906-5e22220c-be8b-45a7-92ca-cdc473f7b1cf.png)
 
-### Phase 1: Initial Integration
+4. **Drawflow**  
+   Drawflow is a lightweight library for creating flow-based programming interfaces, demonstrating how visual tools can make programming more intuitive.
+   - [GitHub Drawflow](https://github.com/jerosoler/Drawflow)  
+   ![Drawflow Example](https://user-images.githubusercontent.com/15168847/232057526-63018038-440b-4a0b-baac-d366e9cba313.gif)
 
-#### Milestone 1: Protocol and Backend Architecture
+5. **Unreal Engine 5: Blueprints**  
+   Unreal Engine's Blueprint system allows for visual scripting, enabling game developers to create complex behaviors without writing code.
+   - [Unreal Engine Blueprints Documentation](https://docs.unrealengine.com/5.0/en-US/blueprint-tutorials-in-unreal-engine/)  
+   ![Unreal Engine Blueprints](https://user-images.githubusercontent.com/15168847/232058249-2f7ccaa3-887b-4248-8d1d-e354a52ad33a.png)
 
-- Define communication protocol, data formats, and API endpoints.
-- Design modular backend architecture with Rust and dynamic plugin loading.
-- Implement core services, node execution engine, and database integration.
+### The Future of Development
 
-#### Milestone 2: CLI Tool Implementation
-
-- Develop commands for flow and plugin management, node operations, and configuration setup.
-- Implement flow execution, monitoring, debugging, and general configuration commands.
-
-#### Milestone 3: Integration with Minecraft, Godot, Tauri
-
-- Enable in-game file manipulation and node interaction interfaces.
-
-### Phase 2: Advanced Capabilities and Plugin Ecosystem
-
-#### Milestone 4: Expand Core Features and Plugin Ecosystem
-
-- Implement file nodes, database support, and basic math operations.
-- Release community plugins, establish a marketplace, and iterate based on user feedback.
-
-#### Milestone 5: Data Analysis, IoT, and Visual Interface Enhancements
-
-- Implement machine learning, web dashboard tools, IoT nodes, and real-time data processing.
-- Enhance the node-based interface, enable flow saving/reuse, and optimize for usability.
-
-#### Milestone 6: UX Optimizations and Mobile Integration
-
-- Optimize UI/UX, streamline workflows, and develop mobile versions for iOS and Android with accessibility in mind.
-
-## Applications
-
-For Nodium to be accessible, it will need a dynamic solution for using it.  
-Nodium itself will be a backend architecture like [PIPEWIRE](https://pipewire.org/), and it will have different view applications.
-
-### CLI Application
-
-All functionalities should be available as CLI commands to make it easy for Linux users to adopt.
-
-### Minecraft Mod
-
-A Minecraft JAVA and BEDROCK mod would provide the opportunity to creatively start developing on the backend.
-
-#### Control Minecraft With Arduino (YT Video)
-
-[![YT Video](https://img.youtube.com/vi/xBf9fIEuX_o/0.jpg)](https://www.youtube.com/watch?v=xBf9fIEuX_o)
-
-### Tauri (Rust): React + TypeScript
-
-![image](https://github.com/drumnicorn/nodium/assets/15168847/bfe43d91-471c-458d-82a3-00421ca1b163)
-
-The desktop application would be the solution for primary companies and people who prefer a flat layout like [NodeRED](https://github.com/node-red/node-red).
-
-- [Node.js](https://nodejs.org/en/download/)
-- [Yarn](https://classic.yarnpkg.com/en/docs/install/#windows-stable)
-- [Rust](https://www.rust-lang.org/tools/install)
-- [Obsidian](https://obsidian.md/)
-
-### Godot 3D Game
-
-It will be a game with plugins for reading files on PC, like audio, which will then be visible in 3D as a vinyl, for example, and in-game you can do anything with it. It will be like Garry's Mod!
-
-## Inspiration
-
-### NodeRED
-
-[GitHub NodeRED](https://github.com/node-red/node-red)
-
-![nodeRED](https://user-images.githubusercontent.com/15168847/232058437-213eb8a7-4eeb-4a6d-9752-60e12abf9bb7.png)
-
-### Orange
-
-[GitHub Orange3](https://github.com/biolab/orange3)
-
-![orange3](https://user-images.githubusercontent.com/15168847/232058386-aee44090-4057-4427-841b-f3846b5d70a9.png)
-
-### Blender: Geometry Nodes
-
-[Doc Geometry Nodes](https://docs.blender.org/manual/en/latest/modeling/geometry_nodes/index.html#index-0)
-
-![image](https://user-images.githubusercontent.com/15168847/232055166-b1cabd5e-a89b-4139-9a18-ae96e809d7e6.png)
-
-### Unity: Shader Graph
-
-[Doc Shader Graph](https://docs.unity3d.com/Packages/com.unity.shadergraph@14.0/manual/First-Shader-Graph.html)
-
-![shader_graph](https://user-images.githubusercontent.com/15168847/232060906-5e22220c-be8b-45a7-92ca-cdc473f7b1cf.png)
-
-### Drawflow
-
-[GitHub Drawflow](https://github.com/jerosoler/Drawflow)
-
-![drawflow](https://user-images.githubusercontent.com/15168847/232057526-63018038-440b-4a0b-baac-d366e9cba313.gif)
-
-### Unreal Engine 5: Blueprints
-
-[Doc Blueprints](https://docs.unrealengine.com/5.0/en-US/blueprint-tutorials-in-unreal-engine/)
-
-![blueprints](https://user-images.githubusercontent.com/15168847/232058249-2f7ccaa3-887b-4248-8d1d-e354a52ad33a.png)
-
-### Obsidian: Graph View
-
-[Obsidian](https://obsidian.md/)
-
-![Graph View](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.ylrThQHkTiKS5BLL3fdhQwHaGD%26pid%3DApi&f=1&ipt=7470813d96d050197f7dab3987a61d75917120a6ae854cd905bb5a84508ce579&ipo=images)
-
-### Mindustry: Logic
-
-[Mindustry](https://mindustrygame.github.io/)
-
-![Logic](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgamehelp.guru%2Fwp-content%2Fuploads%2F2020%2F02%2Fm2-min-1.png&f=1&nofb=1&ipt=d6825f99424a4e7ffb4ccc6dca9d8cd2ca920ec7db238b7e454cbe6b22e5c7c4&ipo=images)
-
-### Factorio: Circuit Network
-
-[Factorio](https://www.factorio.com/)
-
-![Circuit Network](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fsimcitycoon.weebly.com%2Fuploads%2F2%2F7%2F7%2F1%2F27716059%2F5980052_orig.jpg&f=1&nofb=1&ipt=777b8d046e072d70c583098933f2c67382aa07183fcf530c5c9f4726b6d13ebc&ipo=images)
-
-### Godot: Visual Scripting
-
-[Godot](https://godotengine.org/)
-
-![Visual Scripting](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpreview.redd.it%2Fw2rpdli94h361.jpg%3Fwidth%3D1512%26format%3Dpjpg%26auto%3Dwebp%26s%3Dce4241cfa994df0b01f38c00e80c433fd53e4d84&f=1&nofb=1&ipt=1af59dbb1cdc3067ecd86dd575ebbc2f078ec66fd7265dbd2d8f82082d67d643&ipo=images)
-
-### Houdini: VEX
-
-[Houdini](https://www.sidefx.com/)
-
-![VEX](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.7fL5PFkK6zEwdnjpS-gTBQHaFe%26pid%3DApi&f=1&ipt=ce329d2732dfcb38a39bab7da4b3ea8770b190df92908397c9563efda06adee7&ipo=images)
-
-### Mini Metro: Metro Map
-
-[Mini Metro](https://dinopoloclub.com/minimetro/)
-
-![Metro Map](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimgs.6sqft.com%2Fwp-content%2Fuploads%2F2015%2F11%2F20042557%2Fmini-metro-nyc-subway-.gif&f=1&nofb=1&ipt=eef7eebfd7a81d78dc04a18fde9eba402f017be82f853c426bf1b99f47ad3ea5&ipo=images)
+Visio represents a vision where software development is transformed into a seamless, creative, and visual process. It is a concept that stands ready for a future where AGI can use it as a foundation to revolutionize how we think about and engage with programming, pushing the boundaries of what is possible in software development.
